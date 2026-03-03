@@ -6,7 +6,7 @@ export const mockUsers = [
     password: "test123",
     name: "Pranav Choudhary",
     twoFactorRequired: true,
-    role: "user"
+    role: "user",
   },
   {
     id: "2",
@@ -14,7 +14,7 @@ export const mockUsers = [
     password: "admin123",
     name: "Admin User",
     twoFactorRequired: false,
-    role: "admin"
+    role: "admin",
   },
   {
     id: "3",
@@ -22,14 +22,14 @@ export const mockUsers = [
     password: "demo123",
     name: "Demo User",
     twoFactorRequired: true,
-    role: "user"
-  }
+    role: "user",
+  },
 ];
 
 export const mockOtpData: Record<string, string> = {};
 
 export const generateOTP = (): string => {
-  return '123456';
+  return "123456";
 };
 
 export const mockDashboardCards = [
@@ -40,7 +40,7 @@ export const mockDashboardCards = [
     value: "127",
     stats: "+12% vs last mont h",
     statsColor: "#17BDD3",
-    isTrendingUp: true
+    isTrendingUp: true,
   },
   {
     title: "Pending Approvals",
@@ -49,7 +49,7 @@ export const mockDashboardCards = [
     value: "8",
     stats: "+12% vs last month",
     statsColor: "#FFB51D",
-    isTrendingUp: true
+    isTrendingUp: true,
   },
   {
     title: "Approved This Month",
@@ -58,7 +58,7 @@ export const mockDashboardCards = [
     value: "34",
     stats: "+12% vs last month",
     statsColor: "#08DD7D",
-    isTrendingUp: true
+    isTrendingUp: true,
   },
   {
     title: "Require Attention",
@@ -67,11 +67,32 @@ export const mockDashboardCards = [
     value: "12",
     stats: "+12% vs last month",
     statsColor: "#FF4949",
-    isTrendingUp: true
-  }
+    isTrendingUp: true,
+  },
+];
+
+export const mockNavCards = [
+  {
+    title: "Generate SPC/PIL",
+    link: "/generate-SPC-PIL",
+    icon: "Icon-01.svg",
+    iconBgColor: "#17BDD3",
+  },
+  {
+    title: "Compare Document",
+    link: "/compare-documents",
+    icon: "Icon-02.svg",
+    iconBgColor: "#0088FF",
+  },
+  {
+    title: "View Repository",
+    link: "/document-repository",
+    icon: "Icon-03.svg",
+    iconBgColor: "#056FA3",
+  },
 ];
 
 // Simulate API delay
 export const simulateDelay = (ms: number = 1000): Promise<void> => {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 };

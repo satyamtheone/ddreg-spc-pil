@@ -270,20 +270,20 @@ User Opens App
 
 All routes under `app/(authenticated)/` share a common layout that includes the **Sidebar** and **Header**.
 
-| Route                        | Page File                            | Nav Title               | Status                         |
-| ---------------------------- | ------------------------------------ | ----------------------- | ------------------------------ |
-| `/dashboard`               | `dashboard/page.tsx`               | Dashboard               | ✅ Implemented                 |
-| `/generate-SPC-PIL`        | `generate-SPC-PIL/page.tsx`        | Generate SPC / PIL      | 🚧 Placeholder                 |
-| `/document-editor`         | `document-editor/page.tsx`         | Document Editor         | 🚧 Placeholder                 |
-| `/workflow-management`     | `workflow-management/page.tsx`     | Workflow Management     | 🚧 Placeholder                 |
-| `/document-repository`     | `document-repository/page.tsx`     | Document Repository     | 🚧 Placeholder                 |
-| `/template-library`        | `template-library/page.tsx`        | Template Library        | 🚧 Placeholder                 |
-| `/regulatory-intelligence` | `regulatory-intelligence/page.tsx` | Regulatory Intelligence | 🚧 Placeholder                 |
-| `/compare-documents`       | `compare-documents/page.tsx`       | Compare Documents       | 🚧 Placeholder                 |
-| `/audit-version-history`   | `audit-version-history/page.tsx`   | Audit & Version History | 🚧 Placeholder                 |
-| `/notification-center`     | `notification-center/page.tsx`     | Notification Center     | 🚧 Placeholder                 |
-| `/settings`                | `settings/page.tsx`                | Settings                | 🚧 Placeholder                 |
-| `/account`                 | `account/page.tsx`                 | Account                 | 🚧 Placeholder (Hidden in nav) |
+| Route                        | Page File                            | Nav Title               | Status           |
+| ---------------------------- | ------------------------------------ | ----------------------- | ---------------- |
+| `/dashboard`               | `dashboard/page.tsx`               | Dashboard               | ✅ Implemented   |
+| `/generate-SPC-PIL`        | `generate-SPC-PIL/page.tsx`        | Generate SPC / PIL      | 🚧 Placeholder   |
+| `/document-editor`         | `document-editor/page.tsx`         | Document Editor         | 🚧 Placeholder   |
+| `/workflow-management`     | `workflow-management/page.tsx`     | Workflow Management     | 🚧 Placeholder   |
+| `/document-repository`     | `document-repository/page.tsx`     | Document Repository     | 🚧 Placeholder   |
+| `/template-library`        | `template-library/page.tsx`        | Template Library        | 🚧 Placeholder   |
+| `/regulatory-intelligence` | `regulatory-intelligence/page.tsx` | Regulatory Intelligence | 🚧 Placeholder   |
+| `/compare-documents`       | `compare-documents/page.tsx`       | Compare Documents       | 🚧 Placeholder   |
+| `/audit-version-history`   | `audit-version-history/page.tsx`   | Audit & Version History | 🚧 Placeholder   |
+| `/notification-center`     | `notification-center/page.tsx`     | Notification Center     | 🚧 Placeholder   |
+| `/settings`                | `settings/page.tsx`                | Settings                | 🚧 Placeholder   |
+| `/account`                 | `account/page.tsx`                 | Account                 | 🚧 Placeholder  |
 
 > **Note:** `(authenticated)` is a Next.js **Route Group** — the parentheses mean it does NOT affect the URL path. It only groups routes to apply a shared layout.
 
@@ -308,7 +308,7 @@ The `AuthForm` component manages a **5-state authentication flow** using a singl
        │                               │
        │ [No 2FA]                      │ [Back]
        ▼                               ▼
-  /dashboard                      ┌─────────┐
+  /dashboard                       ┌─────────┐
                                    │  login  │
   ┌─────────┐   [Click Forgot]     └─────────┘
   │  login  │ ──────────────────►
@@ -608,10 +608,10 @@ Displays a 4-column grid of statistic cards:
 
 ```
 ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-│  127            🔵│  8             🟡│  34            🟢│  12            🔴│
-│  Documents       │  Pending         │  Approved This   │  Require         │
-│  Generated       │  Approvals       │  Month           │  Attention       │
-│  📈 +12% ...     │  📈 +12% ...     │  📈 +12% ...     │  📈 +12% ...     │
+│  127            │ │  8              │ │  34             │ │  12             │
+│  Documents      │ │  Pending        │ │  Approved This  │ │  Require        │
+│  Generated      │ │  Approvals      │ │  Month          │ │  Attention      │
+│  📈 +12% ... 	  │ │ 📈 +12% ...     │ │ 📈 +12% ...    │ │  📈 +12% ...   │
 └─────────────────┘ └─────────────────┘ └─────────────────┘ └─────────────────┘
 ```
 
@@ -989,43 +989,43 @@ npm run lint
 
  User Input           AuthForm Component           API Layer              Storage
 ─────────┐           ─────────────────────        ──────────────         ──────────
-         │                                                            
- Email + │──[submit]──► handleLogin()         
- Password│             │                      
-         │             ├──► toast.promise(    
-         │             │     mainApiCaller(    
+         │                                                          
+ Email + │──[submit]──► handleLogin()       
+ Password│             │                    
+         │             ├──► toast.promise(  
+         │             │     mainApiCaller(  
          │             │       "/api/login",   
-         │             │       "POST",         
+         │             │       "POST",       
          │             │       {email, password}   
-         │             │     )                 
-         │             │                          ──────────────     
-         │             │                          mockUsers.find()    
-         │             │                          ──────────────     
-         │             │◄──── { userId,       
+         │             │     )               
+         │             │                          ──────────────   
+         │             │                          mockUsers.find()  
+         │             │                          ──────────────   
+         │             │◄──── { userId,     
          │             │       twoFactorRequired:  
-         │             │       true }          
-         │             │                      
+         │             │       true }        
+         │             │                    
          │             ├──► setAuthState("otp")   
          │             ├──► setUserId(userId)  
-         │             │                      
- 6-digit │──[input]───► OTPInput onChange()    
-   OTP   │             │                      
+         │             │                    
+ 6-digit │──[input]───► OTPInput onChange()  
+   OTP   │             │                    
          │             ├──► handleVerifyOTP()  
-         │             │                      
-         │             ├──► mainApiCaller(     
+         │             │                    
+         │             ├──► mainApiCaller(   
          │             │     "/api/verify-otp",  
-         │             │     "POST",           
-         │             │     {userId, otp}     
-         │             │   )                   
-         │             │                          ──────────────     
+         │             │     "POST",         
+         │             │     {userId, otp}   
+         │             │   )                 
+         │             │                          ──────────────   
          │             │                          mockOtpData check   
-         │             │                          ──────────────     
-         │             │◄──── { res: user,     
-         │             │       message }        
+         │             │                          ──────────────   
+         │             │◄──── { res: user,   
+         │             │       message }      
          │             │                                                ──────────
          │             ├──► localStorage.setItem("user", JSON)  ──────► browser
          │             │                                                 storage
-         │             └──► router.push("/dashboard")       
+         │             └──► router.push("/dashboard")     
 ```
 
 ---
