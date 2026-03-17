@@ -129,6 +129,7 @@ body {
   }
   .bg-gradient {
     background: linear-gradient(269deg, #00cfad 0.74%, #0469ce 99.01%);
+    @apply text-white
   }
 
   .bg-gradient-hover:hover {
@@ -244,4 +245,17 @@ body {
   .body-bg {
     background-color: #F4F5FB;
   }
+}
+
+
+.spcBNS {
+  @apply border border-slate-300 p-4 py-6  shadow-md shadow-[#3b82f6]/20 bg-white
+}
+
+.spc-primary-bg {
+  @apply bg-linear-to-r from-sky-600 to-teal-500 text-white
+}
+
+.spc-primary-bg-hover {
+@apply  hover:from-teal-500 hover:to-sky-600
 }

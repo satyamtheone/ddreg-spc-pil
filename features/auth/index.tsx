@@ -1,26 +1,35 @@
+"Use client"
 import Image from "next/image";
-import { AuthForm } from "./components/authForm";
+import image from '../../public/auth/loginimage.png'
+import SignIn from "./signIn";
 
 export const AuthPage: React.FC = () => {
   return (
-    <div className="w-full min-h-screen bg-[url('/auth/Icon-01.svg')] bg-cover bg-center flex items-center justify-center lg:justify-between p-2 lg:p-20">
-      <div className="w-full flex">
+    <div className="w-full h-screen bg-[url('/auth/Icon-01.svg')] bg-cover bg-center flex items-center justify-center lg:justify-between p-2 lg:p-20">
+      <div className="w-full h-full flex">
         {/* Left side - Login Form */}
-        <div className="lg:w-1/2 flex items-center ">
-          <AuthForm />
+        <div className="lg:w-1/3 flex items-center ">
+          <div  className="w-full spcBNS rounded-4xl">
+          <SignIn/>
+          </div>
         </div>
+        
 
         {/* Right side - Image */}
-        <div className="lg:w-1/2 relative hidden lg:block">
+        <div className="lg:w-2/3 h-full relative hidden lg:block">
+        <div className="w-full h-full">
           <Image
-            src="/auth/Icon-02.svg"
-            alt="Authentication illustration"
-            fill
-          />
+              priority
+              src={image}
+              className="animate-dialog-slide-in h-full object-contain"
+              loading="eager"
+              alt="login image"
+            />
+            </div>
         </div>
       </div>
     </div>
   );
 };
 
-export { AuthForm } from "./components/authForm";
+

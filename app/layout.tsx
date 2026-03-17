@@ -2,6 +2,8 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "react-hot-toast";
+import DrawerProvider from "@/components/hooks/DrawerProvider";
+import DialogProvider from "@/components/hooks/DialogProvider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -27,12 +29,14 @@ export default function RootLayout({
         className={`${poppins.variable} antialiased custom-scrollbar`}
       >
         <Toaster
-          position="top-center"
+          position="top-right"
           reverseOrder={false}
         />
-        <TooltipProvider>
-        {children}
-        </TooltipProvider>
+       <DrawerProvider>
+              <DialogProvider>
+                {children}
+              </DialogProvider>
+            </DrawerProvider>
       </body>
     </html>
   );
