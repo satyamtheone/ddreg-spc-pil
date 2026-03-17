@@ -249,13 +249,105 @@ body {
 
 
 .spcBNS {
-  @apply border border-slate-300 p-4 py-6  shadow-md shadow-[#3b82f6]/20 bg-white
+  @apply border border-slate-300 shadow-md shadow-[#3b82f6]/20
 }
 
+.spcCard {
+  @apply border border-slate-300 shadow-md shadow-[#3b82f6]/20 p-4 py-6 bg-white
+}
 .spc-primary-bg {
   @apply bg-linear-to-r from-sky-600 to-teal-500 text-white
 }
 
+.custom-button {
+  @apply hover:scale-3d hover:scale-105 active:scale-3d active:scale-95 cursor-pointer border-cyan-200 md:p-4 p-2 min-w-max transition-all duration-100 rounded-[10px];
+}
+
+.custom-button-hover-classes {
+  @apply shadow-md hover:scale-3d hover:scale-105 active:scale-3d active:scale-95 cursor-pointer transition-all duration-100 rounded-[10px];
+}
+
+.custom-dynamicButton-hover-classes {
+  @apply active:scale-3d active:scale-95 cursor-pointer transition-all duration-100;
+}
 .spc-primary-bg-hover {
 @apply  hover:from-teal-500 hover:to-sky-600
+}
+@theme {
+  /* Slide In */
+  --animate-slide-in: slide-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+
+  @keyframes slide-in {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* Slide Out */
+  --animate-dialog-slide-in: slide-in 0.3s ease-out forwards;
+
+  @keyframes slide-in {
+    from {
+      transform: translateX(10%);
+      /* subtle movement */
+      opacity: 0;
+    }
+
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  --animate-dialog-slide-down: slide-down 0.3s ease-out forwards;
+
+  @keyframes slide-down {
+    from {
+      transform: translateY(-10%);
+      /* subtle movement */
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  --animate-fadeIn: fadeIn 0.3s ease-in-out;
+}
+
+
+@keyframes fadeScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotate(-10deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.animate-fadeScale {
+  animation: fadeScale 0.25s ease-in-out;
 }

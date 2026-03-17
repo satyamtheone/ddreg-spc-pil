@@ -1,3 +1,4 @@
+"use client"
 import PageHeader from "@/components/common/pageHeader"
 import UserAvatar from "./userAvatar"
 import { RiUserLine } from "react-icons/ri";
@@ -8,7 +9,7 @@ import { FaRegBuilding } from "react-icons/fa";
 const Account: React.FC =() =>{
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader />
+      <PageHeader title="My Account" subTitle="Stay updated with latest regulatory changes" />
       <div className="w-full bg-gradient p-4 py-6 shadow-md rounded-[10px] ">
         <div className=" text-xl font-semibold mb-4">Profile</div>
         <div className="flex items-center justify-between max-md:flex-wrap">
@@ -37,26 +38,29 @@ const Account: React.FC =() =>{
         </div>
       </div>
 
-      <div className="spcBNS rounded-[10px]">
+      <div className="spcCard rounded-[10px]">
         <div className=" text-xl font-semibold mb-4">Company</div>
 
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 w-full items-center">
           <ProfileTabCard
             bg={"bg-sky-700"}
             icon={<FaRegBuilding size={20} />}
             title={"Company Name"}
-            subTitle="ddreg"
+            subTitle="DDReg Pharma Pvt. Ltd."
           />
           <ProfileTabCard
             bg={"bg-cyan-500"}
             icon={<MdOutlineEmail size={20} />}
             title={"Email"}
+            subTitle="satyam.s@ddreg.in"
           />
           <ProfileTabCard
             bg={"bg-teal-500"}
             icon={<FaRegBuilding size={20} />}
             title={"Role"}
+            subTitle="Project Manager"
           />
+         
         </div>
       </div>
     </div>

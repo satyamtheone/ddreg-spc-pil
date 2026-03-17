@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import { Form, Formik, FormikHelpers } from "formik";
-import { POST } from "@/lib/http-methods";
 import {
   MdOutlineMailOutline,
   MdOutlineVisibility,
@@ -14,6 +14,7 @@ import FormikInput from "@/components/FormikComponents/FormikInput";
 import { handleVisibility } from "@/lib/utils";
 import DynamicButton from "@/components/common/DynamicButton";
 import LoginLinks from "./loginLinks";
+import { useLoginMutation } from "@/lib/redux/slices/authApi";
 
 // ---- TYPES ----
 type LoginValues = {
@@ -45,9 +46,10 @@ function LoginForm({
   setShowOtpForm,
   setUserEmail,
 }: Props) {
-  // const { refreshSession } = useAuth();
   const router = useRouter();
   const [type, setType] = useState<"password" | "text">("password");
+
+  const [login, { isLoading ,isError,error}] = useLoginMutation();
 
   const onSubmit = async (
     values: LoginValues,
@@ -57,36 +59,33 @@ function LoginForm({
     setShowOtpForm(false);
 
     try {
-      // const { data } = await POST("/auth/login", values);
+      const data = await login(values).unwrap();
 
-      // if (data.code === "FETCHED") {
-      //   setShowOtpForm(false);
-
-      //   const { token, ...userInfo } = data;
-      //   localStorage.setItem("userInfo", JSON.stringify(userInfo));
-
-      //   // refreshSession();
-
-      //   if (data?.user?.twoFactor === false) {
-      //     document.cookie = "otp_verified=true; path=/; SameSite=Lax";
-      //     router.push("/dashboard");
-      //   }
-
-      //   toast.success("Logged in Successfully.");
-      // } else if (data.code === "OTP_SENT") {
-      //   setShowOtpForm(true);
-      //   toast.success(data.message);
-      // } else {
-      //   toast.error("Login Failed! Try Again.");
-      // }
-      router.push("/dashboard")
+      if (data?.otp === false || data?.accessToken) {
+        setShowOtpForm(false);
+        router.push("/dashboard");
+        toast.success("Logged in Successfully.");
+      } else if (data.otp === true) {
+        setShowOtpForm(true);
+        toast.success(data?.message);
+      } else {
+        toast.error("Login Failed! Try Again.");
+      }
+       localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error: any) {
       setShowOtpForm(false);
-      toast.error(error?.message || "Login failed");
+      toast.error(error?.data?.message || "Login failed");
     } finally {
       actions.setSubmitting(false);
     }
   };
+
+  useEffect(() => {
+  if (isError) {
+    toast.error((error as any)?.data?.message || "Login failed");
+    setShowOtpForm(false);
+  }
+}, [isError, error]);
 
   return (
     <Formik<LoginValues>
@@ -95,11 +94,11 @@ function LoginForm({
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      {({ isSubmitting, values }) => (
+      {({ values }) => (
         <div className="w-full flex flex-col gap-9 animate-dialog-slide-in">
           <div className="flex flex-col gap-3">
             <h2 className="font-semibold md:text-4xl text-2xl">
-            Login to Your Account
+              Login to Your Account
             </h2>
             <h6>Please sign in to continue.</h6>
           </div>
@@ -111,9 +110,7 @@ function LoginForm({
                 type="email"
                 placeholder="Enter Email Address"
                 label="Email"
-                sideIcon={
-                  <MdOutlineMailOutline className="h-6 w-6" />
-                }
+                sideIcon={<MdOutlineMailOutline className="h-6 w-6" />}
               />
 
               <FormikInput
@@ -150,8 +147,8 @@ function LoginForm({
 
               <DynamicButton
                 variant="submit"
-                text={isSubmitting ? "Signing In..." : "Sign In"}
-                isSubmitting={isSubmitting}
+                text={isLoading ? "Signing In..." : "Sign In"}
+                isSubmitting={isLoading}
               />
             </div>
           </Form>

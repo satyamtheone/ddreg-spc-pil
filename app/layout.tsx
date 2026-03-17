@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "react-hot-toast";
 import DrawerProvider from "@/components/hooks/DrawerProvider";
 import DialogProvider from "@/components/hooks/DialogProvider";
+import ReduxProvider from "@/lib/redux/reduxProvider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -28,6 +29,7 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} antialiased custom-scrollbar`}
       >
+         <ReduxProvider>
         <Toaster
           position="top-right"
           reverseOrder={false}
@@ -37,6 +39,7 @@ export default function RootLayout({
                 {children}
               </DialogProvider>
             </DrawerProvider>
+            </ReduxProvider>
       </body>
     </html>
   );

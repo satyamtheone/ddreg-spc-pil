@@ -9,7 +9,7 @@ export const AuthPage: React.FC = () => {
       <div className="w-full h-full flex">
         {/* Left side - Login Form */}
         <div className="lg:w-1/3 flex items-center ">
-          <div  className="w-full spcBNS rounded-4xl">
+          <div  className="w-full spcCard rounded-4xl">
           <SignIn/>
           </div>
         </div>

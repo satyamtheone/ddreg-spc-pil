@@ -1,12 +1,13 @@
 "use client";
+
 import React, { RefObject } from "react";
 import { Form, Field, ErrorMessage, Formik, FormikHelpers } from "formik";
 import { MdArrowBackIos } from "react-icons/md";
-import { POST } from "@/lib/http-methods";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import DynamicButton from "@/components/common/DynamicButton";
+import { useVerifyOtpMutation } from "@/lib/redux/slices/authApi";
 
 // ---- TYPES ----
 type OtpValues = {
@@ -18,18 +19,8 @@ type Props = {
   userEmail: string;
   otpValues: string[];
   otpRefs: RefObject<(HTMLInputElement | null)[]>;
-  handleOtpChange: (
-    index: number,
-    value: string,
-    setFieldValue: (field: string, value: any) => void,
-    isPaste?: boolean
-  ) => void;
-  handleOtpKeyDown: (
-    index: number,
-    e: React.KeyboardEvent<HTMLInputElement>,
-    setFieldValue: (field: string, value: any) => void,
-    isPaste?: boolean
-  ) => void;
+  handleOtpChange: any;
+  handleOtpKeyDown: any;
   handleresendOtp: () => void;
   resendCooldown: boolean;
   resendSecondsLeft: number;
@@ -57,31 +48,28 @@ function OTPForm({
   handleBackToLogin,
 }: Props) {
   const router = useRouter();
-  // const { refreshSession } = useAuth();
+  const [verifyOtp, { isLoading }] = useVerifyOtpMutation();
 
   const onOtpSubmit = async (
     values: OtpValues,
     actions: FormikHelpers<OtpValues>
   ) => {
-    const payload = { ...values, email: userEmail };
+    const userInfo = localStorage.getItem("userInfo"); 
+    const parsedUser = userInfo ? JSON.parse(userInfo) : null;
+    const payload = { ...values, tempToken: parsedUser.tempToken
+ };
 
     try {
-      const { data } = await POST("/auth/verify-otp", payload);
-
-      if (data.code === "OTP_VERIFIED") {
-        document.cookie = "otp_verified=true; path=/; SameSite=Lax";
-
-        const { token, ...userInfo } = data;
-        localStorage.setItem("userInfo", JSON.stringify(userInfo));
-
-        // refreshSession();
+      const data = await verifyOtp(payload).unwrap();
+      if (data.accessToken) {
+        localStorage.setItem("userInfo", JSON.stringify(data));
         toast.success("Logged in Successfully.");
         router.push("/dashboard");
       } else {
         toast.error(data.message);
       }
     } catch (error: any) {
-      toast.error(error?.message || "OTP verification failed");
+      toast.error(error?.data?.message || "OTP verification failed");
     } finally {
       actions.setSubmitting(false);
     }
@@ -120,11 +108,7 @@ function OTPForm({
                     className="h-12 text-center p-2.5 w-full rounded-md border border-neutral-200 text-sm shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan-600"
                     value={value}
                     onChange={(e) =>
-                      handleOtpChange(
-                        index,
-                        e.target.value,
-                        setFieldValue
-                      )
+                      handleOtpChange(index, e.target.value, setFieldValue)
                     }
                     onKeyDown={(e) =>
                       handleOtpKeyDown(index, e, setFieldValue)
@@ -162,21 +146,16 @@ function OTPForm({
               </div>
             </div>
 
-            <div className="py-4 pt-10">
-              {/* <LoginLinks /> */}
-            </div>
-
             <div className="flex flex-col gap-4 my-4">
               <DynamicButton
                 type="submit"
-                isSubmitting={isSubmitting}
-                text={isSubmitting ? "Verifying..." : "Verify OTP"}
+                isSubmitting={isLoading}
+                text={isLoading ? "Verifying..." : "Verify OTP"}
                 variant="outline"
               />
 
               <DynamicButton
                 type="button"
-                isSubmitting={isSubmitting}
                 text="Back to Login"
                 variant="submit"
                 icon={<MdArrowBackIos className="h-5 w-5 text-white" />}
