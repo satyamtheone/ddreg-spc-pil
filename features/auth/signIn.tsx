@@ -4,8 +4,7 @@ import { toast } from "react-hot-toast";
 import image from "../../public/auth/mainLogo.svg";
 import { POST } from "@/lib/http-methods";
 import Image from "next/image";
-import ForgotPasswordOTPForm from "./ForgotPasswordOTPForm";
-import ResetPasswordForm from "./ResetPasswordForm";
+import ForgotPasswordOTPForm, { OtpValues } from "./ForgotPasswordOTPForm";
 import ForgotPasswordForm from "./ForgotPasswordForm";
 import OTPForm from "./OTPForm";
 import LoginForm from "./LoginForm";
@@ -18,15 +17,24 @@ function SignIn() {
   const [showForgotPasswordForm, setShowForgotPasswordForm] = useState(false);
   const [showForgotOtpForm, setShowForgotOtpForm] = useState(false);
   const [showResetPasswordForm, setShowResetPasswordForm] = useState(false);
-
   const [userEmail, setUserEmail] = useState("");
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
 
   const [otpValues, setOtpValues] = useState<OtpArray>([
-    "", "", "", "", "", "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
   ]);
   const [forgotOtpValues, setForgotOtpValues] = useState<OtpArray>([
-    "", "", "", "", "", "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
   ]);
 
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -59,11 +67,11 @@ function SignIn() {
     email: forgotPasswordEmail || userEmail || "",
   };
 
-  const forgotOtpInitialValues = { otp: "" };
-
-  const resetPasswordInitialValues = {
+  const forgotOtpInitialValues = {
+    otp: "",
+    email: "",
+    newPass: "",
     password: "",
-    confirmPassword: "",
   };
 
   // ---- OTP CHANGE ----
@@ -71,7 +79,7 @@ function SignIn() {
     index: number,
     value: string,
     setFieldValue: (field: string, value: any) => void,
-    isForForgot = false
+    isForForgot = false,
   ) => {
     if (value.length > 1) return;
     if (value && !/^\d$/.test(value)) return;
@@ -98,7 +106,7 @@ function SignIn() {
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>,
     setFieldValue: (field: string, value: any) => void,
-    isForForgot = false
+    isForForgot = false,
   ) => {
     const currentOtpValues = isForForgot ? forgotOtpValues : otpValues;
     const refs = isForForgot ? forgotOtpRefs : otpRefs;
@@ -158,11 +166,8 @@ function SignIn() {
     setResendSecondsLeft(RESEND_COOLDOWN_SECONDS);
 
     try {
-      await POST("/auth/resend-otp", {
+      await POST("/auth/forgotPassword", {
         email: emailToSend,
-        Subject: forgotPasswordEmail
-          ? "Password Reset OTP"
-          : "Login OTP",
       });
     } catch (error: any) {
       toast.error(error?.message || "Failed to resend OTP");
@@ -243,15 +248,6 @@ function SignIn() {
           />
         );
 
-      case "reset-password":
-        return (
-          <ResetPasswordForm
-            resetPasswordInitialValues={resetPasswordInitialValues}
-            handleBackToLogin={handleBackToLogin}
-            forgotPasswordEmail={forgotPasswordEmail}
-          />
-        );
-
       case "forgot-otp":
         return (
           <ForgotPasswordOTPForm
@@ -279,9 +275,7 @@ function SignIn() {
       <div className="flex justify-start w-full">
         <Image priority src={image} alt="login image" />
       </div>
-      <div className="overflow-hidden w-full p-1">
-        {renderForm()}
-      </div>
+      <div className="overflow-hidden w-full p-1">{renderForm()}</div>
     </div>
   );
 }

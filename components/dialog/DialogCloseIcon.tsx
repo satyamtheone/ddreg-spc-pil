@@ -9,9 +9,9 @@ const DialogCloseIcon: React.FC = () => {
   return (
     <div
       onClick={closeDialog}
-      className="border shadow-md border-gray-200 rounded-lg md:h-12.5 h-8 w-8 md:w-12.5 flex justify-center items-center cursor-pointer hover:text-white hover:bg-red-400"
+      className="border group shadow-md border-gray-200 bg-white rounded-lg md:h-12.5 h-8 w-8 md:w-12.5 flex justify-center items-center cursor-pointer hover:text-white hover:bg-red-400"
     >
-      <HiXMark className="h-8 w-8" />
+      <HiXMark className="h-6 w-6 text-black group-hover:text-white" />
     </div>
   );
 };

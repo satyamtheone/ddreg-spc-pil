@@ -6,9 +6,14 @@ import { NavData } from "@/lib/NavData";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
+import { IoLogOut } from "react-icons/io5";
+import ModalProvider from "../dialog/Dialog";
+import LogoutDialog from "@/features/auth/logoutDialog";
+import { useDialog } from "../hooks/DialogProvider";
 
 export default function Header() {
   const pathname = usePathname();
+  const { openDialog } = useDialog();
 
   const { title, icon, className, iconFolder } = useMemo(() => {
     const matched = NavData.find((item) => {
@@ -88,16 +93,20 @@ export default function Header() {
 
             <Button
               variant="ghost"
-              size="icon"
-              className={`p-2 border rounded-lg transition-colors cursor-pointer ${iconFolder === "white" ? "text-white hover:bg-white/10 border-white" : "text-black hover:bg-gray-100"}`}
+              onClick={() => {
+                openDialog({
+                  children: (
+                    <ModalProvider
+                      size="md:w-200 w-11/12 "
+                      title={`Logout`}
+                      children={<LogoutDialog />}
+                    />
+                  ),
+                });
+              }}
+              className={` border rounded-lg transition-colors cursor-pointer ${iconFolder === "white" ? "text-white hover:bg-white/10 border-white" : "text-black hover:bg-gray-100"}`}
             >
-              <Image
-                src={`/header/${iconFolder}/Icon-03.svg`}
-                alt="Icon 03"
-                width={24}
-                height={24}
-                className="object-contain"
-              />
+              <IoLogOut className="h-6 w-6" />
             </Button>
           </div>
         </div>

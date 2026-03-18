@@ -1,16 +1,20 @@
 "use client";
 
-import React, { RefObject } from "react";
+import React, { RefObject, useEffect } from "react";
 import { Form, Field, ErrorMessage, Formik, FormikHelpers } from "formik";
 import { MdArrowBackIos } from "react-icons/md";
-import { POST } from "@/lib/http-methods";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 import DynamicButton from "@/components/common/DynamicButton";
+import { useConfirmPasswordMutation } from "@/lib/redux/slices/authApi";
+import { passwordRules } from "@/lib/utilsSchema";
+import FormikPassword from "@/components/FormikComponents/FormikPassword";
 
 // ---- TYPES ----
-type OtpValues = {
+export type OtpValues = {
+  email: string;
   otp: string;
+  newPass: string;
 };
 
 type Props = {
@@ -22,13 +26,13 @@ type Props = {
     index: number,
     value: string,
     setFieldValue: (field: string, value: any) => void,
-    isForForgot?: boolean
+    isForForgot?: boolean,
   ) => void;
   handleOtpKeyDown: (
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>,
     setFieldValue: (field: string, value: any) => void,
-    isForForgot?: boolean
+    isForForgot?: boolean,
   ) => void;
   handleresendOtp: () => void;
   resendCooldown: boolean;
@@ -43,6 +47,8 @@ const otpValidationSchema = Yup.object({
     .required("OTP is required")
     .length(6, "OTP must be 6 digits")
     .matches(/^\d+$/, "OTP must contain only numbers"),
+  newPass: passwordRules.required(),
+  password: passwordRules.oneOf([Yup.ref("newPass")], "Passwords must match"),
 });
 
 function ForgotPasswordOTPForm({
@@ -56,32 +62,40 @@ function ForgotPasswordOTPForm({
   resendCooldown,
   resendSecondsLeft,
   handleBackToLogin,
-  setShowResetPasswordForm,
 }: Props) {
+  const [confirmPassword, { isLoading, isError, error }] =
+    useConfirmPasswordMutation();
   const onForgotOtpSubmit = async (
     values: OtpValues,
-    actions: FormikHelpers<OtpValues>
+    actions: FormikHelpers<OtpValues>,
   ) => {
-    const payload = { ...values, email: forgotPasswordEmail };
+    const payload = {
+      otp: values.otp,
+      email: forgotPasswordEmail,
+      newPass: values.newPass,
+    };
 
     try {
-      const { data } = await POST(
-        "/auth/forget-password/verify-otp",
-        payload
-      );
-
-      if (data.code === "OTP_VERIFIED") {
-        setShowResetPasswordForm(true);
-        toast.success(data.message || "OTP verified successfully.");
+      const data = await confirmPassword(payload).unwrap();
+      if (data.success) {
+        handleBackToLogin();
+        toast.success(data.message || "Password Changed successfully.");
       } else {
-        toast.error(data.message || "Invalid OTP. Try Again.");
+        toast.error(data.message || "Invalid Password. Try Again.");
       }
     } catch (error: any) {
-      toast.error(error?.message || "Invalid OTP. Please try again.");
+      toast.error(error?.message || "Invalid Password. Please try again.");
     } finally {
       actions.setSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    if (isError) {
+      toast.error((error as any)?.data?.message || "Login failed");
+      handleBackToLogin();
+    }
+  }, [isError, error]);
 
   return (
     <Formik<OtpValues>
@@ -90,12 +104,10 @@ function ForgotPasswordOTPForm({
       validationSchema={otpValidationSchema}
       onSubmit={onForgotOtpSubmit}
     >
-      {({ isSubmitting, setFieldValue }) => (
+      {({ isSubmitting, setFieldValue, isValid, dirty }) => (
         <Form className="w-full flex flex-col gap-4 animate-dialog-slide-in">
           <div className="flex flex-col gap-1">
-            <h2 className="font-semibold md:text-4xl text-2xl">
-              Verify OTP
-            </h2>
+            <h2 className="font-semibold md:text-4xl text-2xl">Verify OTP</h2>
             <h6>We've sent a 6-digit verification code to</h6>
             <p className="text-cyan-500">{forgotPasswordEmail}</p>
           </div>
@@ -112,15 +124,10 @@ function ForgotPasswordOTPForm({
                     forgotOtpRefs.current[index] = el;
                   }}
                   type="text"
-                  className="h-12 text-center p-2.5 w-full rounded-md border border-neutral-200 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan-600"
+                  className="md:h-12 h-9 text-center p-2.5 w-full rounded-md border border-neutral-200 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan-600"
                   value={value}
                   onChange={(e) =>
-                    handleOtpChange(
-                      index,
-                      e.target.value,
-                      setFieldValue,
-                      true
-                    )
+                    handleOtpChange(index, e.target.value, setFieldValue, true)
                   }
                   onKeyDown={(e) =>
                     handleOtpKeyDown(index, e, setFieldValue, true)
@@ -162,17 +169,22 @@ function ForgotPasswordOTPForm({
             </div>
           </div>
 
+          <div>
+            <FormikPassword name="newPass" label="Confirm Password " />
+            <FormikPassword name="password" label="New Password" />
+          </div>
+
           <div className="flex flex-col gap-2 my-4">
             <DynamicButton
               type="submit"
-              isSubmitting={isSubmitting}
-              text={isSubmitting ? "Verifying..." : "Verify OTP"}
+              isSubmitting={isLoading || isSubmitting || !dirty || !isValid}
+              text={isSubmitting ? "Updating..." : "Update Password"}
               variant="outline"
             />
 
             <DynamicButton
               type="button"
-              isSubmitting={isSubmitting}
+              isSubmitting={isSubmitting || isLoading}
               text="Back to Login"
               variant="submit"
               icon={<MdArrowBackIos className="h-5 w-5 text-white" />}

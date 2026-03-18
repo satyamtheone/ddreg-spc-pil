@@ -8,6 +8,10 @@ import { FaRegBuilding } from "react-icons/fa";
 import { useGetMeQuery } from "@/lib/redux/slices/userApi";
 import ProfileSkeleton from "@/components/common/skletons/profileSkeleton";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
+import { LiaUserAstronautSolid } from "react-icons/lia";
+import { FaEarthAsia } from "react-icons/fa6";
+import { FaLanguage } from "react-icons/fa";
+import { RiTimeZoneLine } from "react-icons/ri";
 
 const Account: React.FC = () => {
   const query = useGetMeQuery();
@@ -65,26 +69,26 @@ const Account: React.FC = () => {
               />
               <ProfileTabCard
                 bg={"bg-teal-500"}
-                icon={<FaRegBuilding size={20} />}
+                icon={<LiaUserAstronautSolid size={20} />}
                 title={"Role"}
                 subTitle={data?.data?.role || "-"}
               />
               <ProfileTabCard
-                bg={"bg-teal-500"}
-                icon={<FaRegBuilding size={20} />}
-                title={"Role"}
+                bg={"bg-green-600"}
+                icon={<FaEarthAsia size={20} />}
+                title={"Country"}
                 subTitle={data?.data?.country || "-"}
               />
               <ProfileTabCard
-                bg={"bg-teal-500"}
-                icon={<FaRegBuilding size={20} />}
-                title={"Role"}
+                bg={"bg-sky-600"}
+                icon={<FaLanguage size={20} />}
+                title={"Language"}
                 subTitle={data?.data?.language || "-"}
               />
               <ProfileTabCard
-                bg={"bg-teal-500"}
-                icon={<FaRegBuilding size={20} />}
-                title={"Role"}
+                bg={"bg-teal-700"}
+                icon={<RiTimeZoneLine size={20} />}
+                title={"Time Zone"}
                 subTitle={data?.data?.timeZone || "-"}
               />
             </div>

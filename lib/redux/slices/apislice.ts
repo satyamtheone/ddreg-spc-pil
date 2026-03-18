@@ -88,7 +88,7 @@ const baseQueryWithReauth: BaseQueryFn<
         // 🔁 Call refresh API
         const refreshResult = await baseQuery(
           {
-            url: "/auth/refresh-token", // 🔁 change if needed
+            url: "/auth/refresh",
             method: "POST",
             body: { refreshToken },
           },

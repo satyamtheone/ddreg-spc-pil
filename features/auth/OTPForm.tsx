@@ -1,6 +1,6 @@
 "use client";
 
-import React, { RefObject } from "react";
+import React, { RefObject, useEffect } from "react";
 import { Form, Field, ErrorMessage, Formik, FormikHelpers } from "formik";
 import { MdArrowBackIos } from "react-icons/md";
 import * as Yup from "yup";
@@ -48,26 +48,25 @@ function OTPForm({
   handleBackToLogin,
 }: Props) {
   const router = useRouter();
-  const [verifyOtp, { isLoading }] = useVerifyOtpMutation();
+  const [verifyOtp, { isLoading, isError, error }] = useVerifyOtpMutation();
 
   const onOtpSubmit = async (
     values: OtpValues,
-    actions: FormikHelpers<OtpValues>
+    actions: FormikHelpers<OtpValues>,
   ) => {
-    const userInfo = localStorage.getItem("userInfo"); 
+    const userInfo = localStorage.getItem("userInfo");
     const parsedUser = userInfo ? JSON.parse(userInfo) : null;
-    const payload = { ...values, tempToken: parsedUser.tempToken
- };
+    const payload = { ...values, tempToken: parsedUser.data.tempToken };
 
     try {
       const data = await verifyOtp(payload).unwrap();
-      if (data.accessToken) {
-      document.cookie = `accessToken=${data.accessToken}; path=/`;
-      document.cookie = `refreshToken=${data.refreshToken}; path=/`;
+      if (data?.data?.accessToken) {
+        document.cookie = `accessToken=${data?.data?.accessToken}; path=/`;
+        document.cookie = `refreshToken=${data?.data?.refreshToken}; path=/`;
         toast.success("Logged in Successfully.");
         router.push("/dashboard");
       } else {
-        toast.error(data.message);
+        toast.error(data?.data?.message);
       }
     } catch (error: any) {
       toast.error(error?.data?.message || "OTP verification failed");
@@ -76,6 +75,13 @@ function OTPForm({
     }
   };
 
+  useEffect(() => {
+    if (isError) {
+      toast.error((error as any)?.data?.message || "Login failed");
+      handleBackToLogin();
+    }
+  }, [isError, error]);
+
   return (
     <Formik<OtpValues>
       enableReinitialize
@@ -83,7 +89,7 @@ function OTPForm({
       validationSchema={otpValidationSchema}
       onSubmit={onOtpSubmit}
     >
-      {({ isSubmitting, setFieldValue }) => (
+      {({ isSubmitting, setFieldValue, dirty, isValid }) => (
         <div className="w-full flex flex-col gap-9 animate-dialog-slide-in">
           <div className="flex flex-col gap-1">
             <h2 className="font-semibold md:text-4xl text-2xl">
@@ -106,14 +112,12 @@ function OTPForm({
                       otpRefs.current[index] = el;
                     }}
                     type="text"
-                    className="h-12 text-center p-2.5 w-full rounded-md border border-neutral-200 text-sm shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan-600"
+                    className="md:h-12 h-9 text-center p-2.5 w-full rounded-md border border-neutral-200 text-sm shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan-600"
                     value={value}
                     onChange={(e) =>
                       handleOtpChange(index, e.target.value, setFieldValue)
                     }
-                    onKeyDown={(e) =>
-                      handleOtpKeyDown(index, e, setFieldValue)
-                    }
+                    onKeyDown={(e) => handleOtpKeyDown(index, e, setFieldValue)}
                     maxLength={1}
                     autoComplete="off"
                   />
@@ -150,7 +154,7 @@ function OTPForm({
             <div className="flex flex-col gap-4 my-4">
               <DynamicButton
                 type="submit"
-                isSubmitting={isLoading}
+                isSubmitting={isLoading || isSubmitting || !dirty || !isValid}
                 text={isLoading ? "Verifying..." : "Verify OTP"}
                 variant="outline"
               />

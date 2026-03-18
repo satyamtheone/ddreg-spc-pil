@@ -1,12 +1,13 @@
 "use client";
 import * as Yup from "yup";
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Formik, FormikHelpers } from "formik";
 import { MdArrowBackIos } from "react-icons/md";
 import { POST } from "@/lib/http-methods";
 import toast from "react-hot-toast";
 import FormikInput from "@/components/FormikComponents/FormikInput";
 import DynamicButton from "@/components/common/DynamicButton";
+import { useForgotPasswordMutation } from "@/lib/redux/slices/authApi";
 
 interface ForgotPasswordValues {
   email: string;
@@ -29,32 +30,35 @@ function ForgotPasswordForm({
   setShowForgotOtpForm,
   setForgotPasswordEmail,
 }: ForgotPasswordFormProps) {
+  const [forgotPassword, { isLoading, isError, error }] =
+    useForgotPasswordMutation();
   const onForgotPasswordSubmit = async (
     values: ForgotPasswordValues,
-    actions: FormikHelpers<ForgotPasswordValues>
+    actions: FormikHelpers<ForgotPasswordValues>,
   ) => {
     setForgotPasswordEmail(values.email);
-
     try {
-      const { data } = await POST("/auth/sent-otp", values);
-
-      if (data.code === "OTP_SENT") {
+      const data = await forgotPassword(values).unwrap();
+      if (data.success) {
         setShowForgotOtpForm(true);
         actions.setSubmitting(false);
-        toast.success(
-          data.message || "OTP sent to your email successfully."
-        );
+        toast.success(data.message || "OTP sent to your email successfully.");
       } else {
         actions.setSubmitting(false);
         toast.error(data.message || "Failed to send OTP. Try Again.");
       }
     } catch (error: any) {
-      toast.error(
-        error?.message || "Something went wrong. Please try again."
-      );
+      toast.error(error?.message || "Something went wrong. Please try again.");
       actions.setSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    if (isError) {
+      toast.error((error as any)?.data?.message || "Login failed");
+      handleBackToLogin();
+    }
+  }, [isError, error]);
 
   return (
     <Formik<ForgotPasswordValues>
@@ -63,7 +67,7 @@ function ForgotPasswordForm({
       validationSchema={forgotPasswordValidationSchema}
       onSubmit={onForgotPasswordSubmit}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, isValid }) => (
         <Form>
           <div className="flex flex-col gap-4 animate-dialog-slide-in">
             <div>
@@ -87,14 +91,14 @@ function ForgotPasswordForm({
               <DynamicButton
                 type="submit"
                 variant="outline"
-                isSubmitting={isSubmitting}
+                isSubmitting={isLoading || isSubmitting || !isValid}
                 text={isSubmitting ? "Sending OTP..." : "Send OTP"}
               />
 
               <DynamicButton
                 type="button"
                 variant="submit"
-                isSubmitting={isSubmitting}
+                isSubmitting={isSubmitting || isLoading}
                 onClick={handleBackToLogin}
                 text="Back to Login"
                 icon={<MdArrowBackIos className="h-5 w-5 text-white" />}

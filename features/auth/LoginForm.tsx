@@ -42,7 +42,7 @@ function LoginForm({
 
   const onSubmit = async (
     values: LoginValues,
-    actions: FormikHelpers<LoginValues>
+    actions: FormikHelpers<LoginValues>,
   ) => {
     setUserEmail(values.email);
     setShowOtpForm(false);
@@ -50,20 +50,19 @@ function LoginForm({
     try {
       const data = await login(values).unwrap();
 
-      if (data?.otp === false || data?.accessToken) {
+      if (data?.data?.otp === false || data?.data?.accessToken) {
         setShowOtpForm(false);
-        document.cookie = `accessToken=${data.accessToken}; path=/`;
-        document.cookie = `refreshToken=${data.refreshToken}; path=/`;
+        document.cookie = `accessToken=${data.data?.accessToken}; path=/`;
+        document.cookie = `refreshToken=${data.data?.refreshToken}; path=/`;
         router.push("/dashboard");
         toast.success("Logged in Successfully.");
-      } else if (data.otp === true) {
+      } else if (data?.data?.otp === true) {
         localStorage.setItem("userInfo", JSON.stringify(data));
         setShowOtpForm(true);
-        toast.success(data?.message);
+        toast.success(data?.data?.message);
       } else {
         toast.error("Login Failed! Try Again.");
       }
-      
     } catch (error: any) {
       setShowOtpForm(false);
       toast.error(error?.data?.message || "Login failed");
@@ -73,11 +72,11 @@ function LoginForm({
   };
 
   useEffect(() => {
-  if (isError) {
-    toast.error((error as any)?.data?.message || "Login failed");
-    setShowOtpForm(false);
-  }
-}, [isError, error]);
+    if (isError) {
+      toast.error((error as any)?.data?.message || "Login failed");
+      setShowOtpForm(false);
+    }
+  }, [isError, error]);
 
   return (
     <Formik<LoginValues>
@@ -86,7 +85,7 @@ function LoginForm({
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      {({ values }) => (
+      {({ values, isSubmitting, dirty, isValid }) => (
         <div className="w-full flex flex-col gap-9 animate-dialog-slide-in">
           <div className="flex flex-col gap-3">
             <h2 className="font-semibold md:text-4xl text-2xl">
@@ -126,9 +125,7 @@ function LoginForm({
               <button
                 type="button"
                 className="btn btn-link p-0 text-cyan-500 font-semibold"
-                onClick={() =>
-                  handleForgotPasswordClick(values.email)
-                }
+                onClick={() => handleForgotPasswordClick(values.email)}
               >
                 Forgot Password?
               </button>
@@ -140,7 +137,7 @@ function LoginForm({
               <DynamicButton
                 variant="submit"
                 text={isLoading ? "Signing In..." : "Sign In"}
-                isSubmitting={isLoading}
+                isSubmitting={isLoading || isSubmitting || !dirty || !isValid}
               />
             </div>
           </Form>
