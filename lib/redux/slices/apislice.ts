@@ -1,54 +1,49 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {
+  createApi,
+  fetchBaseQuery,
+  BaseQueryFn,
+  FetchArgs,
+  FetchBaseQueryError,
+} from "@reduxjs/toolkit/query/react";
+import { Mutex } from "async-mutex";
 
-const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
-  let result = await baseQuery(args, api, extraOptions);
+/* ================= MUTEX ================= */
 
-  if (result.error?.status === 401) {
-    const refreshToken =
-      typeof window !== "undefined"
-        ? localStorage.getItem("refreshToken")
-        : null;
+const mutex = new Mutex();
 
-    if (!refreshToken) {
-      localStorage.clear();
-      window.location.href = "/login";
-      return result;
-    }
+/* ================= COOKIE HELPERS ================= */
 
-    const refreshResult = await baseQuery(
-      {
-        url: "/auth/refresh-token",
-        method: "POST",
-        body: { refreshToken },
-      },
-      api,
-      extraOptions
-    );
+const getCookie = (name: string): string | null => {
+  if (typeof document === "undefined") return null;
 
-    if (refreshResult.data) {
-      const newAccessToken = (refreshResult.data as any).accessToken;
-
-      localStorage.setItem("accessToken", newAccessToken);
-
-      // 🔁 retry original request
-      result = await baseQuery(args, api, extraOptions);
-    } else {
-      localStorage.clear();
-      window.location.href = "/login";
-    }
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    return parts.pop()?.split(";").shift() || null;
   }
 
-  return result;
+  return null;
 };
 
-// Base query with token support
+const setCookie = (name: string, value: string, days = 1) => {
+  if (typeof document === "undefined") return;
+
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+};
+
+const deleteCookie = (name: string) => {
+  if (typeof document === "undefined") return;
+
+  document.cookie = `${name}=; Max-Age=0; path=/`;
+};
+
+/* ================= BASE QUERY ================= */
+
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://192.168.2.159:5000/api",
   prepareHeaders: (headers) => {
-    const token =
-      typeof window !== "undefined"
-        ? localStorage.getItem("accessToken")
-        : null;
+    const token = getCookie("accessToken");
 
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
@@ -58,9 +53,92 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
+/* ================= REAUTH LOGIC ================= */
+
+const baseQueryWithReauth: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+  await mutex.waitForUnlock();
+
+  let result = await baseQuery(args, api, extraOptions);
+
+  if (
+    result.error &&
+    result.error.status === 401 &&
+    (args as FetchArgs).url !== "/auth/refresh"
+  ) {
+    if (!mutex.isLocked()) {
+      const release = await mutex.acquire();
+
+      try {
+        const refreshToken = getCookie("refreshToken");
+
+        // ❌ No refresh token → logout
+        if (!refreshToken) {
+          deleteCookie("accessToken");
+          deleteCookie("refreshToken");
+          if (typeof window !== "undefined") {
+            window.location.href = "/";
+          }
+          return result;
+        }
+
+        // 🔁 Call refresh API
+        const refreshResult = await baseQuery(
+          {
+            url: "/auth/refresh-token", // 🔁 change if needed
+            method: "POST",
+            body: { refreshToken },
+          },
+          api,
+          extraOptions,
+        );
+
+        if (refreshResult.data) {
+          const data: any = refreshResult.data;
+
+          const newAccessToken = data.accessToken;
+          const newRefreshToken = data.refreshToken;
+
+          // ✅ Save new tokens
+          setCookie("accessToken", newAccessToken, 1);
+          if (newRefreshToken) {
+            setCookie("refreshToken", newRefreshToken, 15);
+          }
+
+          // 🔁 Retry original request
+          result = await baseQuery(args, api, extraOptions);
+        } else {
+          // ❌ Refresh failed → logout
+          deleteCookie("accessToken");
+          deleteCookie("refreshToken");
+
+          if (typeof window !== "undefined") {
+            window.location.href = "/";
+          }
+        }
+      } finally {
+        release();
+      }
+    } else {
+      // 🟡 Wait for ongoing refresh
+      await mutex.waitForUnlock();
+
+      // 🔁 Retry request
+      result = await baseQuery(args, api, extraOptions);
+    }
+  }
+
+  return result;
+};
+
+/* ================= API SLICE ================= */
+
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: baseQueryWithReauth, 
+  baseQuery: baseQueryWithReauth,
   tagTypes: ["Auth"],
   endpoints: () => ({}),
 });

@@ -279,7 +279,6 @@ function SignIn() {
       <div className="flex justify-start w-full">
         <Image priority src={image} alt="login image" />
       </div>
-
       <div className="overflow-hidden w-full p-1">
         {renderForm()}
       </div>

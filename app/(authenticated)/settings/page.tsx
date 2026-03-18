@@ -2,6 +2,7 @@
 import DynamicTab from "@/components/common/DynamicTab";
 import PageHeader from "@/components/common/pageHeader";
 import { useState } from "react";
+import GeneralTabComponent from "./generalTabComponent";
 
 const Setting = () => {
   const [activeTab, setActiveTab] = useState("General");
@@ -9,7 +10,7 @@ const Setting = () => {
   const activeChild = (tab:string) => {
     switch (tab) {
       case "General":
-        return <>hi</>;
+        return <GeneralTabComponent/>;
       case "Security":
         return  <>Security</>;
          case "User":

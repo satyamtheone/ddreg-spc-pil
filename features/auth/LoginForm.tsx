@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { Form, Formik, FormikHelpers } from "formik";
 import {
@@ -7,7 +6,6 @@ import {
   MdOutlineVisibility,
   MdVisibilityOff,
 } from "react-icons/md";
-import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import FormikInput from "@/components/FormikComponents/FormikInput";
@@ -15,6 +13,7 @@ import { handleVisibility } from "@/lib/utils";
 import DynamicButton from "@/components/common/DynamicButton";
 import LoginLinks from "./loginLinks";
 import { useLoginMutation } from "@/lib/redux/slices/authApi";
+import { validationSchema } from "@/lib/utilsSchema";
 
 // ---- TYPES ----
 type LoginValues = {
@@ -29,16 +28,6 @@ type Props = {
   setUserEmail: (email: string) => void;
 };
 
-// ---- VALIDATION ----
-const validationSchema = Yup.object({
-  email: Yup.string().email().required("Email is required"),
-  password: Yup.string()
-    .required("Password is required")
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{6,})/,
-      "Must Contain 6 Characters, One Uppercase, One Number and One Special Case Character"
-    ),
-});
 
 function LoginForm({
   initialValues,
@@ -63,15 +52,18 @@ function LoginForm({
 
       if (data?.otp === false || data?.accessToken) {
         setShowOtpForm(false);
+        document.cookie = `accessToken=${data.accessToken}; path=/`;
+        document.cookie = `refreshToken=${data.refreshToken}; path=/`;
         router.push("/dashboard");
         toast.success("Logged in Successfully.");
       } else if (data.otp === true) {
+        localStorage.setItem("userInfo", JSON.stringify(data));
         setShowOtpForm(true);
         toast.success(data?.message);
       } else {
         toast.error("Login Failed! Try Again.");
       }
-       localStorage.setItem("userInfo", JSON.stringify(data));
+      
     } catch (error: any) {
       setShowOtpForm(false);
       toast.error(error?.data?.message || "Login failed");

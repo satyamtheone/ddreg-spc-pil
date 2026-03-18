@@ -20,3 +20,116 @@ export const handleVisibility = (
 };
 
 
+
+export const countries = [
+  {"value":"AT","label":"Austria"},
+  {"value":"BE","label":"Belgium"},
+  {"value":"BG","label":"Bulgaria"},
+  {"value":"HR","label":"Croatia"},
+  {"value":"CY","label":"Cyprus"},
+  {"value":"CZ","label":"Czech Republic"},
+  {"value":"DK","label":"Denmark"},
+  {"value":"EE","label":"Estonia"},
+  {"value":"FI","label":"Finland"},
+  {"value":"FR","label":"France"},
+  {"value":"DE","label":"Germany"},
+  {"value":"GR","label":"Greece"},
+  {"value":"HU","label":"Hungary"},
+  {"value":"IE","label":"Ireland"},
+  {"value":"IT","label":"Italy"},
+  {"value":"LV","label":"Latvia"},
+  {"value":"LT","label":"Lithuania"},
+  {"value":"LU","label":"Luxembourg"},
+  {"value":"MT","label":"Malta"},
+  {"value":"NL","label":"Netherlands"},
+  {"value":"PL","label":"Poland"},
+  {"value":"PT","label":"Portugal"},
+  {"value":"RO","label":"Romania"},
+  {"value":"SK","label":"Slovakia"},
+  {"value":"SI","label":"Slovenia"},
+  {"value":"ES","label":"Spain"},
+  {"value":"SE","label":"Sweden"},
+  {"value":"US","label":"United States"},
+  {"value":"GB","label":"United Kingdom"},
+  {"value":"SA","label":"Saudi Arabia"},
+  {"value":"AU","label":"Australia"}
+]
+
+
+export const languages =[
+  
+  { "label": "English", "value": "en" },
+  { "label": "Hindi", "value": "hi" },
+  { "label": "Spanish", "value": "es" },
+  { "label": "French", "value": "fr" },
+  { "label": "German", "value": "de" },
+  { "label": "Chinese (Simplified)", "value": "zh-CN" },
+  { "label": "Chinese (Traditional)", "value": "zh-TW" },
+  { "label": "Japanese", "value": "ja" },
+  { "label": "Korean", "value": "ko" },
+  { "label": "Arabic", "value": "ar" },
+  { "label": "Portuguese", "value": "pt" },
+  { "label": "Russian", "value": "ru" },
+  { "label": "Italian", "value": "it" },
+  { "label": "Dutch", "value": "nl" },
+  { "label": "Turkish", "value": "tr" },
+  { "label": "Polish", "value": "pl" },
+  { "label": "Swedish", "value": "sv" },
+  { "label": "Danish", "value": "da" },
+  { "label": "Finnish", "value": "fi" },
+  { "label": "Norwegian", "value": "no" },
+  { "label": "Thai", "value": "th" },
+  { "label": "Vietnamese", "value": "vi" },
+  { "label": "Indonesian", "value": "id" },
+  { "label": "Malay", "value": "ms" },
+  { "label": "Bengali", "value": "bn" },
+  { "label": "Punjabi", "value": "pa" },
+  { "label": "Gujarati", "value": "gu" },
+  { "label": "Marathi", "value": "mr" },
+  { "label": "Tamil", "value": "ta" },
+  { "label": "Telugu", "value": "te" },
+  { "label": "Kannada", "value": "kn" },
+  { "label": "Malayalam", "value": "ml" },
+  { "label": "Urdu", "value": "ur" }
+]
+
+
+export const timeZones =[
+  { "label": "(UTC-12:00) Baker Island", "value": "Etc/GMT+12" },
+  { "label": "(UTC-11:00) Niue", "value": "Pacific/Niue" },
+  { "label": "(UTC-10:00) Hawaii", "value": "Pacific/Honolulu" },
+  { "label": "(UTC-09:00) Alaska", "value": "America/Anchorage" },
+  { "label": "(UTC-08:00) Pacific Time (US & Canada)", "value": "America/Los_Angeles" },
+  { "label": "(UTC-07:00) Mountain Time (US & Canada)", "value": "America/Denver" },
+  { "label": "(UTC-06:00) Central Time (US & Canada)", "value": "America/Chicago" },
+  { "label": "(UTC-05:00) Eastern Time (US & Canada)", "value": "America/New_York" },
+  { "label": "(UTC-04:00) Atlantic Time (Canada)", "value": "America/Halifax" },
+  { "label": "(UTC-03:00) Buenos Aires", "value": "America/Argentina/Buenos_Aires" },
+  { "label": "(UTC-02:00) South Georgia", "value": "Atlantic/South_Georgia" },
+  { "label": "(UTC-01:00) Azores", "value": "Atlantic/Azores" },
+ 
+  { "label": "(UTC+00:00) UTC / London", "value": "Europe/London" },
+  { "label": "(UTC+01:00) Berlin, Paris", "value": "Europe/Berlin" },
+  { "label": "(UTC+02:00) Cairo", "value": "Africa/Cairo" },
+  { "label": "(UTC+03:00) Moscow", "value": "Europe/Moscow" },
+  { "label": "(UTC+03:30) Tehran", "value": "Asia/Tehran" },
+  { "label": "(UTC+04:00) Dubai", "value": "Asia/Dubai" },
+  { "label": "(UTC+04:30) Kabul", "value": "Asia/Kabul" },
+  { "label": "(UTC+05:00) Karachi", "value": "Asia/Karachi" },
+  { "label": "(UTC+05:30) India Standard Time (IST)", "value": "Asia/Kolkata" },
+  { "label": "(UTC+05:45) Nepal", "value": "Asia/Kathmandu" },
+  { "label": "(UTC+06:00) Dhaka", "value": "Asia/Dhaka" },
+  { "label": "(UTC+06:30) Yangon", "value": "Asia/Yangon" },
+  { "label": "(UTC+07:00) Bangkok", "value": "Asia/Bangkok" },
+  { "label": "(UTC+08:00) Singapore", "value": "Asia/Singapore" },
+  { "label": "(UTC+09:00) Tokyo", "value": "Asia/Tokyo" },
+  { "label": "(UTC+09:30) Adelaide", "value": "Australia/Adelaide" },
+  { "label": "(UTC+10:00) Sydney", "value": "Australia/Sydney" },
+  { "label": "(UTC+11:00) Solomon Islands", "value": "Pacific/Guadalcanal" },
+  { "label": "(UTC+12:00) Auckland", "value": "Pacific/Auckland" },
+  { "label": "(UTC+13:00) Tonga", "value": "Pacific/Tongatapu" },
+  { "label": "(UTC+14:00) Kiritimati", "value": "Pacific/Kiritimati" }
+]
+
+
+

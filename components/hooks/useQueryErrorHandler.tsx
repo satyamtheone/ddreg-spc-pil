@@ -3,10 +3,22 @@
 import { useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
 
-export function useQueryErrorHandler(query, apiName = "API") {
+// Generic type for data
+type QueryType<T> = {
+  data?: T;
+  isError: boolean;
+  error?: any;
+  isLoading: boolean;
+  isFetching: boolean;
+};
+
+export function useQueryErrorHandler<T>(
+  query: QueryType<T>,
+  apiName: string = "API"
+): T | undefined {
   const { data, isError, error, isLoading, isFetching } = query;
 
-  const timeoutRef = useRef(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (isError && error && !isLoading && !isFetching) {
@@ -20,8 +32,8 @@ export function useQueryErrorHandler(query, apiName = "API") {
         toast.error(
           <div className="flex flex-col gap-2 text-xs">
             <strong>{apiName}</strong>
-            <div className="">{message}</div>
-          </div>,
+            <div>{message}</div>
+          </div>
         );
       }, 700);
     }

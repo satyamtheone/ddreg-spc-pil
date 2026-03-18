@@ -1,12 +1,4 @@
-type User = {
-  firstName?: string;
-  lastName?: string;
-  company?: {
-    logo?: {
-      Location?: string;
-    };
-  };
-};
+import { User } from "@/lib/redux/apiTypes";
 
 type Props = {
   user?: User;
@@ -16,16 +8,10 @@ type Props = {
   textSize?: string;
 };
 
-const UserAvatar = ({
-  user,
-  size,
-  padding,
-  shadow,
-  textSize,
-}: Props) => {
-  const firstLetter = user?.firstName?.charAt(0) || "";
-  const lastLetter = user?.lastName?.charAt(0) || "";
-  const logo = user?.company?.logo?.Location;
+const UserAvatar = ({ user, size, padding, shadow, textSize }: Props) => {
+  const firstLetter = user?.fName?.charAt(0) || "";
+  const lastLetter = user?.lName?.charAt(0) || "";
+  const logo = "";
 
   return (
     <div
@@ -44,9 +30,8 @@ const UserAvatar = ({
         <div
           className={`w-full h-full bg-gradient flex justify-center items-center text-white rounded-full ${textSize}`}
         >
-          {/* {firstLetter}
-          {lastLetter} */}
-          SS
+          {firstLetter}
+          {lastLetter}
         </div>
       )}
     </div>

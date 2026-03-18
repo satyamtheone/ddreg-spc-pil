@@ -9,7 +9,7 @@ export const AuthPage: React.FC = () => {
       <div className="w-full h-full flex">
         {/* Left side - Login Form */}
         <div className="lg:w-1/3 flex items-center ">
-          <div  className="w-full spcCard rounded-4xl">
+          <div  className="w-full spcCard rounded-4xl animate-dialog-slide-down ">
           <SignIn/>
           </div>
         </div>
@@ -21,7 +21,7 @@ export const AuthPage: React.FC = () => {
           <Image
               priority
               src={image}
-              className="animate-dialog-slide-in h-full object-contain"
+              className="animate-fadeIn h-full object-contain"
               loading="eager"
               alt="login image"
             />

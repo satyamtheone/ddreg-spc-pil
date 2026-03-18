@@ -62,7 +62,8 @@ function OTPForm({
     try {
       const data = await verifyOtp(payload).unwrap();
       if (data.accessToken) {
-        localStorage.setItem("userInfo", JSON.stringify(data));
+      document.cookie = `accessToken=${data.accessToken}; path=/`;
+      document.cookie = `refreshToken=${data.refreshToken}; path=/`;
         toast.success("Logged in Successfully.");
         router.push("/dashboard");
       } else {
