@@ -35,3 +35,24 @@ export const updatePasswordValidationSchema = Yup.object({
     .oneOf([Yup.ref("newPassword")], "Passwords must match")
     .notOneOf([Yup.ref("password")], "New password should be different"),
 });
+
+export const createRoleValidationSchema = Yup.object().shape({
+  name: Yup.string()
+    .trim()
+    .required("Role name is required")
+    .min(2, "Role name must be at least 2 characters"),
+
+  description: Yup.string()
+    .trim()
+    .required("Description is required")
+    .min(5, "Description must be at least 5 characters"),
+
+  permissions: Yup.object().test(
+    "at-least-one-permission",
+    "At least one permission must be selected",
+    (value) => {
+      if (!value) return false;
+      return Object.values(value).some((v) => v === true);
+    },
+  ),
+});

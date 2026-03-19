@@ -46,7 +46,7 @@ const AutoLogoutForm: React.FC<Props> = ({ initialValue = false }) => {
       onSubmit={() => {}}
     >
       {({ values, setFieldValue }) => (
-        <div className="w-full flex justify-between items-center">
+        <div className="w-full flex justify-between items-center animate-dialog-slide-down">
           <div className="flex flex-col gap-1">
             <div className="text-base font-medium">Auto Logout</div>
             <div className="tex-base font-normal">

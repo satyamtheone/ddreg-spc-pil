@@ -9,9 +9,9 @@ const DrawerCloseButton: React.FC = () => {
   return (
     <div
       onClick={closeDrawer}
-      className="border shadow-md border-gray-200 rounded-lg h-12.5 w-12.5 flex justify-center items-center cursor-pointer hover:text-white hover:bg-red-400"
+      className="border shadow-md border-gray-200 bg-white rounded-lg h-10 w-10 flex justify-center items-center cursor-pointer hover:text-white hover:bg-red-400"
     >
-      <HiXMark className="h-8 w-8" />
+      <HiXMark className="h-8 w-8 text-black hover:text-white" />
     </div>
   );
 };

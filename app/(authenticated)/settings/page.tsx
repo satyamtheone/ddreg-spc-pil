@@ -4,6 +4,8 @@ import PageHeader from "@/components/common/pageHeader";
 import { useState } from "react";
 import GeneralTabComponent from "./general/generalTabComponent";
 import SecorityTabComponent from "./security/secorityTabComponent";
+import UserTabComponent from "./user/userTabComponent";
+import RoleTabComponent from "./roles/roleTabComponent";
 
 const Setting = () => {
   const [activeTab, setActiveTab] = useState("General");
@@ -15,9 +17,9 @@ const Setting = () => {
       case "Security":
         return <SecorityTabComponent />;
       case "User":
-        return <>User</>;
+        return <UserTabComponent />;
       case "Roles":
-        return <>Roles & Permissions</>;
+        return <RoleTabComponent />;
       default:
         return <>hisdf</>;
     }
@@ -32,8 +34,8 @@ const Setting = () => {
         tabs={[
           { label: "General", value: "General" },
           { label: "Security", value: "Security" },
-          { label: "User", value: "User" },
           { label: "Roles & Permissions", value: "Roles" },
+          { label: "User", value: "User" },
         ]}
         setActiveTab={handleSetActiveTabs}
         activeTab={activeTab}

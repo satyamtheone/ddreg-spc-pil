@@ -32,6 +32,7 @@ export interface TwoFactorRequest {
   enabled: boolean;
 }
 
+
 export interface ConfirmForgotPasswordRequest {
   email: string;
   otp: string;
@@ -130,6 +131,13 @@ export const authApi = apiSlice.injectEndpoints({
         body,
       }),
     }),
+    createUser: builder.mutation<ForgotPasswordResponse, TwoFactorRequest>({
+      query: (body) => ({
+        url: "/users",
+        method: "POST",
+        body,
+      }),
+    }),
     // Logout
     logout: builder.mutation<void, { refreshToken: string }>({
       query: (body) => ({
@@ -150,5 +158,6 @@ export const {
   useAutoLogoutMutation,
   useChangePasswordMutation,
   useRefreshTokenMutation,
+  useCreateUserMutation,
   useLogoutMutation,
 } = authApi;

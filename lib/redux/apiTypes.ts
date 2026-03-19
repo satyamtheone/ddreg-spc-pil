@@ -11,10 +11,10 @@ export type User = {
   autoLogOut: boolean;
   isActive: boolean;
   createdAt: string;
-  role: "USER" | string;
+  role: "USER" | "ADMIN" | "SUPERADMIN";
   createdById: string;
   businessRoleId: string | null;
-  businessRole: unknown | null;
+  businessRole: {};
 };
 
 export interface MeResponse {
@@ -41,5 +41,29 @@ export type UpdatePreferencesResponse = {
     language?: string;
     timeZone?: string;
   };
+  message: string;
+};
+
+export type RolePermission = {
+  id: string;
+  type: string;
+  createdAt: string;
+};
+
+export type GetPermissionsResponse = {
+  success: boolean;
+  message: string;
+  data: RolePermission[];
+};
+
+export type CreateROleRequest = {
+  name: string;
+  description: string;
+  permissions: string[];
+};
+
+export type CreateRoleResponse = {
+  success?: boolean;
+  data: {};
   message: string;
 };

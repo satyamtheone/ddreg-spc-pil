@@ -27,8 +27,7 @@ const FormikToggle: React.FC<FormikToggleProps> = ({
             checked={field.value}
             disabled={disabled}
             className="
-           bg-teal-100
-           data-[state=unchecked]:bg-teal-200
+           data-[state=unchecked]:bg-gray-300
            data-[state=checked]:bg-linear-to-r
           data-[state=checked]:from-sky-600
           data-[state=checked]:to-teal-500 "

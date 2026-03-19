@@ -352,3 +352,32 @@ body {
 .animate-fadeScale {
   animation: fadeScale 0.25s ease-in-out;
 }
+
+
+.table-container {
+  @apply w-full min-w-5xl  rounded-[10px] border border-slate-300;
+}
+
+.table-header {
+  @apply w-full   font-semibold text-base border-b border-slate-300;
+}
+
+.table-header-cell {
+  @apply border-r px-4  py-2 capitalize  border-slate-300 break-all;
+}
+.table-header-lastCell {
+  @apply px-4  py-2 capitalize border-slate-300;
+}
+
+.table-body {
+  @apply flex flex-col;
+}
+.table-body-cell {
+  @apply font-normal capitalize flex-wrap  border-r border-slate-300 p-4 flex break-all;
+}
+.table-body-lastCell {
+  @apply font-normal capitalize  border-slate-300 p-4;
+}
+.table-body-actionCell {
+  @apply flex gap-2 max-md:flex-wrap items-center  border-slate-300 p-2;
+}

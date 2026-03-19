@@ -1,7 +1,11 @@
 /* ================= API ================= */
 
 import {
+  CreateROleRequest,
+  CreateRoleResponse,
+  GetPermissionsResponse,
   MeResponse,
+  RolePermission,
   UpdatePreferencesPayload,
   UpdatePreferencesResponse,
   User,
@@ -40,6 +44,21 @@ export const userApi = apiSlice.injectEndpoints({
       providesTags: ["Auth"],
     }),
 
+    getRolePermissions: builder.query<GetPermissionsResponse, void>({
+      query: () => ({
+        url: "/roles",
+        method: "GET",
+      }),
+      providesTags: ["Auth"],
+    }),
+
+    createRole: builder.mutation<CreateRoleResponse, CreateROleRequest>({
+      query: (body) => ({
+        url: "/roles",
+        method: "POST",
+        body,
+      }),
+    }),
     // 🔹 Get user by ID
     getUserById: builder.query<User, string>({
       query: (id) => ({
@@ -54,5 +73,7 @@ export const {
   useGetMeQuery,
   useUpdatePreferencesMutation,
   useGetUsersQuery,
+  useCreateRoleMutation,
+  useGetRolePermissionsQuery,
   useGetUserByIdQuery,
 } = userApi;
