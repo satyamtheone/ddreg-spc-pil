@@ -53,7 +53,6 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-/* ================= REAUTH LOGIC ================= */
 
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
@@ -97,10 +96,10 @@ const baseQueryWithReauth: BaseQueryFn<
         );
 
         if (refreshResult.data) {
-          const data: any = refreshResult.data;
+          const data: any = refreshResult?.data;
 
-          const newAccessToken = data.accessToken;
-          const newRefreshToken = data.refreshToken;
+          const newAccessToken = data?.data?.accessToken;
+          const newRefreshToken = data?.data?.refreshToken;
 
           // ✅ Save new tokens
           setCookie("accessToken", newAccessToken, 1);
@@ -123,10 +122,7 @@ const baseQueryWithReauth: BaseQueryFn<
         release();
       }
     } else {
-      // 🟡 Wait for ongoing refresh
       await mutex.waitForUnlock();
-
-      // 🔁 Retry request
       result = await baseQuery(args, api, extraOptions);
     }
   }
@@ -134,7 +130,6 @@ const baseQueryWithReauth: BaseQueryFn<
   return result;
 };
 
-/* ================= API SLICE ================= */
 
 export const apiSlice = createApi({
   reducerPath: "api",

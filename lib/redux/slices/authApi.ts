@@ -1,4 +1,3 @@
-
 /* ================= TYPES ================= */
 
 import { apiSlice } from "./apislice";
@@ -27,6 +26,10 @@ export interface ForgotPasswordResponse {
 
 export interface ForgotPasswordRequest {
   email: string;
+}
+
+export interface TwoFactorRequest {
+  enabled: boolean;
 }
 
 export interface ConfirmForgotPasswordRequest {
@@ -113,6 +116,20 @@ export const authApi = apiSlice.injectEndpoints({
       }),
     }),
 
+    twoFactor: builder.mutation<ForgotPasswordResponse, TwoFactorRequest>({
+      query: (body) => ({
+        url: "/auth/toggle2FA",
+        method: "POST",
+        body,
+      }),
+    }),
+    autoLogout: builder.mutation<ForgotPasswordResponse, TwoFactorRequest>({
+      query: (body) => ({
+        url: "/auth/toggleInactivity",
+        method: "POST",
+        body,
+      }),
+    }),
     // Logout
     logout: builder.mutation<void, { refreshToken: string }>({
       query: (body) => ({
@@ -129,6 +146,8 @@ export const {
   useVerifyOtpMutation,
   useForgotPasswordMutation,
   useConfirmPasswordMutation,
+  useTwoFactorMutation,
+  useAutoLogoutMutation,
   useChangePasswordMutation,
   useRefreshTokenMutation,
   useLogoutMutation,
