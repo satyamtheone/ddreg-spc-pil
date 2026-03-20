@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Formik, Form, FormikHelpers } from "formik";
 import FormikInput from "@/components/FormikComponents/FormikInput";
 import FormikToggle from "@/components/FormikComponents/FormikToggle";
@@ -8,8 +8,11 @@ import toast from "react-hot-toast";
 import {
   useCreateRoleMutation,
   useGetRolePermissionsQuery,
+  useUpdateRoleMutation,
 } from "@/lib/redux/slices/userApi";
 import { createRoleValidationSchema } from "@/lib/utilsSchema";
+import { useDrawer } from "@/components/hooks/DrawerProvider";
+import { GetRolesResponse } from "@/lib/redux/apiTypes";
 
 type Permission = {
   id: string;
@@ -17,108 +20,161 @@ type Permission = {
 };
 
 type FormValues = {
-  name: string;
+  roleName: string;
   description: string;
   permissions: Record<string, boolean>;
 };
 
-const AddEditRoleForm = () => {
+const AddEditRoleForm = ({
+  role,
+  actionType,
+}: {
+  role?: GetRolesResponse["data"][number];
+  actionType?: "add";
+}) => {
+  const { closeDrawer } = useDrawer();
   const { data, isLoading: isFetching } = useGetRolePermissionsQuery();
-
-  const [createRole, { isLoading }] = useCreateRoleMutation();
-
+  const [createRole, { isLoading, isError, error }] = useCreateRoleMutation();
+   const [updateRole, { isLoading:updateLoading, isError:updateError, error:updateerror }] = useUpdateRoleMutation();
   const permissionsData: Permission[] = data?.data || [];
 
-  /**
-   * ✅ Create dynamic initial values from API
-   */
+  const selectedPermissionIds = useMemo(() => {
+    return new Set(role?.permissions?.map((p) => p.id) || []);
+  }, [role]);
+
   const initialPermissions = useMemo(() => {
     const obj: Record<string, boolean> = {};
+
     permissionsData.forEach((perm) => {
-      obj[perm.id] = false; // default OFF
+      obj[perm.id] = selectedPermissionIds.has(perm.id);
     });
+
     return obj;
-  }, [permissionsData]);
+  }, [permissionsData, selectedPermissionIds]);
 
   const handleSubmit = async (
     values: FormValues,
     { resetForm }: FormikHelpers<FormValues>,
   ) => {
-    /**
-     * ✅ Extract selected permission IDs
-     */
-    const selectedPermissions = Object.entries(values.permissions)
+    const selectedPermissionIds = Object.entries(values.permissions)
       .filter(([_, v]) => v)
       .map(([id]) => id);
 
     const payload = {
-      name: values.name,
+      name: values.roleName,
       description: values.description,
-      permissions: selectedPermissions,
+      permissionIds: selectedPermissionIds,
     };
-
     try {
-      const res = await createRole(payload).unwrap();
-      toast.success(res?.message || "Role created successfully");
+      if(actionType == "add") {
+        const res = await updateRole({ id: role?.id || "", body: payload }).unwrap();
+        toast.success(res?.message || `${values.roleName} updated successfully`);
+      } else {
+        const res = await createRole(payload).unwrap();
+        toast.success(res?.message || "Role created successfully");
+      }
+    
+      closeDrawer();
       resetForm();
     } catch (error: any) {
       toast.error(error?.data?.message || "Failed to create role");
     }
   };
 
+  useEffect(() => {
+    if (isError || updateError) {
+      toast.error(
+        (error || (updateerror as any))?.data?.message || "Update failed",
+      );
+    }
+  }, [isError, error, updateerror]);
+
   return (
     <Formik<FormValues>
       enableReinitialize
       initialValues={{
-        name: "",
-        description: "",
+        roleName: role?.name || "",
+        description: role?.description || "",
         permissions: initialPermissions,
       }}
       validationSchema={createRoleValidationSchema}
       onSubmit={handleSubmit}
     >
-      {({ setFieldValue }) => (
-        <Form className="space-y-6">
-          {/* Role Box */}
-          <div className="p-4 border rounded-xl space-y-4">
-            <h2 className="font-semibold text-lg">Role</h2>
+      {({ setFieldValue, dirty, isValid }) => {
+        return (
+          <Form className="space-y-6 mt-4">
+            <div className="p-4 border rounded-xl space-y-4 spcBNS">
+              <h2 className="font-semibold text-lg">Role</h2>
 
-            <FormikInput name="name" placeholder="Enter Role Name" />
+              {/* Inputs */}
+              <FormikInput
+                label="Role Name"
+                name="roleName"
+                placeholder="Enter Role Name"
+              />
 
-            <FormikInput name="description" placeholder="Enter Description" />
-            <FormikInput name="roleName" placeholder="Enter Role Name" />
+              <FormikInput
+                label="Description"
+                name="description"
+                placeholder="Enter Description"
+              />
 
-            {/* Permissions */}
-            <div className="space-y-3">
-              <div className="text-sm font-medium">Permissions</div>
+              {/* Permissions */}
+              <div className="space-y-3">
+                <div className="text-sm font-medium">Permissions</div>
+                {isFetching ? (
+                  <div className="h-10 skeleton"></div>
+                ) : (
+                  <div className="flex flex-wrap gap-6 py-4 animate-dialog-slide-down">
+                    {permissionsData.map((perm) => (
+                      <div key={perm.id} className="flex items-center gap-2">
+                        <span>
+                          {perm.type.charAt(0) +
+                            perm.type.slice(1).toLowerCase()}
+                        </span>
 
-              <div className="flex flex-wrap gap-6">
-                {permissionsData.map((perm) => (
-                  <div key={perm.id} className="flex items-center gap-2">
-                    <span>
-                      {perm.type.charAt(0) + perm.type.slice(1).toLowerCase()}
-                    </span>
-
-                    <FormikToggle
-                      name={`permissions.${perm.id}`}
-                      disabled={isLoading}
-                      onChange={(checked) =>
-                        setFieldValue(`permissions.${perm.id}`, checked)
-                      }
-                    />
+                        <FormikToggle
+                          name={`permissions.${perm.id}`}
+                          disabled={isLoading}
+                          onChange={(checked) =>
+                            setFieldValue(`permissions.${perm.id}`, checked)
+                          }
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
+
+                {/* ✅ Permission Error */}
+                {/* {errors.permissions && touched.permissions && (
+                  <div className="text-red-500 text-sm">
+                    {errors.permissions}
+                  </div>
+                )} */}
               </div>
             </div>
-          </div>
-          {/* Submit */}
-          <DynamicButton
-            variant="submit"
-            isSubmitting={isLoading}
-            text="Add Role"
-          />
-        </Form>
-      )}
+
+            {/* Footer Button */}
+            <div className="absolute left-0 right-0 bg-white border-t border-gray-300 bottom-0">
+              <div className="w-full p-4">
+                <DynamicButton
+                  variant="submit"
+                  isSubmitting={isLoading || !dirty || !isValid}
+                  text={
+                    actionType === "add"
+                      ? isLoading
+                        ? "Adding Role..."
+                        : "Add Role"
+                      : updateLoading
+                        ? "Updating Role..."
+                        : "Update Role"
+                  }
+                />
+              </div>
+            </div>
+          </Form>
+        );
+      }}
     </Formik>
   );
 };

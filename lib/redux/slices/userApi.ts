@@ -4,10 +4,12 @@ import {
   CreateROleRequest,
   CreateRoleResponse,
   GetPermissionsResponse,
+  GetRolesResponse,
   MeResponse,
   RolePermission,
   UpdatePreferencesPayload,
   UpdatePreferencesResponse,
+  UpdateRoleRequest,
   User,
   UsersResponse,
 } from "../apiTypes";
@@ -46,6 +48,14 @@ export const userApi = apiSlice.injectEndpoints({
 
     getRolePermissions: builder.query<GetPermissionsResponse, void>({
       query: () => ({
+        url: "/roles/permissions",
+        method: "GET",
+      }),
+      providesTags: ["Auth"],
+    }),
+
+    getRoles: builder.query<GetRolesResponse, void>({
+      query: () => ({
         url: "/roles",
         method: "GET",
       }),
@@ -58,6 +68,15 @@ export const userApi = apiSlice.injectEndpoints({
         method: "POST",
         body,
       }),
+    }),
+
+    updateRole: builder.mutation<CreateRoleResponse, UpdateRoleRequest>({
+      query: ({ id, body }) => ({
+        url: `/roles/${id}/permissions`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Auth"],
     }),
     // 🔹 Get user by ID
     getUserById: builder.query<User, string>({
@@ -73,7 +92,9 @@ export const {
   useGetMeQuery,
   useUpdatePreferencesMutation,
   useGetUsersQuery,
+  useGetRolesQuery,
   useCreateRoleMutation,
+  useUpdateRoleMutation,
   useGetRolePermissionsQuery,
   useGetUserByIdQuery,
 } = userApi;

@@ -55,15 +55,37 @@ export type GetPermissionsResponse = {
   message: string;
   data: RolePermission[];
 };
+export type GetRolesResponse = {
+  success: boolean;
+  message: string;
+  data: [
+    {
+      id: string;
+      name: string;
+      description: string;
+      permissions: RolePermission[];
+    },
+  ];
+};
 
 export type CreateROleRequest = {
   name: string;
   description: string;
-  permissions: string[];
+  permissionIds: string[];
 };
 
 export type CreateRoleResponse = {
   success?: boolean;
-  data: {};
+  data: {
+    id: string;
+    name: string;
+    description: string;
+    createdAt: string;
+  };
   message: string;
+};
+
+export type UpdateRoleRequest = {
+  id: string;
+  body: CreateROleRequest;
 };

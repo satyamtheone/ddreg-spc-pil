@@ -3,11 +3,17 @@ import UsersTable from "../user/usersTable";
 import DynamicButton from "@/components/common/DynamicButton";
 import AddEditRoleForm from "./addEditRoleForm";
 import { useDrawer } from "@/components/hooks/DrawerProvider";
+import RolesTable from "./rolesTable";
+import { useGetMeQuery, useGetRolesQuery } from "@/lib/redux/slices/userApi";
+import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
+import RoleTableSkeleton from "@/components/common/skletons/tableSkeleton";
 
 type RoleTabComponentProps = {};
 
 const RoleTabComponent: React.FC<RoleTabComponentProps> = () => {
   const { openDrawer } = useDrawer();
+  const query = useGetRolesQuery();
+  const data = useQueryErrorHandler(query, "Get Roles");
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
@@ -22,15 +28,17 @@ const RoleTabComponent: React.FC<RoleTabComponentProps> = () => {
             onClick={() =>
               openDrawer({
                 title: "Add User",
-                children: <AddEditRoleForm />,
+                children: <AddEditRoleForm actionType="add" />,
               })
             }
           />
         </div>
       </div>
-      <UsersTable
-        data={[{ plan: "sdf", _id: "asd", duration: "adsvf", price: "ascdv" }]}
-      />
+      {query.isLoading || query.isFetching ? (
+        <RoleTableSkeleton />
+      ) : (
+        <RolesTable data={data?.data} />
+      )}
     </div>
   );
 };
