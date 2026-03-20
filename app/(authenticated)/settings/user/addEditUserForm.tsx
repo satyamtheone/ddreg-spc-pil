@@ -1,120 +1,142 @@
 "use client";
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { Formik, Form, FormikHelpers } from "formik";
 import FormikInput from "@/components/FormikComponents/FormikInput";
 import FormikToggle from "@/components/FormikComponents/FormikToggle";
 import DynamicButton from "@/components/common/DynamicButton";
 import toast from "react-hot-toast";
-import { useCreateUserMutation } from "@/lib/redux/slices/authApi";
 import FormikPassword from "@/components/FormikComponents/FormikPassword";
+import {
+  useCreateUserMutation,
+  useGetRolesQuery,
+  useUpdateUserMutation,
+} from "@/lib/redux/slices/userApi";
+import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
+import { User } from "@/lib/redux/apiTypes";
+import FormikRadio from "@/components/FormikComponents/FoemikRadio";
+import { useDrawer } from "@/components/hooks/DrawerProvider";
 
 type FormValues = {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  roles: {
-    editor: boolean;
-    reviewer: boolean;
-    approver: boolean;
-  };
+  businessRole: string;
 };
 
-const AddEditUserForm = () => {
-  const [createUser, { isLoading }] = useCreateUserMutation();
+const AddEditUserForm = ({
+  user,
+  actionType,
+}: {
+  user?: User;
+  actionType?: "add";
+}) => {
+  const { closeDrawer } = useDrawer();
+  const query = useGetRolesQuery();
+  const data = useQueryErrorHandler(query, "Get Roles");
+  const [createUser, { isLoading, isError, error }] = useCreateUserMutation();
+  const [
+    UpdateUser,
+    { isLoading: updateLoading, isError: updateError, error: updateerror },
+  ] = useUpdateUserMutation();
 
   const handleSubmit = async (
     values: FormValues,
     { resetForm }: FormikHelpers<FormValues>,
   ) => {
     const formData = new FormData();
-    formData.append("firstName", values.firstName);
-    formData.append("lastName", values.lastName);
+    formData.append("fName", values.firstName);
+    formData.append("lName", values.lastName);
     formData.append("email", values.email);
     formData.append("password", values.password);
-
-    // Send roles as array
-    const selectedRoles = Object.entries(values.roles)
-      .filter(([_, v]) => v)
-      .map(([k]) => k);
-
-    selectedRoles.forEach((role) => {
-      formData.append("roles[]", role);
-    });
+    formData.append("role", "USER");
+    formData.append("businessRoleId", values.businessRole);
 
     try {
-      //   const res = await createUser(formData).unwrap();
-      //   toast.success(res?.message || "User created successfully");
-      resetForm();
+      if (actionType === "add") {
+        const res = await createUser(formData).unwrap();
+        toast.success(res?.message || "User created successfully");
+      } else {
+        const res = await UpdateUser({
+          id: user?.id || "",
+          body: formData,
+        }).unwrap();
+        toast.success(res?.message || "User Updated successfully");
+      }
     } catch (error: any) {
       toast.error(error?.data?.message || "Failed to create user");
+    } finally {
+      closeDrawer();
+      resetForm();
     }
   };
+
+  useEffect(() => {
+    if (isError || updateError) {
+      toast.error(
+        (error || (updateerror as any))?.data?.message || "Update failed",
+      );
+    }
+  }, [isError, error, updateerror]);
 
   return (
     <Formik<FormValues>
       initialValues={{
-        firstName: "",
-        lastName: "",
-        email: "",
+        firstName: user?.fName || "",
+        lastName: user?.lName || "",
+        email: user?.email || "",
         password: "",
-        roles: {
-          editor: false,
-          reviewer: false,
-          approver: false,
-        },
+        businessRole: user?.businessRoleId || "",
       }}
       onSubmit={handleSubmit}
     >
-      {({ values, setFieldValue }) => (
-        <Form className="space-y-6 mt-4">
-          {/* User Details */}
+      {({ dirty, isValid, isSubmitting }) => (
+        <Form className="space-y-6 mt-4 mb-20">
           <div className="p-4 border rounded-xl space-y-4 spcBNS">
             <h2 className="font-semibold text-lg">User Detail</h2>
-
             <FormikInput name="firstName" placeholder="Enter First Name" />
             <FormikInput name="lastName" placeholder="Enter Last Name" />
             <FormikInput name="email" placeholder="Enter Email" type="email" />
             <FormikPassword name="password" placeholder="Password" />
           </div>
 
-          <div className="p-4 border rounded-xl space-y-4 spcBNS">
+          <div className="p-4 border rounded-xl space-y-4 spcBNS max-h-70 overflow-auto">
             <h2 className="font-semibold text-lg">Select Role</h2>
-            <div className="flex justify-between items-center">
-              <span>Editor</span>
-              <FormikToggle
-                name="roles.editor"
-                disabled={isLoading}
-                onChange={(checked) => setFieldValue("roles.editor", checked)}
-              />
-            </div>
-            <hr />
-
-            <div className="flex justify-between items-center">
-              <span>Reviewer</span>
-              <FormikToggle
-                name="roles.reviewer"
-                disabled={isLoading}
-                onChange={(checked) => setFieldValue("roles.reviewer", checked)}
-              />
-            </div>
-            <hr />
-            <div className="flex justify-between items-center">
-              <span>Approver</span>
-              <FormikToggle
-                name="roles.approver"
-                disabled={isLoading}
-                onChange={(checked) => setFieldValue("roles.approver", checked)}
-              />
-            </div>
+            {query.isFetching ? (
+              <div className="flex flex-col gap-4">
+                <div className="h-10 skeleton"></div>
+                <div className="h-10 skeleton"></div>
+                <div className="h-10 skeleton"></div>
+                <div className="h-10 skeleton"></div>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-1">
+                {data?.data.map((perm, i) => (
+                  <FormikRadio
+                    key={i}
+                    name="businessRole"
+                    label={perm.name}
+                    value={perm.id}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="absolute left-0 right-0 bg-white border-t border-gray-300  bottom-0">
             <div className="w-full p-4">
               <DynamicButton
                 variant="submit"
-                isSubmitting={isLoading}
-                text="Add"
+                isSubmitting={isLoading || !dirty || !isValid || isSubmitting}
+                text={
+                  actionType === "add"
+                    ? isLoading
+                      ? "Adding User..."
+                      : "Add User"
+                    : updateLoading
+                      ? "Updating User..."
+                      : "Update User"
+                }
               />
             </div>
           </div>

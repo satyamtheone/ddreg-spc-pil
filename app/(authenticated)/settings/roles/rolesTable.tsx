@@ -15,7 +15,6 @@ import MiniChip from "@/components/common/miniChip";
 type Props = {
   data?: GetRolesResponse["data"];
   isLoading?: boolean;
-  companyList?: any;
 };
 
 const RolesTable: React.FC<Props> = ({ data = [], isLoading = false }) => {

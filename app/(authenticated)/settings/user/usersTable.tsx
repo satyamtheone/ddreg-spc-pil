@@ -9,25 +9,15 @@ import { useDialog } from "@/components/hooks/DialogProvider";
 import RoleTableSkeleton from "@/components/common/skletons/tableSkeleton";
 import { UserManagementColumns } from "@/lib/utils";
 import AddEditUserForm from "./addEditUserForm";
-
-type PlanItem = {
-  _id: string;
-  plan: string;
-  price: number | string;
-  duration: string;
-};
+import { GetUserResponse } from "@/lib/redux/apiTypes";
 
 type Props = {
-  data?: PlanItem[];
+  data?: GetUserResponse["data"];
   isLoading?: boolean;
   companyList?: any;
 };
 
-const UsersTable: React.FC<Props> = ({
-  data = [],
-  isLoading = false,
-  companyList,
-}) => {
+const UsersTable: React.FC<Props> = ({ data = [], isLoading = false }) => {
   const { openDrawer } = useDrawer();
   const { openDialog } = useDialog();
 
@@ -52,7 +42,7 @@ const UsersTable: React.FC<Props> = ({
           {data.length > 0 ? (
             data.map((item, index) => (
               <div
-                key={item._id}
+                key={item.id}
                 className={`${index % 2 === 0 ? "bg-purple-50" : ""} ${
                   index + 1 === data.length ? "" : "border-b"
                 } transition-colors duration-150 group grid ${
@@ -61,11 +51,11 @@ const UsersTable: React.FC<Props> = ({
                     : ""
                 } grid-cols-6 border-slate-300 text-sm`}
               >
-                <div className="table-body-cell">{item.plan}</div>
-                <div className="table-body-cell">{item.price}</div>
-                <div className="table-body-cell">{item.plan}</div>
-                <div className="table-body-cell">{item.price}</div>
-                <div className="table-body-cell">{item.duration}</div>
+                <div className="table-body-cell">{item.fName}</div>
+                <div className="table-body-cell">{item.lName}</div>
+                <div className="table-body-cell">{item.email}</div>
+                <div className="table-body-cell">{item.role}</div>
+                <div className="table-body-cell">{item.businessRole.name}</div>
 
                 <div className="table-body-actionCell">
                   <div
@@ -73,7 +63,7 @@ const UsersTable: React.FC<Props> = ({
                     onClick={() =>
                       openDrawer({
                         title: "Add User",
-                        children: <AddEditUserForm  />,
+                        children: <AddEditUserForm user={item} />,
                       })
                     }
                   >

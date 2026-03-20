@@ -20,7 +20,6 @@ const FormikToggle: React.FC<FormikToggleProps> = ({
   return (
     <div className="flex items-center gap-3">
       {label && <label className="text-zinc-800 capitalize">{label}</label>}
-
       <Field name={name}>
         {({ field, form }: FieldProps) => (
           <Switch

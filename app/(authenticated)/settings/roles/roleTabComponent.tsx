@@ -1,12 +1,13 @@
+"use client";
 import React from "react";
-import UsersTable from "../user/usersTable";
 import DynamicButton from "@/components/common/DynamicButton";
 import AddEditRoleForm from "./addEditRoleForm";
 import { useDrawer } from "@/components/hooks/DrawerProvider";
 import RolesTable from "./rolesTable";
-import { useGetMeQuery, useGetRolesQuery } from "@/lib/redux/slices/userApi";
+import { useGetRolesQuery } from "@/lib/redux/slices/userApi";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import RoleTableSkeleton from "@/components/common/skletons/tableSkeleton";
+import { RiAddBoxLine } from "react-icons/ri";
 
 type RoleTabComponentProps = {};
 
@@ -23,11 +24,12 @@ const RoleTabComponent: React.FC<RoleTabComponentProps> = () => {
       <div className="flex w-full justify-end">
         <div>
           <DynamicButton
+            icon={<RiAddBoxLine size={20} />}
             variant="submit"
             text="Add Role"
             onClick={() =>
               openDrawer({
-                title: "Add User",
+                title: "Add Role",
                 children: <AddEditRoleForm actionType="add" />,
               })
             }

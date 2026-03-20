@@ -3,15 +3,16 @@
 import {
   CreateROleRequest,
   CreateRoleResponse,
+  CreateUserResponse,
   GetPermissionsResponse,
   GetRolesResponse,
+  GetUserResponse,
   MeResponse,
-  RolePermission,
   UpdatePreferencesPayload,
   UpdatePreferencesResponse,
   UpdateRoleRequest,
+  UpdateUserRequest,
   User,
-  UsersResponse,
 } from "../apiTypes";
 import { apiSlice } from "./apislice";
 
@@ -36,14 +37,6 @@ export const userApi = apiSlice.injectEndpoints({
         body,
       }),
       invalidatesTags: ["Auth"],
-    }),
-    // 🔹 Get all users
-    getUsers: builder.query<UsersResponse, void>({
-      query: () => ({
-        url: "/users",
-        method: "GET",
-      }),
-      providesTags: ["Auth"],
     }),
 
     getRolePermissions: builder.query<GetPermissionsResponse, void>({
@@ -78,6 +71,30 @@ export const userApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Auth"],
     }),
+
+    getUsers: builder.query<GetUserResponse, void>({
+      query: () => ({
+        url: "/users",
+        method: "GET",
+      }),
+      providesTags: ["Auth"],
+    }),
+    createUser: builder.mutation<CreateUserResponse, FormData>({
+      query: (body) => ({
+        url: "/users",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    updateUser: builder.mutation<CreateUserResponse, UpdateUserRequest>({
+      query: ({ id, body }) => ({
+        url: `/users/user/2adb8de5-713d-4824-b6de-a26f141dd88e`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
     // 🔹 Get user by ID
     getUserById: builder.query<User, string>({
       query: (id) => ({
@@ -96,5 +113,7 @@ export const {
   useCreateRoleMutation,
   useUpdateRoleMutation,
   useGetRolePermissionsQuery,
+  useCreateUserMutation,
+  useUpdateUserMutation,
   useGetUserByIdQuery,
 } = userApi;

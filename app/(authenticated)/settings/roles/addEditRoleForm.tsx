@@ -66,18 +66,23 @@ const AddEditRoleForm = ({
       permissionIds: selectedPermissionIds,
     };
     try {
-      if(actionType == "add") {
-        const res = await updateRole({ id: role?.id || "", body: payload }).unwrap();
-        toast.success(res?.message || `${values.roleName} updated successfully`);
-      } else {
+      if (actionType == "add") {
         const res = await createRole(payload).unwrap();
         toast.success(res?.message || "Role created successfully");
+      } else {
+        const res = await updateRole({
+          id: role?.id || "",
+          body: payload,
+        }).unwrap();
+        toast.success(
+          res?.message || `${values.roleName} updated successfully`,
+        );
       }
-    
-      closeDrawer();
-      resetForm();
     } catch (error: any) {
       toast.error(error?.data?.message || "Failed to create role");
+    } finally {
+      closeDrawer();
+      resetForm();
     }
   };
 
@@ -100,7 +105,7 @@ const AddEditRoleForm = ({
       validationSchema={createRoleValidationSchema}
       onSubmit={handleSubmit}
     >
-      {({ setFieldValue, dirty, isValid }) => {
+      {({ setFieldValue, dirty, isValid, isSubmitting }) => {
         return (
           <Form className="space-y-6 mt-4">
             <div className="p-4 border rounded-xl space-y-4 spcBNS">
@@ -159,7 +164,7 @@ const AddEditRoleForm = ({
               <div className="w-full p-4">
                 <DynamicButton
                   variant="submit"
-                  isSubmitting={isLoading || !dirty || !isValid}
+                  isSubmitting={isLoading || !dirty || !isValid || isSubmitting}
                   text={
                     actionType === "add"
                       ? isLoading

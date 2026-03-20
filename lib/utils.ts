@@ -145,8 +145,8 @@ export const UserManagementColumns = [
   { name: "First Name", key: "firstName" },
   { name: "Last Name", key: "lastName" },
   { name: "Email", key: "email" },
-  { name: "Company", key: "company" },
   { name: "Role", key: "role" },
+  { name: "Business Role", key: "businessRole" },
 ];
 
 export const RolesManagementColumns = [

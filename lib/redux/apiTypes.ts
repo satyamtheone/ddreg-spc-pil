@@ -2,7 +2,7 @@ export type User = {
   id: string;
   fName: string;
   lName: string;
-  userProfilePic: string | null;
+  userProfilePic?: string | null;
   email: string;
   country: string | null;
   language: string | null;
@@ -14,7 +14,15 @@ export type User = {
   role: "USER" | "ADMIN" | "SUPERADMIN";
   createdById: string;
   businessRoleId: string | null;
-  businessRole: {};
+  businessRole: BusinessRole;
+};
+
+export type BusinessRole = {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  permissions: RolePermission[];
 };
 
 export interface MeResponse {
@@ -88,4 +96,36 @@ export type CreateRoleResponse = {
 export type UpdateRoleRequest = {
   id: string;
   body: CreateROleRequest;
+};
+
+export type CreateUserRequest = {
+  fName: string;
+  lName: string;
+  email: string;
+  password: string;
+  role: string;
+  businessRoleId: string;
+  userProfilePic?: string;
+};
+
+export type CreateUserResponse = {
+  success?: boolean;
+  data: {
+    id: string;
+    name: string;
+    description: string;
+    createdAt: string;
+  };
+  message: string;
+};
+
+export type UpdateUserRequest = {
+  id: string;
+  body: FormData;
+};
+
+export type GetUserResponse = {
+  success: boolean;
+  message: string;
+  data: User[];
 };
