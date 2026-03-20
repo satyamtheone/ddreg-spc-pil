@@ -49,7 +49,9 @@ const AddEditUserForm = ({
     formData.append("lName", values.lastName);
     formData.append("email", values.email);
     formData.append("password", values.password);
-    formData.append("role", "USER");
+    if (actionType === "add") {
+      formData.append("role", "USER");
+    } 
     formData.append("businessRoleId", values.businessRole);
 
     try {
