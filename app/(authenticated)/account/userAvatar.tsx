@@ -1,4 +1,9 @@
+import ModalProvider from "@/components/dialog/Dialog";
 import { User } from "@/lib/redux/apiTypes";
+import UpdateProfilePicForm from "./updateProfilePicForm";
+import { useAuth } from "@/lib/AuthProvider";
+import { useDialog } from "@/components/hooks/DialogProvider";
+import { FaCameraRetro } from "react-icons/fa";
 
 type Props = {
   user?: User;
@@ -8,14 +13,16 @@ type Props = {
   textSize?: string;
 };
 
-const UserAvatar = ({ user, size, padding, shadow, textSize }: Props) => {
+const UserAvatar = ({ size, padding, shadow, textSize }: Props) => {
+  const { user, imageUrl } = useAuth();
+  const { openDialog } = useDialog();
   const firstLetter = user?.fName?.charAt(0) || "";
   const lastLetter = user?.lName?.charAt(0) || "";
-  const logo = "";
+  const logo = imageUrl;
 
   return (
     <div
-      className={`border-slate-300 border rounded-full bg-white 
+      className={`relative border-slate-300 border rounded-full bg-white 
       ${shadow || "shadow-md"} 
       ${size || "h-full w-full"} 
       ${padding || "p-1"}`}
@@ -24,7 +31,7 @@ const UserAvatar = ({ user, size, padding, shadow, textSize }: Props) => {
         <img
           src={logo}
           alt="user-avatar"
-          className="w-full h-full object-cover rounded-full"
+          className="w-full h-full object-contain rounded-full"
         />
       ) : (
         <div
@@ -34,6 +41,26 @@ const UserAvatar = ({ user, size, padding, shadow, textSize }: Props) => {
           {lastLetter}
         </div>
       )}
+      <div
+        className="absolute -bottom-4 left-0 right-0"
+        onClick={() => {
+          openDialog({
+            children: (
+              <ModalProvider
+                size="md:w-200 w-11/12 "
+                title={`Upload/Update Profile`}
+                children={<UpdateProfilePicForm />}
+              />
+            ),
+          });
+        }}
+      >
+        <div className="w-full flex justify-center ">
+          <div className="bg-gray-100 p-2 rounded-full spcBNS cursor-pointer custom-dynamicButton-hover-classes">
+            <FaCameraRetro className="text-teal-900" size={20} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

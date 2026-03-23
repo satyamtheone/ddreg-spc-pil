@@ -2,10 +2,12 @@ import React from "react";
 import UpdatePasswordForm from "./updatePasswordForm";
 import TwoFactorFrom from "./twoFactorFrom";
 import AutoLogoutForm from "./autoLogoutForm";
+import { useAuth } from "@/lib/AuthProvider";
 
 type SecorityTabComponentProps = {};
 
 const SecorityTabComponent: React.FC<SecorityTabComponentProps> = (props) => {
+  
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">

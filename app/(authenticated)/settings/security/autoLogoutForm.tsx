@@ -4,16 +4,14 @@ import { Formik, FormikHelpers } from "formik";
 import FormikToggle from "@/components/FormikComponents/FormikToggle";
 import toast from "react-hot-toast";
 import { useAutoLogoutMutation } from "@/lib/redux/slices/authApi";
-
-type Props = {
-  initialValue?: boolean;
-};
+import { useAuth } from "@/lib/AuthProvider";
 
 type FormValues = {
   enabled: boolean;
 };
 
-const AutoLogoutForm: React.FC<Props> = ({ initialValue = false }) => {
+const AutoLogoutForm: React.FC = () => {
+  const { user, isUserLoading, refreshUser } = useAuth();
   const [twoFactorVerify, { isLoading }] = useAutoLogoutMutation();
 
   const handleToggleChange = async (
@@ -26,7 +24,7 @@ const AutoLogoutForm: React.FC<Props> = ({ initialValue = false }) => {
       const res = await twoFactorVerify({
         enabled: checked,
       }).unwrap();
-
+      refreshUser();
       toast.success(res?.message || "Auto logout updated successfully");
     } catch (error: any) {
       setFieldValue("enabled", !checked); // revert
@@ -41,7 +39,7 @@ const AutoLogoutForm: React.FC<Props> = ({ initialValue = false }) => {
     <Formik<FormValues>
       enableReinitialize
       initialValues={{
-        enabled: Boolean(initialValue),
+        enabled: Boolean(user?.autoLogOut),
       }}
       onSubmit={() => {}}
     >
@@ -56,7 +54,7 @@ const AutoLogoutForm: React.FC<Props> = ({ initialValue = false }) => {
           <FormikToggle
             label={values.enabled ? "Disable" : "Enable"}
             name="enabled"
-            disabled={isLoading}
+            disabled={isLoading || isUserLoading}
             onChange={(checked) => handleToggleChange(checked, setFieldValue)}
           />
         </div>

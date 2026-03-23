@@ -24,7 +24,7 @@ export const userApi = apiSlice.injectEndpoints({
         url: "/users/me",
         method: "GET",
       }),
-      providesTags: ["Auth"],
+      providesTags: ["Me"],
     }),
     // 🔹updatePreferences
     updatePreferences: builder.mutation<
@@ -36,7 +36,7 @@ export const userApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body,
       }),
-      invalidatesTags: ["Auth"],
+      invalidatesTags: ["Me"],
     }),
 
     getRolePermissions: builder.query<GetPermissionsResponse, void>({
@@ -61,6 +61,7 @@ export const userApi = apiSlice.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Auth"],
     }),
 
     updateRole: builder.mutation<CreateRoleResponse, UpdateRoleRequest>({
@@ -68,6 +69,14 @@ export const userApi = apiSlice.injectEndpoints({
         url: `/roles/${id}/permissions`,
         method: "PATCH",
         body,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+
+    deleteRole: builder.mutation({
+      query: (id) => ({
+        url: `/roles/${id}`,
+        method: "DELETE",
       }),
       invalidatesTags: ["Auth"],
     }),
@@ -85,16 +94,27 @@ export const userApi = apiSlice.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Auth"],
     }),
 
     updateUser: builder.mutation<CreateUserResponse, UpdateUserRequest>({
       query: ({ id, body }) => ({
-        url: `/users/user/2adb8de5-713d-4824-b6de-a26f141dd88e`,
+        url: `/users/user/${id}`,
         method: "PATCH",
         body,
       }),
       invalidatesTags: ["Auth"],
     }),
+
+    deleteUser: builder.mutation<{ success: boolean; message: string }, string>(
+      {
+        query: (id) => ({
+          url: `/users/${id}`,
+          method: "DELETE",
+        }),
+        invalidatesTags: ["Auth"],
+      },
+    ),
     // 🔹 Get user by ID
     getUserById: builder.query<User, string>({
       query: (id) => ({
@@ -113,7 +133,9 @@ export const {
   useCreateRoleMutation,
   useUpdateRoleMutation,
   useGetRolePermissionsQuery,
+  useDeleteRoleMutation,
   useCreateUserMutation,
   useUpdateUserMutation,
+  useDeleteUserMutation,
   useGetUserByIdQuery,
 } = userApi;

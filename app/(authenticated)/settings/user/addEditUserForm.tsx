@@ -1,8 +1,7 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { Formik, Form, FormikHelpers } from "formik";
 import FormikInput from "@/components/FormikComponents/FormikInput";
-import FormikToggle from "@/components/FormikComponents/FormikToggle";
 import DynamicButton from "@/components/common/DynamicButton";
 import toast from "react-hot-toast";
 import FormikPassword from "@/components/FormikComponents/FormikPassword";
@@ -15,6 +14,8 @@ import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import { User } from "@/lib/redux/apiTypes";
 import FormikRadio from "@/components/FormikComponents/FoemikRadio";
 import { useDrawer } from "@/components/hooks/DrawerProvider";
+import FormRoleSkeleton from "@/components/common/skletons/formRoleSkeleton";
+import { createUserValidationSchema } from "@/lib/utilsSchema";
 
 type FormValues = {
   firstName: string;
@@ -31,6 +32,7 @@ const AddEditUserForm = ({
   user?: User;
   actionType?: "add";
 }) => {
+  const isAddFrom = actionType === "add";
   const { closeDrawer } = useDrawer();
   const query = useGetRolesQuery();
   const data = useQueryErrorHandler(query, "Get Roles");
@@ -47,15 +49,15 @@ const AddEditUserForm = ({
     const formData = new FormData();
     formData.append("fName", values.firstName);
     formData.append("lName", values.lastName);
-    formData.append("email", values.email);
-    formData.append("password", values.password);
-    if (actionType === "add") {
+    if (isAddFrom) {
       formData.append("role", "USER");
-    } 
+      formData.append("email", values.email);
+      formData.append("password", values.password);
+    }
     formData.append("businessRoleId", values.businessRole);
 
     try {
-      if (actionType === "add") {
+      if (isAddFrom) {
         const res = await createUser(formData).unwrap();
         toast.success(res?.message || "User created successfully");
       } else {
@@ -90,6 +92,7 @@ const AddEditUserForm = ({
         password: "",
         businessRole: user?.businessRoleId || "",
       }}
+      validationSchema={createUserValidationSchema(actionType || "")}
       onSubmit={handleSubmit}
     >
       {({ dirty, isValid, isSubmitting }) => (
@@ -98,19 +101,23 @@ const AddEditUserForm = ({
             <h2 className="font-semibold text-lg">User Detail</h2>
             <FormikInput name="firstName" placeholder="Enter First Name" />
             <FormikInput name="lastName" placeholder="Enter Last Name" />
-            <FormikInput name="email" placeholder="Enter Email" type="email" />
-            <FormikPassword name="password" placeholder="Password" />
+            <FormikInput
+              disabled={!isAddFrom}
+              name="email"
+              placeholder="Enter Email"
+              type="email"
+            />
+            <FormikPassword
+              disabled={!isAddFrom}
+              name="password"
+              placeholder="Password"
+            />
           </div>
 
           <div className="p-4 border rounded-xl space-y-4 spcBNS max-h-70 overflow-auto">
             <h2 className="font-semibold text-lg">Select Role</h2>
             {query.isFetching ? (
-              <div className="flex flex-col gap-4">
-                <div className="h-10 skeleton"></div>
-                <div className="h-10 skeleton"></div>
-                <div className="h-10 skeleton"></div>
-                <div className="h-10 skeleton"></div>
-              </div>
+              <FormRoleSkeleton />
             ) : (
               <div className="flex flex-col gap-1">
                 {data?.data.map((perm, i) => (

@@ -6,12 +6,9 @@ import { countries, languages, timeZones } from "@/lib/utils";
 import DynamicButton from "@/components/common/DynamicButton";
 import { generalFormScheme } from "@/lib/utilsSchema";
 import FormikSelect from "@/components/FormikComponents/FormikSelect";
-import {
-  useGetMeQuery,
-  useUpdatePreferencesMutation,
-} from "@/lib/redux/slices/userApi";
-import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
+import { useUpdatePreferencesMutation } from "@/lib/redux/slices/userApi";
 import GeneralSkeleton from "@/components/common/skletons/generalSkeleton";
+import { useAuth } from "@/lib/AuthProvider";
 
 // ---- TYPES ----
 type FormValues = {
@@ -21,8 +18,7 @@ type FormValues = {
 };
 
 const GeneralForm = () => {
-  const query = useGetMeQuery();
-  const user = useQueryErrorHandler(query, "Get User");
+  const { user, isUserLoading, refreshUser } = useAuth();
   const [updatePreferences, { isLoading, isError, error }] =
     useUpdatePreferencesMutation();
 
@@ -35,7 +31,7 @@ const GeneralForm = () => {
         Object.entries(values).filter(([_, value]) => value),
       );
       const res = await updatePreferences(payload).unwrap();
-
+      refreshUser();
       toast.success(res.message || "Preferences updated");
     } catch (err: any) {
       toast.error(err?.data?.message || "Update failed");
@@ -50,18 +46,16 @@ const GeneralForm = () => {
     }
   }, [isError, error]);
 
- 
-
   return (
     <>
-      {query.isLoading || query.isFetching ? (
+      {isUserLoading ? (
         <GeneralSkeleton />
       ) : (
         <Formik<FormValues>
           initialValues={{
-            country: user?.data?.country || "",
-            language: user?.data.language || "",
-            timeZone: user?.data.timeZone || "",
+            country: user?.country || "",
+            language: user?.language || "",
+            timeZone: user?.timeZone || "",
           }}
           validationSchema={generalFormScheme}
           onSubmit={onSubmit}

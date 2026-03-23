@@ -4,16 +4,14 @@ import { Formik, FormikHelpers } from "formik";
 import FormikToggle from "@/components/FormikComponents/FormikToggle";
 import toast from "react-hot-toast";
 import { useTwoFactorMutation } from "@/lib/redux/slices/authApi";
-
-type Props = {
-  initialValue?: boolean;
-};
+import { useAuth } from "@/lib/AuthProvider";
 
 type FormValues = {
   enabled: boolean;
 };
 
-const TwoFactorFrom: React.FC<Props> = ({ initialValue = false }) => {
+const TwoFactorFrom: React.FC = () => {
+  const { user, isUserLoading, refreshUser } = useAuth();
   const [twoFactorVerify, { isLoading }] = useTwoFactorMutation();
 
   const handleToggleChange = async (
@@ -26,7 +24,7 @@ const TwoFactorFrom: React.FC<Props> = ({ initialValue = false }) => {
       const res = await twoFactorVerify({
         enabled: checked,
       }).unwrap();
-
+      refreshUser();
       toast.success(
         res?.message || "Two-factor authentication updated successfully",
       );
@@ -43,7 +41,7 @@ const TwoFactorFrom: React.FC<Props> = ({ initialValue = false }) => {
     <Formik<FormValues>
       enableReinitialize
       initialValues={{
-        enabled: Boolean(initialValue),
+        enabled: Boolean(user?.twoFAEnabled),
       }}
       onSubmit={() => {}}
     >
@@ -60,7 +58,7 @@ const TwoFactorFrom: React.FC<Props> = ({ initialValue = false }) => {
           <FormikToggle
             label={values.enabled ? "Disable" : "Enable"}
             name="enabled"
-            disabled={isLoading}
+            disabled={isLoading || isUserLoading}
             onChange={(checked) => handleToggleChange(checked, setFieldValue)}
           />
         </div>

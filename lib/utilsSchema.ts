@@ -47,3 +47,19 @@ export const createRoleValidationSchema = Yup.object({
     },
   ),
 });
+
+export const createUserValidationSchema = (type: string) =>
+  Yup.object({
+    firstName: Yup.string().trim().required("First Name is required"),
+    lastName: Yup.string().trim().required("Last Name is required"),
+    email:
+      type === "add"
+        ? Yup.string().email().required("Email is required")
+        : Yup.string().email(),
+    password:
+      type === "add"
+        ? passwordRules.required("Password is required")
+        : Yup.string(),
+
+    businessRole: Yup.string().trim().required("Description is required"),
+  });

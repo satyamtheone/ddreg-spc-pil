@@ -71,6 +71,7 @@ export type GetRolesResponse = {
       id: string;
       name: string;
       description: string;
+      createdById?: string;
       permissions: RolePermission[];
     },
   ];

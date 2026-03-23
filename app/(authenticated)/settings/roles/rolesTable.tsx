@@ -11,6 +11,8 @@ import { RolesManagementColumns } from "@/lib/utils";
 import AddEditRoleForm from "./addEditRoleForm";
 import { GetRolesResponse } from "@/lib/redux/apiTypes";
 import MiniChip from "@/components/common/miniChip";
+import DeleteRoleDialog from "./deleteRoleDialog";
+import { useAuth } from "@/lib/AuthProvider";
 
 type Props = {
   data?: GetRolesResponse["data"];
@@ -18,6 +20,7 @@ type Props = {
 };
 
 const RolesTable: React.FC<Props> = ({ data = [], isLoading = false }) => {
+  const { canDoAction } = useAuth();
   const { openDrawer } = useDrawer();
   const { openDialog } = useDialog();
 
@@ -51,8 +54,8 @@ const RolesTable: React.FC<Props> = ({ data = [], isLoading = false }) => {
                     : ""
                 } grid-cols-4 border-slate-300 text-sm`}
               >
-                <div className="table-body-cell">{item.name}</div>
-                <div className="table-body-cell">{item.description}</div>
+                <div className="table-body-cell">{item?.name}</div>
+                <div className="table-body-cell">{item?.description}</div>
                 <div className="table-body-cell flex items-center gap-2">
                   {item?.permissions.map((p, i) => (
                     <MiniChip size="small" status={p.type} key={i} />
@@ -60,39 +63,41 @@ const RolesTable: React.FC<Props> = ({ data = [], isLoading = false }) => {
                 </div>
 
                 <div className="table-body-actionCell">
-                  <div
-                    className="custom-button-hover-classes border p-2 border-gray-200"
-                    onClick={() =>
-                      openDrawer({
-                        title: "Update Role",
-                        children: <AddEditRoleForm role={item} />,
-                      })
-                    }
-                  >
-                    <FiEdit size={20} />
-                  </div>
-
-                  <div
-                    className="custom-button-hover-classes border p-2 border-red-400 text-red-400"
-                    onClick={() =>
-                      openDialog({
-                        children: (
-                          <ModalProvider
-                            title="Delete Plan"
-                            size="md:w-200 w-11/12"
-                          >
-                            <div>hi</div>
-                            {/* <DeletePlanModal
-                              roleId={item._id}
-                              roleName={item.plan}
-                            /> */}
-                          </ModalProvider>
-                        ),
-                      })
-                    }
-                  >
-                    <RiDeleteBinLine size={20} />
-                  </div>
+                  {canDoAction(item.createdById || "") && (
+                    <>
+                      <div
+                        className="custom-button-hover-classes border p-2 border-gray-200"
+                        onClick={() =>
+                          openDrawer({
+                            title: "Update Role",
+                            children: <AddEditRoleForm role={item} />,
+                          })
+                        }
+                      >
+                        <FiEdit size={20} />
+                      </div>
+                      <div
+                        className="custom-button-hover-classes border p-2 border-red-400 text-red-400"
+                        onClick={() =>
+                          openDialog({
+                            children: (
+                              <ModalProvider
+                                title="Delete Role"
+                                size="md:w-200 w-11/12"
+                              >
+                                <DeleteRoleDialog
+                                  Id={item.id}
+                                  Name={item.name}
+                                />
+                              </ModalProvider>
+                            ),
+                          })
+                        }
+                      >
+                        <RiDeleteBinLine size={20} />
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             ))

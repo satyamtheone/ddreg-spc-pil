@@ -9,17 +9,20 @@ interface FormikPasswordProps {
   name: string;
   label?: string;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 const FormikPassword = ({
   name,
   label,
   placeholder = "Enter password",
+  disabled,
 }: FormikPasswordProps) => {
   const [type, setType] = useState<"password" | "text">("password");
 
   return (
     <FormikInput
+      disabled={disabled}
       name={name}
       type={type}
       placeholder={placeholder}

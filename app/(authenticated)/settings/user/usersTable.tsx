@@ -10,6 +10,8 @@ import RoleTableSkeleton from "@/components/common/skletons/tableSkeleton";
 import { UserManagementColumns } from "@/lib/utils";
 import AddEditUserForm from "./addEditUserForm";
 import { GetUserResponse } from "@/lib/redux/apiTypes";
+import { useAuth } from "@/lib/AuthProvider";
+import DeleteUserDialog from "./deleteUserDialog";
 
 type Props = {
   data?: GetUserResponse["data"];
@@ -18,6 +20,7 @@ type Props = {
 };
 
 const UsersTable: React.FC<Props> = ({ data = [], isLoading = false }) => {
+  const { canDoAction } = useAuth();
   const { openDrawer } = useDrawer();
   const { openDialog } = useDialog();
 
@@ -51,46 +54,51 @@ const UsersTable: React.FC<Props> = ({ data = [], isLoading = false }) => {
                     : ""
                 } grid-cols-6 border-slate-300 text-sm`}
               >
-                <div className="table-body-cell">{item.fName}</div>
-                <div className="table-body-cell">{item.lName}</div>
-                <div className="table-body-cell">{item.email}</div>
-                <div className="table-body-cell">{item.role}</div>
-                <div className="table-body-cell">{item.businessRole.name}</div>
+                <div className="table-body-cell">{item?.fName}</div>
+                <div className="table-body-cell">{item?.lName}</div>
+                <div className="table-body-cell">{item?.email}</div>
+                <div className="table-body-cell">{item?.role}</div>
+                <div className="table-body-cell">
+                  {item?.businessRole?.name}
+                </div>
 
                 <div className="table-body-actionCell">
-                  <div
-                    className="custom-button-hover-classes border p-2 border-gray-200"
-                    onClick={() =>
-                      openDrawer({
-                        title: "Add User",
-                        children: <AddEditUserForm user={item} />,
-                      })
-                    }
-                  >
-                    <FiEdit size={20} />
-                  </div>
+                  {canDoAction(item.createdById || "") && (
+                    <>
+                      <div
+                        className="custom-button-hover-classes border p-2 border-gray-200"
+                        onClick={() =>
+                          openDrawer({
+                            title: "Add User",
+                            children: <AddEditUserForm user={item} />,
+                          })
+                        }
+                      >
+                        <FiEdit size={20} />
+                      </div>
 
-                  <div
-                    className="custom-button-hover-classes border p-2 border-red-400 text-red-400"
-                    onClick={() =>
-                      openDialog({
-                        children: (
-                          <ModalProvider
-                            title="Delete Plan"
-                            size="md:w-200 w-11/12"
-                          >
-                            <div>hi</div>
-                            {/* <DeletePlanModal
-                              roleId={item._id}
-                              roleName={item.plan}
-                            /> */}
-                          </ModalProvider>
-                        ),
-                      })
-                    }
-                  >
-                    <RiDeleteBinLine size={20} />
-                  </div>
+                      <div
+                        className="custom-button-hover-classes border p-2 border-red-400 text-red-400"
+                        onClick={() =>
+                          openDialog({
+                            children: (
+                              <ModalProvider
+                                title="Delete User"
+                                size="md:w-200 w-11/12"
+                              >
+                                <DeleteUserDialog
+                                  Id={item.id}
+                                  Name={item.fName}
+                                />
+                              </ModalProvider>
+                            ),
+                          })
+                        }
+                      >
+                        <RiDeleteBinLine size={20} />
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             ))
