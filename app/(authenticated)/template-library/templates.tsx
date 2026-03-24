@@ -66,8 +66,15 @@ const Templates: React.FC<TemplatesProps> = (props) => {
         />
       </div>
       <div className="">{activeChild(activeTab)}</div>
-
-      <Templatecard />
+      <div className="flex gap-6 flex-wrap">
+        <Templatecard />
+        <Templatecard />
+        <Templatecard />
+        <Templatecard />
+        <Templatecard />
+        <Templatecard />
+        <Templatecard />
+      </div>
     </div>
   );
 };

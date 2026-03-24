@@ -46,6 +46,7 @@ const SelectForFilter: React.FC<SelectForFilterProps> = ({
           focus:bg-white
           shadow-sm
           cursor-pointer
+          animate-fadeIn
         "
       >
         {options.map((a, index) => (

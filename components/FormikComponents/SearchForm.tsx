@@ -43,7 +43,7 @@ function SearchForm({ onSearchChange, onSearchSubmit }: SearchFormProps) {
         }, [values.search]);
 
         return (
-          <Form className="w-full">
+          <Form className="w-full animate-dialog-slide-down">
             <FormikInput
               autoFocus
               name="search"

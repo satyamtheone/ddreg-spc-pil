@@ -99,15 +99,25 @@ const AddEditUserForm = ({
         <Form className="space-y-6 mt-4 mb-20">
           <div className="p-4 border rounded-xl space-y-4 spcBNS">
             <h2 className="font-semibold text-lg">User Detail</h2>
-            <FormikInput name="firstName" placeholder="Enter First Name" />
-            <FormikInput name="lastName" placeholder="Enter Last Name" />
+            <FormikInput
+              label="First Name"
+              name="firstName"
+              placeholder="Enter First Name"
+            />
+            <FormikInput
+              label="Last Name"
+              name="lastName"
+              placeholder="Enter Last Name"
+            />
             <FormikInput
               disabled={!isAddFrom}
+              label="Email"
               name="email"
               placeholder="Enter Email"
               type="email"
             />
             <FormikPassword
+              label="Password"
               disabled={!isAddFrom}
               name="password"
               placeholder="Password"

@@ -30,7 +30,7 @@ const UserTabComponent: React.FC<UserTabComponentProps> = () => {
             onClick={() =>
               openDrawer({
                 title: "Add User",
-                children: <AddEditUserForm actionType="add" />,
+              children: <AddEditUserForm actionType="add" />,
               })
             }
           />

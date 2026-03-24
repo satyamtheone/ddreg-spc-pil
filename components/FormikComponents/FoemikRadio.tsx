@@ -25,7 +25,7 @@ const FormikRadio: React.FC<FormikRadioProps> = ({
           const isChecked = field.value === value;
 
           return (
-            <div className="hover:bg-sky-50 p-2 rounded-2xl flex items-center flex-row-reverse justify-between">
+            <div className="hover:bg-sky-50 p-2 rounded-2xl flex items-center flex-row-reverse justify-between animate-dialog-slide-down">
               <input
                 type="radio"
                 name={name}
