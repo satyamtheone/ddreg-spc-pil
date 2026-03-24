@@ -27,13 +27,14 @@ const FormikInput = forwardRef<HTMLInputElement, FormikInputProps>(
       type = "text",
       placeholder,
       sideIcon,
+      containerMargin,
       ...props
     },
-    ref
+    ref,
   ) => {
     return (
       <div
-        className={`relative mb-6 `}
+        className={`relative ${containerMargin ? containerMargin : "mb-6"} `}
       >
         {label && (
           <label className="block text-zinc-800 mb-2" htmlFor={name}>
@@ -75,7 +76,7 @@ const FormikInput = forwardRef<HTMLInputElement, FormikInputProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 FormikInput.displayName = "FormikInput";

@@ -52,7 +52,7 @@ const UpdateProfilePicForm: React.FC = () => {
       enableReinitialize
       onSubmit={handleSubmit}
     >
-      {() => (
+      {({ dirty, isSubmitting, isValid, values }) => (
         <Form className="flex flex-col gap-4">
           <FormikImageUpload
             name="userProfilePic"
@@ -62,7 +62,13 @@ const UpdateProfilePicForm: React.FC = () => {
           <DynamicButton
             type="submit"
             variant="submit"
-            isSubmitting={isLoading}
+            isSubmitting={
+              isLoading ||
+              !dirty ||
+              !isValid ||
+              isSubmitting ||
+              !values.userProfilePic
+            }
             text={isLoading ? "Uploading..." : "Update Profile"}
           />
         </Form>

@@ -4,7 +4,6 @@ import UserAvatar from "./userAvatar"
 import { RiUserLine } from "react-icons/ri";
 import ProfileTabCard from "./profileTabCard";
 import { MdOutlineEmail } from "react-icons/md";
-import { FaRegBuilding } from "react-icons/fa";
 import { useGetMeQuery } from "@/lib/redux/slices/userApi";
 import ProfileSkeleton from "@/components/common/skletons/profileSkeleton";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";

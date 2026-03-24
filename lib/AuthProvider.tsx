@@ -77,7 +77,10 @@ const deleteCookie = (name: string) => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   /* 🔥 RTK Query handles everything */
-  const { data, isLoading, refetch } = useGetMeQuery();
+  const accessToken = getCookie("accessToken");
+  const { data, isLoading, refetch } = useGetMeQuery(undefined, {
+    skip: !accessToken,
+  });
 
   const user: User | null = data?.data ?? null;
 
@@ -151,7 +154,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       hasPermission,
       canDoAction,
       imageUrl,
-      refreshUser: refetch, // 🔥 now RTK powered
+      refreshUser: refetch,
       logout,
     }),
     [user, isLoading, refetch, logout],

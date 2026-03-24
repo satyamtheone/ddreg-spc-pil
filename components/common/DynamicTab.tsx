@@ -17,7 +17,7 @@ const DynamicTab = ({
   activeTab,
 }: Props) => {
   return (
-    <div className="spcBNS rounded-[35px] max-w-max animate-dialog-slide-down  p-2">
+    <div className="spcBNS rounded-[35px] max-w-max animate-dialog-slide-down bg-purple-50  p-2">
       <div className=" flex gap-2">
         {tabs.map((t) => (
           <div
