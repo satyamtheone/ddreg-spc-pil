@@ -55,14 +55,14 @@ const SpcTableHeader: React.FC<SpcTableHeaderProps> = ({
         />
         {/* TABLE VIEW */}
         <div
-          className={`custom-button font-bold border flex gap-4 items-center cursor-pointer ${view == "table" && "bg-gradient"}`}
+          className={`custom-button font-bold border flex gap-4 items-center cursor-pointer bg-white ${view == "table" && "bg-gradient"}`}
           onClick={() => onViewChange?.("table")}
         >
           <TbTableDashed size={24} />
         </div>
         {/* GRID VIEW */}
         <div
-          className={`custom-button font-bold border  flex gap-4 items-center cursor-pointer ${view == "grid" && "bg-gradient"}`}
+          className={`custom-button font-bold border  flex gap-4 items-center cursor-pointer  bg-white ${view == "grid" && "bg-gradient"}`}
           onClick={() => onViewChange?.("grid")}
         >
           <FiGrid size={24} />
@@ -72,7 +72,7 @@ const SpcTableHeader: React.FC<SpcTableHeaderProps> = ({
           <DynamicButton
             icon={<FaRegSquarePlus />}
             text="Add Reference"
-            variant="outline"
+            variant="card"
             onClick={onAddReference}
           />
         </div>

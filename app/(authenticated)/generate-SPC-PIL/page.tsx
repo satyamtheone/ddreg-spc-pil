@@ -1,3 +1,4 @@
+import { SearchDocument } from "@/components/common/SearchDocument";
 import GenerateSpc from "./generateSpc";
 
 export const metadata = {
@@ -6,7 +7,8 @@ export const metadata = {
 
 export default function GenerateSPCPIL() {
   return (
-    <div>
+    <div className="flex  flex-col gap-4">
+      <SearchDocument />
       <GenerateSpc />
     </div>
   );

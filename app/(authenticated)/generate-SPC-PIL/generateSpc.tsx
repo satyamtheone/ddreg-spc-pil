@@ -31,7 +31,7 @@ const GenerateSpc: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 p-4 bg-white spcBNS rounded-[10px]">
       <SpcTableHeader
         view={view}
         totalDocuments={24}
@@ -40,7 +40,6 @@ const GenerateSpc: React.FC = () => {
         onViewChange={handleViewChange}
         onAddReference={handleAddReference}
       />
-
       {view === "table" ? <SPCTable /> : <SpcGrid />}
     </div>
   );

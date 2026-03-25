@@ -6,6 +6,7 @@ import React from "react";
 import { CiCalendar } from "react-icons/ci";
 import { FaEye } from "react-icons/fa";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import SpcActionButtons from "./spcActionButtons";
 
 type SpcGridCardProps = {
   item: ProductDocument;
@@ -14,7 +15,7 @@ type SpcGridCardProps = {
 const SpcGridCard: React.FC<SpcGridCardProps> = ({ item }) => {
   return (
     <div
-      className={`shadow-md  rounded-[10px] py-4  relative flex flex-col gap-4 w-110 border ${crudOperationChipColors({ variant: item?.status[0] }).border} animate-dialog-slide-down`}
+      className={`shadow-md  rounded-[10px] py-4  relative flex flex-col gap-4 w-104 border ${crudOperationChipColors({ variant: item?.status[0] }).border} animate-dialog-slide-down`}
     >
       {item.status.find((f) => f === "Approved") && (
         <div className="absolute right-0 bg-emerald-400 p-1 text-sm font-semibold text-white px-4 rounded-l-3xl">
@@ -27,7 +28,7 @@ const SpcGridCard: React.FC<SpcGridCardProps> = ({ item }) => {
         <div className=" text-sm font-normal text-neutral-400">
           Product Name
         </div>
-        <div className=" font-semibold">{item?.productName}</div>
+        <div className=" font-semibold">{item?.productName} </div>
       </div>
       <div className="flex gap-4 px-4">
         <div>
@@ -57,22 +58,7 @@ const SpcGridCard: React.FC<SpcGridCardProps> = ({ item }) => {
         </div>
       </div>
 
-      <div className="flex gap-4 w-full px-4">
-        <DynamicButton
-          variant="card"
-          text="Preview"
-          size="slim"
-          icon={<FaEye size={20} />}
-        />
-
-        <DynamicButton
-          variant="card"
-          text="Select"
-          size="slim"
-          icon={<IoMdCheckmarkCircleOutline size={20} />}
-          iconPosition="right"
-        />
-      </div>
+      <SpcActionButtons  item={item} />
     </div>
   );
 };

@@ -1,7 +1,9 @@
+"use client";
 import MiniChip from "@/components/common/miniChip";
 import { crudOperationChipColors } from "@/lib/utilMethods";
 import { productDocuments, SpcTableColumns } from "@/lib/utils";
 import React from "react";
+import SpcActionButtons from "./spcActionButtons";
 
 type SPCTableProps = {};
 
@@ -12,7 +14,7 @@ const SPCTable: React.FC<SPCTableProps> = (props) => {
       <div className="w-full overflow-x-auto pb-2 animate-fadeIn ">
         <div className="table-container spcBNS rounded-[10px] ">
           {/* Header */}
-          <div className="grid grid-cols-8  text-white bg-sky-600 rounded-t-[10px] pl-1">
+          <div className="grid grid-cols-9  text-white bg-sky-600 rounded-t-[10px] pl-1">
             {SpcTableColumns.map((p: any, index: number) => (
               <div key={index} className="table-header-cell   ">
                 {p.name}
@@ -36,7 +38,7 @@ const SPCTable: React.FC<SPCTableProps> = (props) => {
                     isLoading
                       ? "pointer-events-none animate-pulse opacity-20"
                       : ""
-                  } grid-cols-8 text-sm border-l-4 border-b-[0.5px] ${crudOperationChipColors({ variant: item?.status[0] }).border} `}
+                  } grid-cols-9 text-sm border-l-4 border-b-[0.5px] ${crudOperationChipColors({ variant: item?.status[0] }).border} `}
                 >
                   <div className="table-body-cell">{item?.productName}</div>
                   <div className="table-body-cell">
@@ -52,44 +54,9 @@ const SPCTable: React.FC<SPCTableProps> = (props) => {
                       <MiniChip status={p} key={i} />
                     ))}
                   </div>
-
-                  {/* <div className="table-body-actionCell">
-                    {canDoAction(item.createdById || "") && (
-                      <>
-                        <div
-                          className="custom-button-hover-classes border p-2 border-gray-200"
-                          onClick={() =>
-                            openDrawer({
-                              title: "Update Role",
-                              children: <AddEditRoleForm role={item} />,
-                            })
-                          }
-                        >
-                          <FiEdit size={20} />
-                        </div>
-                        <div
-                          className="custom-button-hover-classes border p-2 border-red-400 text-red-400"
-                          onClick={() =>
-                            openDialog({
-                              children: (
-                                <ModalProvider
-                                  title="Delete Role"
-                                  size="md:w-200 w-11/12"
-                                >
-                                  <DeleteRoleDialog
-                                    Id={item.id}
-                                    Name={item.name}
-                                  />
-                                </ModalProvider>
-                              ),
-                            })
-                          }
-                        >
-                          <RiDeleteBinLine size={20} />
-                        </div>
-                      </>
-                    )}
-                  </div> */}
+                  <div className="col-span-2 flex gap-4 items-center w-full">
+                    <SpcActionButtons item={item} />
+                  </div>
                 </div>
               ))
             ) : (

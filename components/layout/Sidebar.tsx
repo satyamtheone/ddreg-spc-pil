@@ -153,47 +153,6 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
           <div
             className={`flex flex-col items-center justify-center bg-[#E3F3FE] rounded-md space-y-3.5 ${open ? "p-2.5" : "p-0.5"}`}
           >
-            {open && (
-              <motion.div
-                initial={{ opacity: 0, visibility: "hidden" }}
-                animate={{ opacity: 1, visibility: "visible" }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-                className="text-xs w-full"
-              >
-                <div className="flex items-center justify-between">
-                  <p>Documents This Month</p>
-                  <p>34</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p>Pending Approvals</p>
-                  <p className="px-1 bg-amber-400 rounded-lg">3</p>
-                </div>
-              </motion.div>
-            )}
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="w-full bg-transparent shadow-none border"
-            >
-              <Image
-                src="/sidebar/black/Icon-12.svg"
-                alt="Upgrade Icon"
-                width={20}
-                height={20}
-                className="mr-1 py-6 object-contain"
-              />
-              {open && (
-                <motion.span
-                  initial={{ opacity: 0, visibility: "hidden" }}
-                  animate={{ opacity: 1, visibility: "visible" }}
-                  transition={{ duration: 0.3, delay: 0.2 }}
-                >
-                  Quick Actions
-                </motion.span>
-              )}
-            </Button>
-
             <Link
               href={"/account"}
               className={`border border-sky-400 rounded-md w-full flex items-center justify-between gap-2 overflow-hidden ${open ? " py-1 px-2" : "p-0.5"}`}

@@ -6,7 +6,7 @@ type SpcGridProps = {};
 
 const SpcGrid: React.FC<SpcGridProps> = (props) => {
   return (
-    <div className=" flex  gap-6 flex-wrap">
+    <div className=" flex  gap-4 flex-wrap">
       {productDocuments.map((document, index) => (
         <SpcGridCard key={index} item={document} />
       ))}

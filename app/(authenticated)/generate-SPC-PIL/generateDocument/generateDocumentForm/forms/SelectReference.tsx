@@ -1,0 +1,52 @@
+"use client";
+
+import { Formik, Form, Field } from "formik";
+import { useStepper } from "../stepper/stepperContext,";
+import { step1Schema } from "../validation/schema";
+import FormikInput from "@/components/FormikComponents/FormikInput";
+import DynamicButton from "@/components/common/DynamicButton";
+import { FaArrowLeft } from "react-icons/fa6";
+import { IoDocumentTextOutline } from "react-icons/io5";
+
+export default function SelectReference() {
+  const { formData, updateData, setStep } = useStepper();
+
+  return (
+    <Formik
+      initialValues={{
+        referenceName: formData.referenceName || "",
+      }}
+      validationSchema={step1Schema}
+      onSubmit={(values) => {
+        updateData(values);
+        setStep(2);
+      }}
+    >
+      <Form className="flex flex-col gap-4">
+        <FormikInput
+          name="referenceName"
+          placeholder="Reference Name"
+          label="Reference Name"
+        />
+        <div className="w-full flex justify-between">
+          <div>
+            <DynamicButton
+              text="Back to Search"
+              type="button"
+              variant="card"
+              icon={<FaArrowLeft />}
+            />
+          </div>
+          <div>
+            <DynamicButton
+              text="Continue To Template Selection"
+              type="submit"
+              variant="submit"
+              icon={<IoDocumentTextOutline size={25} />}
+            />
+          </div>
+        </div>
+      </Form>
+    </Formik>
+  );
+}
