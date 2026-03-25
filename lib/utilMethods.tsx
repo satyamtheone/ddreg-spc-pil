@@ -30,6 +30,7 @@ export const crudOperationChipColors = ({
         icon: <RiDeleteBin6Line size={size} />,
       };
     case "REVIEWER":
+    case "In Process":
       return {
         border: "border-amber-400",
         hover: "hover:bg-amber-400 hover:text-white",
@@ -40,6 +41,7 @@ export const crudOperationChipColors = ({
 
     case "APPROVER":
     case "Latest":
+    case "Approved":
       return {
         border: "border-green-500",
         hover: "hover:bg-green-500 hover:text-white",
@@ -49,10 +51,10 @@ export const crudOperationChipColors = ({
       };
     default:
       return {
-        border: "border-gray-500",
-        hover: "hover:bg-gray-500 hover:text-white",
-        text: "text-gray-500",
-        bg: "bg-gray-500 text-white",
+        border: "border-zinc-500",
+        hover: "hover:bg-zinc-500 hover:text-white",
+        text: "text-zinc-500",
+        bg: "bg-zinc-500 text-white",
         icon: <GrUserAdmin size={size} />,
       };
   }

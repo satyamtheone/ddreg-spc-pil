@@ -10,7 +10,7 @@ type OptionType = {
 };
 
 type SelectForFilterProps = {
-  handlesearchTitle: (value: string) => void;
+  handleOptionChange: (value: string) => void;
   options: OptionType[];
   optionTitle?: string;
 };
@@ -18,7 +18,7 @@ type SelectForFilterProps = {
 /* ================= COMPONENT ================= */
 
 const SelectForFilter: React.FC<SelectForFilterProps> = ({
-  handlesearchTitle,
+  handleOptionChange,
   options,
   optionTitle,
 }) => {
@@ -31,7 +31,7 @@ const SelectForFilter: React.FC<SelectForFilterProps> = ({
 
       <select
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          handlesearchTitle(e.target.value)
+          handleOptionChange(e.target.value)
         }
         className="
           w-full appearance-none

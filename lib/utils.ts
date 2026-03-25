@@ -154,3 +154,117 @@ export const RolesManagementColumns = [
   { name: "Description", key: "description" },
   { name: "Permissions", key: "permissions" },
 ];
+export type ProductStatus = "Draft" | "In Process" | "Latest" | "Approved";
+
+export type ProductDocument = {
+  productName: string;
+  activeIngredient: string;
+  country: string;
+  type: "SPC" | "PIL";
+  version: number;
+  lastModified: string;
+  status: ProductStatus[];
+};
+
+export const SpcTableColumns = [
+  { name: "Product Name", key: "Product Name" },
+  { name: "Active Ingredient ", key: "Active Ingredient" },
+  { name: "Country", key: "Country" },
+  { name: "Type", key: "Type" },
+  { name: "Version ", key: "Version" },
+  { name: "Last Modified", key: "Last Modified" },
+  { name: "Status", key: "Status" },
+];
+
+export const productDocuments: ProductDocument[] = [
+  {
+    productName: "Aspirin Plus 100mg",
+    activeIngredient: "Acetylsalicylic Acid",
+    country: "United Kingdom",
+    type: "SPC",
+    version: 3.1,
+    lastModified: "2026-01-10",
+    status: ["Latest", "Approved"],
+  },
+  {
+    productName: "Paracetamol Plus 500mg",
+    activeIngredient: "Paracetamol",
+    country: "Germany",
+    type: "SPC",
+    version: 2.4,
+    lastModified: "2025-12-10",
+    status: ["In Process"],
+  },
+  {
+    productName: "Ibuprofen Max 400mg",
+    activeIngredient: "Ibuprofen",
+    country: "France",
+    type: "SPC",
+    version: 4.0,
+    lastModified: "2025-10-20",
+    status: ["Draft"],
+  },
+  {
+    productName: "Metformin XR 1000mg",
+    activeIngredient: "Metformin Hydrochloride",
+    country: "United Kingdom",
+    type: "SPC",
+    version: 1.0,
+    lastModified: "2025-09-18",
+    status: ["Latest"],
+  },
+  {
+    productName: "Lisinopril 10mg",
+    activeIngredient: "Lisinopril",
+    country: "Germany",
+    type: "PIL",
+    version: 3.1,
+    lastModified: "2025-08-25",
+    status: ["In Process"],
+  },
+  {
+    productName: "Aspirin Plus 100mg",
+    activeIngredient: "Acetylsalicylic Acid",
+    country: "Italy",
+    type: "SPC",
+    version: 2.0,
+    lastModified: "2026-01-10",
+    status: ["Approved"],
+  },
+  {
+    productName: "Aspirin Plus 100mg",
+    activeIngredient: "Acetylsalicylic Acid",
+    country: "Germany",
+    type: "SPC",
+    version: 2.0,
+    lastModified: "2026-01-10",
+    status: ["Draft"],
+  },
+  {
+    productName: "Aspirin Plus 100mg",
+    activeIngredient: "Acetylsalicylic Acid",
+    country: "United Kingdom",
+    type: "SPC",
+    version: 2.0,
+    lastModified: "2026-01-10",
+    status: ["In Process"],
+  },
+  {
+    productName: "Aspirin Plus 100mg",
+    activeIngredient: "Acetylsalicylic Acid",
+    country: "Germany",
+    type: "SPC",
+    version: 2.0,
+    lastModified: "2026-01-10",
+    status: ["Latest"],
+  },
+  {
+    productName: "Aspirin Plus 100mg",
+    activeIngredient: "Acetylsalicylic Acid",
+    country: "United Kingdom",
+    type: "SPC",
+    version: 2.0,
+    lastModified: "2026-01-10",
+    status: ["Draft"],
+  },
+];
