@@ -12,7 +12,7 @@ const steps = [
 
 export default function Stepper() {
   const { step, setStep } = useStepper();
-  console.log(step);
+
 
   return (
     <div className="flex items-center justify-between mb-10">
@@ -34,7 +34,9 @@ export default function Stepper() {
                 {step >= stepNumber + 1 ? (
                   <Check className="animate-dialog-slide-down" />
                 ) : (
-                  <div className="h-4 w-4 bg-gradient rounded-full animate-fadeIn"></div>
+                  <div
+                    className={`h-4 w-4  rounded-full animate-fadeIn ${step >= stepNumber ? "bg-gradient" : "bg-gray-300"}`}
+                  ></div>
                 )}
               </div>
               {steps.length === stepNumber ? null : (
@@ -44,7 +46,9 @@ export default function Stepper() {
               )}
             </div>
 
-            <span className="text-sm absolute text-nowrap text-teal-700 -bottom-8 -left-8 ">
+            <span
+              className={`text-sm absolute text-nowrap text-teal-700 -bottom-8 -left-8 ${step == stepNumber && "font-bold text-base"} `}
+            >
               {label}
             </span>
           </div>
