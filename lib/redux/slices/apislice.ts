@@ -41,7 +41,7 @@ const deleteCookie = (name: string) => {
 /* ================= BASE QUERY ================= */
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://192.168.2.159:5000/api",
+  baseUrl: "https://labelling.ddregpharma.com/api",
   prepareHeaders: (headers) => {
     const token = getCookie("accessToken");
 

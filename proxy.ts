@@ -8,14 +8,12 @@ export function proxy(request: NextRequest) {
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
   /* ================= API PROXY ================= */
-
   if (pathname.startsWith("/api")) {
     const url = request.nextUrl.clone();
 
-    url.protocol = "http";
-    url.hostname = "192.168.2.159";
-    url.port = "5000";
-
+    url.protocol = "https";
+    url.hostname = "labelling.ddregpharma.com";
+    url.port = "";
     return NextResponse.rewrite(url);
   }
 
