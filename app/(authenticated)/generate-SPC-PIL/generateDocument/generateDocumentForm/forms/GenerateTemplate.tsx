@@ -28,7 +28,7 @@ export default function GenerateTemplate() {
             placeholder="Reference Name"
             label="Reference Name"
           />
-          <div className="w-full flex justify-between">
+          <div className="w-full flex justify-between ">
             <div>
               <DynamicButton
                 text="Back "

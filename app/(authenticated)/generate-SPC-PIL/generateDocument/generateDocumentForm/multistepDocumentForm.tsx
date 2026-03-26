@@ -1,19 +1,18 @@
 "use client";
 
 import StepDataInput from "./forms/StepDataInput";
-import Step2 from "./forms/SelectTemplate";
 import Stepper from "./stepper/stepper";
 import { StepperProvider, useStepper } from "./stepper/stepperContext,";
 import SelectTemplate from "./forms/SelectTemplate";
-import SelectReference from "./forms/SelectReference";
 import GenerateTemplate from "./forms/GenerateTemplate";
+import SelectReferenceForm from "./forms/SelectReferenceForm";
 
 function FormController() {
   const { step } = useStepper();
 
   switch (step) {
     case 1:
-      return <SelectReference />;
+      return <SelectReferenceForm />;
     case 2:
       return <SelectTemplate />;
     case 3:
@@ -28,10 +27,10 @@ function FormController() {
 export default function MultistepDocumentForm() {
   return (
     <StepperProvider>
-      <div className="max-w-xl mx-auto mt-10">
+      <div className="max-w-xl mx-auto animate-dialog-slide-down ">
         <Stepper />
       </div>
-      <div>
+      <div className="animate-dialog-slide-down">
         <FormController />
       </div>
     </StepperProvider>

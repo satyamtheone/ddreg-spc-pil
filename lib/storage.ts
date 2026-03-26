@@ -10,7 +10,7 @@ export const loadForm = () => {
   return data ? JSON.parse(data) : null;
 };
 export interface StepFormData {
-  referenceName?: string;
+  slectedDocument?: boolean;
   templateName?: string;
   fillData?: string;
   generateTemplate?: string;

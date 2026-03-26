@@ -1,7 +1,9 @@
 import * as Yup from "yup";
 
 export const step1Schema = Yup.object({
-  referenceName: Yup.string().required("Required"),
+  slectedDocument: Yup.boolean()
+    .oneOf([true], "You must select a document")
+    .required("Required"),
 });
 
 export const step2Schema = Yup.object({
