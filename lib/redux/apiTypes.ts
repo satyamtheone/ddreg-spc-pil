@@ -1,3 +1,4 @@
+// ================================================================================== User Types
 export type User = {
   id: string;
   fName: string;
@@ -129,4 +130,105 @@ export type GetUserResponse = {
   success: boolean;
   message: string;
   data: User[];
+};
+
+export type Document = {
+  id: string;
+  name: string;
+  countryId: string;
+};
+export type Country = {
+  id: string;
+  name: string;
+  code: string;
+  regulatoryBody: string;
+  createdAt: string;
+  documents: Document[];
+};
+
+// ================================================================================== Template Types
+
+export type GetCountriesResponse = {
+  success: boolean;
+  message: string;
+  data: Country[];
+};
+
+export type TemplateFile = {
+  size: number;
+  fileName: string;
+  mimeType: string;
+};
+
+export type SchemaMeta = {
+  type: string;
+  version: string | null;
+};
+
+export type CountryTemplate = {
+  name: string;
+  code: string;
+  regulatoryBody: string;
+};
+
+export type TypeInfo = {
+  name: string;
+  country: CountryTemplate;
+};
+
+export type Template = {
+  id: string;
+  name: string;
+  version: string;
+  title: string;
+  typeId: string;
+  sourceType: "UPLOAD" | string;
+  sourceUrl: string | null;
+  templateFile: TemplateFile;
+  schemaMeta: SchemaMeta;
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
+  type: TypeInfo;
+  sectionsCount: number;
+  usageCount: number;
+};
+export type GetTemplatesResponse = {
+  success: boolean;
+  message: string;
+  data: Template[];
+};
+
+export type CreateTemplateResponse = {
+  success: boolean;
+  message: string;
+  data: [];
+};
+
+export type CreateTemplateRequest = {
+  title: string;
+  country: string;
+  type: string;
+  description?: string;
+  templateFile: File;
+};
+
+export type DocumentType = {
+  id: string;
+  name: string;
+  countryId: string;
+};
+
+export type CountryType = {
+  id: string;
+  name: string;
+  code: string;
+  regulatoryBody: string;
+  createdAt: string;
+  documents: DocumentType[];
+};
+
+export type Option = {
+  option: string;
+  value: string;
 };

@@ -9,8 +9,17 @@ import Templates from "./templates";
 import DynamicButton from "@/components/common/DynamicButton";
 import { RiUploadCloud2Line } from "react-icons/ri";
 import { useDrawer } from "@/components/hooks/DrawerProvider";
+import UploadTemplateFrom from "./uploadTemplateFrom";
+import { useGetCountriesQuery } from "@/lib/redux/slices/templateApi";
+import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
+import { getAllDocumentOptions, getCountryOptions } from "@/lib/utilMethods";
 
 export default function TemplateLibrary() {
+  const query = useGetCountriesQuery();
+  const data = useQueryErrorHandler(query, "Get Countries");
+  const options = getCountryOptions(data?.data || []);
+  const allTypesOptions = getAllDocumentOptions(data?.data || []);
+
   const { openDrawer } = useDrawer();
   return (
     <div className="flex flex-col gap-4">
@@ -27,7 +36,7 @@ export default function TemplateLibrary() {
             onClick={() =>
               openDrawer({
                 title: "Update Template",
-                children: <div>hi</div>,
+                children: <UploadTemplateFrom />,
               })
             }
           />
@@ -59,7 +68,11 @@ export default function TemplateLibrary() {
           title="Avg Rating"
         />
       </div>
-      <Templates />
+      <Templates
+        options={options}
+        types={allTypesOptions}
+        isLoading={query.isLoading || query.isFetching}
+      />
     </div>
   );
 }

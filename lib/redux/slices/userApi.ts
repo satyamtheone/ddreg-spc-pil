@@ -32,7 +32,7 @@ export const userApi = apiSlice.injectEndpoints({
       UpdatePreferencesPayload
     >({
       query: (body) => ({
-        url: "/users/updatePreferences",
+        url: "/users/updatePreferences", 
         method: "PATCH",
         body,
       }),

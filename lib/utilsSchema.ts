@@ -63,3 +63,13 @@ export const createUserValidationSchema = (type: string) =>
 
     businessRole: Yup.string().trim().required("Description is required"),
   });
+
+export const UploadTemplateFromSchema = () =>
+  Yup.object({
+    title: Yup.string().trim().required("Title is required"),
+    type: Yup.string().trim().required("Type is required"),
+    country: Yup.string().trim().required("Country is required"),
+    description: Yup.string().trim(),
+    templateFile: Yup.mixed().nullable().required(),
+  });
+

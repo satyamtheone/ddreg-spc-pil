@@ -3,6 +3,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiRead } from "react-icons/ci";
 import { GrUpdate } from "react-icons/gr";
 import { GrUserAdmin } from "react-icons/gr";
+import { CountryType, Option } from "./redux/apiTypes";
+import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";
 
 export const crudOperationChipColors = ({
   variant,
@@ -58,4 +60,50 @@ export const crudOperationChipColors = ({
         icon: <GrUserAdmin size={size} />,
       };
   }
+};
+
+export const formatedDate = (dateString: string): string => {
+  const date = new Date(dateString);
+
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
+export const getCountryOptions = (data: CountryType[]): Option[] => {
+  return data.map((country) => ({
+    option: country.name,
+    value: country.code,
+  }));
+};
+
+export const getCountryLabel = (data: CountryType[]): FormikOptonType[] => {
+  return data.map((country) => ({
+    label: country.name,
+    value: country.code,
+  }));
+};
+
+export const getAllDocumentOptions = (data: CountryType[]): Option[] => {
+  return data.flatMap((country) =>
+    country.documents.map((doc) => ({
+      option: doc.name,
+      value: doc.name,
+    })),
+  );
+};
+export const getDocumentOptions = (
+  data: CountryType[],
+  countryCode: string,
+): FormikOptonType[] => {
+  const country = data.find((c) => c.code === countryCode);
+
+  if (!country) return [];
+
+  return country.documents.map((doc) => ({
+    label: doc.name,
+    value: doc.name,
+  }));
 };

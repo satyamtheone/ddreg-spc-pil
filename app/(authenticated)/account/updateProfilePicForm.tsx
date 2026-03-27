@@ -31,7 +31,6 @@ const UpdateProfilePicForm: React.FC = () => {
     try {
       const formData = new FormData();
 
-      // ✅ only send if it's a new file
       if (values.userProfilePic instanceof File) {
         formData.append("userProfilePic", values.userProfilePic);
       }

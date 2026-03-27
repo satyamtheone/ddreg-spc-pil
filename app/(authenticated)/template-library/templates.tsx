@@ -4,11 +4,23 @@ import SelectForFilter from "@/components/common/selectForFilter";
 import SearchForm from "@/components/FormikComponents/SearchForm";
 import React, { useState } from "react";
 import Templatecard from "./templateCard";
+import { useGetTemplatesQuery } from "@/lib/redux/slices/templateApi";
+import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
+import { Option } from "@/lib/redux/apiTypes";
+import InputSkeleton from "@/components/common/skletons/inputSkeleton";
 
-type TemplatesProps = {};
+type TemplatesProps = {
+  options: Option[];
+  isLoading: boolean;
+  types: Option[];
+};
 
-const Templates: React.FC<TemplatesProps> = (props) => {
+const Templates: React.FC<TemplatesProps> = ({ options, isLoading, types }) => {
   const [activeTab, setActiveTab] = useState("All");
+
+  const query = useGetTemplatesQuery();
+  const data = useQueryErrorHandler(query, "Get Templates");
+
   // const { user, isLoading } = useAuth();
   const activeChild = (tab: string) => {
     switch (tab) {
@@ -24,6 +36,7 @@ const Templates: React.FC<TemplatesProps> = (props) => {
         return <>hisdf</>;
     }
   };
+
   const handleSetActiveTabs = (value: string) => {
     setActiveTab(value);
   };
@@ -36,8 +49,6 @@ const Templates: React.FC<TemplatesProps> = (props) => {
         <DynamicTab
           tabs={[
             { label: "All", value: "All" },
-            { label: "SPC", value: "SPC" },
-            { label: "PIL", value: "PIL" },
             { label: "Latest", value: "Latest" },
           ]}
           setActiveTab={handleSetActiveTabs}
@@ -46,34 +57,35 @@ const Templates: React.FC<TemplatesProps> = (props) => {
         <div className="min-w-130">
           <SearchForm onSearchChange={handleSearch} />
         </div>
-        <SelectForFilter
-          handlesearchTitle={(value: string) => console.log(value)}
-          optionTitle="Filter by"
-          options={[
-            { value: "Country", option: "Country" },
-            { value: "email", option: "Email" },
-            { value: "role", option: "Role" },
-          ]}
-        />
-        <SelectForFilter
-          handlesearchTitle={(value: string) => console.log(value)}
-          optionTitle="Filter by"
-          options={[
-            { value: "type", option: "Type" },
-            { value: "email", option: "Email" },
-            { value: "role", option: "Role" },
-          ]}
-        />
+        {isLoading ? (
+          <div className="flex gap-4 items-center">
+            <div className="min-w-70">
+              <InputSkeleton />
+            </div>
+            <div className="min-w-70">
+              <InputSkeleton />
+            </div>
+          </div>
+        ) : (
+          <div className="flex gap-4 items-center">
+            <SelectForFilter
+              handleOptionChange={(value: string) => console.log(value)}
+              optionTitle="Filter by"
+              options={options}
+            />
+
+            <SelectForFilter
+              handleOptionChange={(value: string) => console.log(value)}
+              optionTitle="Filter by"
+              options={types}
+            />
+          </div>
+        )}
       </div>
-      <div className="">{activeChild(activeTab)}</div>
       <div className="flex gap-6 flex-wrap">
-        <Templatecard />
-        <Templatecard />
-        <Templatecard />
-        <Templatecard />
-        <Templatecard />
-        <Templatecard />
-        <Templatecard />
+        {data?.data.map((template, index) => (
+          <Templatecard key={index} template={template} />
+        ))}
       </div>
     </div>
   );

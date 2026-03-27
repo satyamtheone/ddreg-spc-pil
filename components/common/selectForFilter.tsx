@@ -2,7 +2,6 @@ import React from "react";
 import { FiFilter } from "react-icons/fi";
 import { GoChevronDown } from "react-icons/go";
 
-/* ================= TYPES ================= */
 
 type OptionType = {
   value: string;
@@ -15,7 +14,6 @@ type SelectForFilterProps = {
   optionTitle?: string;
 };
 
-/* ================= COMPONENT ================= */
 
 const SelectForFilter: React.FC<SelectForFilterProps> = ({
   handleOptionChange,
@@ -23,7 +21,7 @@ const SelectForFilter: React.FC<SelectForFilterProps> = ({
   optionTitle,
 }) => {
   return (
-    <div className="relative min-w-70 cursor-pointer">
+    <div className="relative min-w-70 cursor-pointer animate-dialog-slide-down">
       {/* Icon */}
       <span className="absolute left-3 top-1/2 -translate-y-1/2">
         <FiFilter className="h-6 w-6 font-semibold" />
@@ -46,7 +44,7 @@ const SelectForFilter: React.FC<SelectForFilterProps> = ({
           focus:bg-white
           shadow-sm
           cursor-pointer
-          animate-fadeIn
+          
         "
       >
         {options.map((a, index) => (

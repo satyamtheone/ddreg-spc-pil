@@ -7,8 +7,9 @@ import FormikInput from "@/components/FormikComponents/FormikInput";
 import DynamicButton from "@/components/common/DynamicButton";
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoDocumentTextOutline } from "react-icons/io5";
+import SelectedDocumentDetailsChip from "./SelectedDocumentDetailsChip";
 
-export default function SelectTemplate() {
+export default function SelectTemplateForm() {
   const { formData, updateData, setStep } = useStepper();
 
   return (
@@ -24,6 +25,7 @@ export default function SelectTemplate() {
     >
       {({ isValid, dirty }) => (
         <Form className="flex flex-col gap-4">
+          <SelectedDocumentDetailsChip />
           <FormikInput
             name="templateName"
             placeholder="Template Name"

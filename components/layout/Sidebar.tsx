@@ -72,18 +72,17 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
       >
         {/* Sidebar Header */}
         <div className="relative h-17.5 border-b flex w-full items-center justify-center">
-          <div>
-            <Image
-              src={
-                open
-                  ? "/sidebar/header/Icon-01.svg"
-                  : "/sidebar/header/Icon-03.svg"
-              }
-              alt="SPC-PIL Logo"
-              fill
-              className="mx-auto object-contain p-2.5"
-            />
-          </div>
+          <Image
+            src={
+              open
+                ? "/sidebar/header/Icon-01.svg"
+                : "/sidebar/header/Icon-03.svg"
+            }
+            alt="SPC-PIL Logo"
+            fill
+            className="mx-auto object-contain p-2.5"
+          />
+
           {/* Toggle Button - Floating above sidebar */}
           <Image
             src="/sidebar/header/Icon-02.svg"

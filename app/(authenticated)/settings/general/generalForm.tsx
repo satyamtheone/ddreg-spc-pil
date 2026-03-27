@@ -62,7 +62,7 @@ const GeneralForm = () => {
         >
           {({ dirty, errors, isSubmitting }) => (
             <div className="w-full animate-fadeIn">
-              <Form className="w-full flex flex-col gap-6">
+              <Form className="w-full flex flex-col gap-2">
                 {/* Country */}
                 <FormikSelect
                   name="country"
