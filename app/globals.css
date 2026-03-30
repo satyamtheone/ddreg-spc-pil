@@ -381,3 +381,48 @@ body {
 .table-body-actionCell {
   @apply flex gap-2 max-md:flex-wrap items-center  border-slate-300 p-2;
 }
+
+
+/* Jodit Editor CLasses =============================================== */
+
+/* Editor Container */
+.jodit-container {
+  border: none !important;
+  font-family: Inter, sans-serif;
+}
+
+/* Toolbar */
+.jodit-toolbar {
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  padding: 6px !important;
+}
+
+/* Toolbar buttons */
+.jodit-toolbar-button {
+  border-radius: 6px !important;
+}
+
+.jodit-toolbar-button:hover {
+  background: #e2e8f0 !important;
+}
+
+/* Editor area */
+.jodit-wysiwyg {
+  padding: 20px !important;
+  @apply rounded-[10px]
+}
+
+/* Focus style */
+/* .jodit-container:focus-within {
+  box-shadow: 0 0 0 2px #3b82f6;
+} */
+
+.jodit-toolbar {
+  border: none !important;
+  background: transparent !important;
+}
+
+.jodit-toolbar-button {
+  border-radius: 6px !important;
+}

@@ -8,6 +8,7 @@ import { useGetTemplatesQuery } from "@/lib/redux/slices/templateApi";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import { Option } from "@/lib/redux/apiTypes";
 import InputSkeleton from "@/components/common/skletons/inputSkeleton";
+import TemplateCardSkeleton from "@/components/common/skletons/templateCardSkeleton";
 
 type TemplatesProps = {
   options: Option[];
@@ -55,7 +56,10 @@ const Templates: React.FC<TemplatesProps> = ({ options, isLoading, types }) => {
           activeTab={activeTab}
         />
         <div className="min-w-130">
-          <SearchForm onSearchChange={handleSearch} />
+          <SearchForm
+            onSearchChange={handleSearch}
+            isLoading={query.isLoading}
+          />
         </div>
         {isLoading ? (
           <div className="flex gap-4 items-center">
@@ -82,10 +86,18 @@ const Templates: React.FC<TemplatesProps> = ({ options, isLoading, types }) => {
           </div>
         )}
       </div>
-      <div className="flex gap-6 flex-wrap">
-        {data?.data.map((template, index) => (
-          <Templatecard key={index} template={template} />
-        ))}
+      <div className="flex gap-6 flex-wrap ">
+        {query.isLoading ? (
+          <div>
+            <TemplateCardSkeleton />
+          </div>
+        ) : (
+          <>
+            {data?.data.map((template, index) => (
+              <Templatecard key={index} template={template} />
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

@@ -232,3 +232,50 @@ export type Option = {
   option: string;
   value: string;
 };
+
+
+export type Section = {
+  id: string;
+  title: string;
+  content: string;
+  type: string;
+  required: boolean;
+  children?: Section[];
+};
+
+export type TemplateById = {
+  id: string;
+  name: string;
+  version: string;
+  title: string;
+  typeId: string;
+  sourceType: string;
+  sourceUrl: string | null;
+  templateFile: {
+    size: number;
+    fileName: string;
+    mimeType: string;
+  };
+  schemaMeta: {
+    type: string;
+    version: null;
+  };
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
+  type: {
+    name: string;
+    country: {
+      name: string;
+      code: string;
+      regulatoryBody: string;
+    };
+  };
+  section: Section[];
+};
+
+export type GetTemplateByIdResponse = {
+  success: boolean;
+  message: string;
+  data: TemplateById;
+};

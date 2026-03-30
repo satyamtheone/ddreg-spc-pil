@@ -6,6 +6,7 @@ import {
   CreateTemplateRequest,
   CreateTemplateResponse,
   GetCountriesResponse,
+  GetTemplateByIdResponse,
   GetTemplatesResponse,
 } from "../apiTypes";
 import { apiSlice } from "./apislice";
@@ -35,6 +36,13 @@ export const templateApi = apiSlice.injectEndpoints({
         body,
       }),
       invalidatesTags: ["getTemplates"],
+    }),
+
+    getTemplateById: builder.query<GetTemplateByIdResponse, string>({
+      query: (id) => ({
+        url: `/templates/${id}`,
+        method: "GET",
+      }),
     }),
     // 🔹updatePreferences
     // updatePreferences: builder.mutation<
@@ -81,4 +89,5 @@ export const {
   useGetCountriesQuery,
   useGetTemplatesQuery,
   useCreateTemplateMutation,
+  useGetTemplateByIdQuery,
 } = templateApi;

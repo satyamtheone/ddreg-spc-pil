@@ -107,3 +107,36 @@ export const getDocumentOptions = (
     value: doc.name,
   }));
 };
+
+export type Section = {
+  id: string;
+  title: string;
+  content: string;
+  type: string;
+  required: boolean;
+  children?: Section[];
+};
+
+export type SectionWithNumber = Section & {
+  number: string;
+  children?: SectionWithNumber[];
+};
+
+export const addSectionNumbers = (
+  sections: Section[],
+  parentNumber = "",
+): SectionWithNumber[] => {
+  return sections.map((section, index) => {
+    const number = parentNumber
+      ? `${parentNumber}.${index + 1}`
+      : `${index + 1}`;
+
+    return {
+      ...section,
+      number,
+      children: section.children
+        ? addSectionNumbers(section.children, number)
+        : [],
+    };
+  });
+};

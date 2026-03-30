@@ -7,6 +7,7 @@ import React from "react";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { MdOutlineFileDownload } from "react-icons/md";
+import ViewTemplateDrawer from "./viewTemplateDrawer";
 
 type TemplatecardProps = {
   template: Template;
@@ -15,7 +16,7 @@ type TemplatecardProps = {
 const Templatecard: React.FC<TemplatecardProps> = ({ template }) => {
   const { openDrawer } = useDrawer();
   return (
-    <div className="spcBNS p-4 bg-white rounded-[10px] w-105 flex flex-col gap-2 animate-dialog-slide-down ">
+    <div className="spcBNS p-4 bg-white rounded-[10px] w-105 flex flex-col gap-2  ">
       <div className="flex justify-between items-center">
         <div className="p-3 spcBNS max-w-min rounded-lg bg-gradient">
           <IoDocumentTextOutline size={24} />
@@ -63,8 +64,8 @@ const Templatecard: React.FC<TemplatecardProps> = ({ template }) => {
           icon={<MdOutlineRemoveRedEye size={20} />}
           onClick={() =>
             openDrawer({
-              title: "Update Template",
-              children: <div>hi</div>,
+              title: `${template?.name || "Template Preview"}`,
+              children: <ViewTemplateDrawer templateId={template.id} />,
             })
           }
         />
