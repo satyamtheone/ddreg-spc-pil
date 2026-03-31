@@ -43,7 +43,7 @@ const DynamicButton = forwardRef<HTMLButtonElement, Props>(
         ref={ref}
         type={type}
         disabled={isSubmitting}
-        className={`${variantsClass[variant]} transition-all hover:scale-3d hover:scale-101 active:scale-3d active:scale-98 disabled:opacity-50 disabled:pointer-events-none ${size == "slim" ? "md:py-2 py-1" : "px-4 md:py-4 py-1"}  hover:shadow-md shadow-sm rounded-lg w-full cursor-pointer ${className}`}
+        className={`${variantsClass[variant]} transition-all font-semibold hover:scale-3d hover:scale-101 active:scale-3d active:scale-98 disabled:opacity-50 disabled:pointer-events-none ${size == "slim" ? "md:py-2 py-1" : "px-4 md:py-4 py-1"}  hover:shadow-md shadow-sm rounded-lg w-full cursor-pointer ${className}`}
         {...props}
       >
         <div

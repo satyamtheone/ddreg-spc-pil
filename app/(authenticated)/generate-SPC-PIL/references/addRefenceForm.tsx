@@ -8,7 +8,7 @@ import FormikInput from "@/components/FormikComponents/FormikInput";
 import FormikAwareDocumentUploader from "@/components/FormikComponents/FormikAwareDocumentUploader";
 import { LuCloudUpload } from "react-icons/lu";
 import {
-  useCreateTemplateMutation,
+  useCreateReferenceMutation,
   useGetCountriesQuery,
 } from "@/lib/redux/slices/templateApi";
 import { useDrawer } from "@/components/hooks/DrawerProvider";
@@ -22,7 +22,7 @@ type FormValues = {
   country: string;
   type: string;
   description?: string;
-  templateFile: File | string;
+  referenceFile: File | string;
 };
 
 const AddRefenceForm = () => {
@@ -31,8 +31,8 @@ const AddRefenceForm = () => {
   const countriesData = data?.data || [];
   const countryOptions = getCountryLabel(countriesData);
   const { closeDrawer } = useDrawer();
-  const [createTemplate, { isLoading, isError, error }] =
-    useCreateTemplateMutation();
+  const [createReference, { isLoading, isError, error }] =
+    useCreateReferenceMutation();
 
   const onSubmit = async (
     values: FormValues,
@@ -42,13 +42,13 @@ const AddRefenceForm = () => {
       const formData = new FormData();
       formData.append("title", values.title);
       formData.append("country", "EU");
-      {
-        values.description &&
-          formData.append("description", values.description || "");
-      }
+      // {
+      //   values.description &&
+      //     formData.append("description", values.description || "");
+      // }
       formData.append("type", "SMPC");
-      formData.append("templateFile", values.templateFile);
-      const res = await createTemplate(formData).unwrap();
+      formData.append("referenceFile", values.referenceFile);
+      const res = await createReference(formData).unwrap();
       closeDrawer();
       toast.success(res.message || "Reference Uploaded ");
     } catch (err: any) {
@@ -71,7 +71,7 @@ const AddRefenceForm = () => {
           country: "",
           title: "",
           type: "",
-          templateFile: "",
+          referenceFile: "",
           description: "",
         }}
         validationSchema={AddRefenceFormSchema}
@@ -88,7 +88,7 @@ const AddRefenceForm = () => {
                   placeholder="e.g. France SPC Reference"
                 />
                 <FormikInput
-                  name="templateDescription"
+                  name="description"
                   label="Reference Description"
                   placeholder="e.g. France SPC Reference"
                 />

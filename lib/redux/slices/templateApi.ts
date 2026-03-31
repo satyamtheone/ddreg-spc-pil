@@ -114,4 +114,5 @@ export const {
   useGetTemplateByIdQuery,
   useGetReferenceByIdQuery,
   useGetReferencesQuery,
+  useCreateReferenceMutation,
 } = templateApi;

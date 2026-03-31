@@ -382,6 +382,9 @@ body {
   @apply flex gap-2 max-md:flex-wrap items-center  border-slate-300 p-2;
 }
 
+.text-gradient {
+  @apply bg-linear-to-l  from-teal-500 via-sky-400 to-sky-600 text-transparent bg-clip-text
+}
 
 /* Jodit Editor CLasses =============================================== */
 

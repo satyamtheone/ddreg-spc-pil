@@ -79,7 +79,7 @@ export const UploadTemplateFromSchema = () =>
       type: Yup.string().trim().required("Type is required"),
       country: Yup.string().trim().required("Country is required"),
       description: Yup.string().trim(),
-      templateFile: Yup.mixed().nullable().required(),
+      referenceFile: Yup.mixed().nullable().required(),
     });
 
 

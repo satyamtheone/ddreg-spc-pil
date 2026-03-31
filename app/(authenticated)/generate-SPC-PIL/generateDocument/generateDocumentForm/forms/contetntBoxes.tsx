@@ -13,7 +13,7 @@ const ContentBoxes: React.FC<ContentBoxesProps> = ({
   subTitle,
 }) => {
   return (
-    <div className="border-slate-300 border p-3 py-4 rounded-[10px]">
+    <div className="border-slate-300 border spcBNS p-3 py-4 rounded-[10px] w-full">
       <div className="flex flex-col gap-3">
         <div className="text-sm text-neutral-400 ">{title}</div>
         <div className="flex gap-4 flex-wrap">

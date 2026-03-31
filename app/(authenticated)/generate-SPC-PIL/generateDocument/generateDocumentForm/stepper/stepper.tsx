@@ -41,13 +41,13 @@ export default function Stepper() {
               </div>
               {steps.length === stepNumber ? null : (
                 <div
-                  className={`w-24 transition-all ${step >= stepNumber + 1 ? "bg-gradient" : "bg-gray-300"} h-1`}
+                  className={`w-24 transition-all ${step >= stepNumber ? "bg-gradient" : "bg-gray-300"} h-1`}
                 ></div>
               )}
             </div>
 
             <span
-              className={`text-sm absolute text-nowrap text-teal-700 -bottom-8 -left-8 ${step == stepNumber && "font-bold text-base"} `}
+              className={`text-sm absolute text-nowrap  -bottom-8 -left-8 ${step >= stepNumber && "text-gradient"} ${step == stepNumber ? "font-bold text-base " : "font-medium"} `}
             >
               {label}
             </span>

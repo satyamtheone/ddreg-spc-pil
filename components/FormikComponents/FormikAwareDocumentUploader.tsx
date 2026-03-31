@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useField, useFormikContext } from "formik";
-import { SlCloudUpload } from "react-icons/sl";
 import { FaFilePdf, FaFileWord, FaEye } from "react-icons/fa";
 import { RxUpload } from "react-icons/rx";
-import DynamicButton from "../common/DynamicButton";
 
 type Props = {
   name: string;
@@ -168,7 +166,7 @@ const FormikAwareDocumentUploader: React.FC<Props> = ({ name }) => {
               </div>
               <div className="flex flex-col gap-2">
                 <p className="text-zinc-800">
-                  Drag and drop or click to upload Template
+                  Drag and drop or click to upload
                 </p>
                 <p className="text-sm text-neutral-400">
                   Supported Documents: Word(.docx), PDF(.pdf)
