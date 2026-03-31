@@ -1,5 +1,5 @@
 import { SearchDocument } from "@/components/common/SearchDocument";
-import GenerateSpc from "./generateSpc";
+import GenerateSpc from "./references/generateSpc";
 
 export const metadata = {
   title: "Generate SPC-PIL",

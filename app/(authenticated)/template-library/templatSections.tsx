@@ -12,7 +12,7 @@ const TemplateSections: React.FC<Props> = ({ data }) => {
   }, [data]);
 
   return (
-    <div className=" p-4 spcBNS rounded-[10px] bg-purple-50">
+    <div className=" p-4 spcBNS rounded-[10px] bg-purple-50 h-130 overflow-y-auto">
       {sections.map((section) => (
         <SectionItem key={section.id} section={section} />
       ))}

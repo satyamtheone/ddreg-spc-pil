@@ -1,8 +1,9 @@
-import React from 'react';
+"use client";
+import React from "react";
 
 type PageHeaderProps = {
-  title:string
-  subTitle?:string
+  title: string;
+  subTitle?: string;
 };
 
 const PageHeader: React.FC<PageHeaderProps> = (props) => {

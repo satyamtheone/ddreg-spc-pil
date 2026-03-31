@@ -1,20 +1,15 @@
-import MultistepDocumentForm from "./generateDocumentForm/multistepDocumentForm";
-import PageHeader from "@/components/common/pageHeader";
+import GenerateDocument from "./generateDocument";
 
-export const metadata = {
-  title: "Generate SPC-PIL",
+type SearchParams = {
+  referenceId?: string;
 };
 
-export default function Page() {
-  return (
-    <div>
-      <PageHeader
-        title="Generate SPC/PIL"
-        subTitle="Customize the document with your product information"
-      />
-      <div className="flex  flex-col gap-4 spcBNS bg-white rounded-[10px] p-4">
-        <MultistepDocumentForm />
-      </div>
-    </div>
-  );
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
+
+  return <GenerateDocument referenceId={params?.referenceId} />;
 }

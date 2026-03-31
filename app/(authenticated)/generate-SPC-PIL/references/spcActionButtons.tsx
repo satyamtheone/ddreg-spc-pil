@@ -1,13 +1,13 @@
 import DynamicButton from "@/components/common/DynamicButton";
 import { goto } from "@/lib/navigation";
-import { ProductDocument } from "@/lib/utils";
+import { Reference } from "@/lib/redux/apiTypes";
 import React from "react";
 import { FaEye } from "react-icons/fa";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
-type SpcActionButtonsProps = { item: ProductDocument };
+type SpcActionButtonsProps = { references: Reference };
 
-const SpcActionButtons: React.FC<SpcActionButtonsProps> = ({ item }) => {
+const SpcActionButtons: React.FC<SpcActionButtonsProps> = ({ references }) => {
   return (
     <div className="flex gap-4 w-full px-4">
       <DynamicButton
@@ -23,7 +23,11 @@ const SpcActionButtons: React.FC<SpcActionButtonsProps> = ({ item }) => {
         size="slim"
         icon={<IoMdCheckmarkCircleOutline size={20} />}
         iconPosition="right"
-        onClick={() => goto("/generate-SPC-PIL/generateDocument")}
+        onClick={() =>
+          goto(
+            `/generate-SPC-PIL/generateDocument?referenceId=${references.id}`,
+          )
+        }
       />
     </div>
   );

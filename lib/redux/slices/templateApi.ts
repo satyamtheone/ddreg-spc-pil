@@ -1,11 +1,9 @@
-/* ================= API ================= */
 
 import {
-  CreateROleRequest,
-  CreateRoleResponse,
-  CreateTemplateRequest,
   CreateTemplateResponse,
   GetCountriesResponse,
+  GetReferenceByIdResponse,
+  GetReferencesResponse,
   GetTemplateByIdResponse,
   GetTemplatesResponse,
 } from "../apiTypes";
@@ -43,6 +41,30 @@ export const templateApi = apiSlice.injectEndpoints({
         url: `/templates/${id}`,
         method: "GET",
       }),
+    }),
+
+    getReferences: builder.query<GetReferencesResponse, void>({
+      query: () => ({
+        url: `/references`,
+        method: "GET",
+      }),
+      providesTags: ["getReferences"],
+    }),
+
+    getReferenceById: builder.query<GetReferenceByIdResponse, string>({
+      query: (id) => ({
+        url: `/references/${id}`,
+        method: "GET",
+      }),
+    }),
+
+    createReference: builder.mutation<CreateTemplateResponse, FormData>({
+      query: (body) => ({
+        url: `/references`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["getReferences"],
     }),
     // 🔹updatePreferences
     // updatePreferences: builder.mutation<
@@ -90,4 +112,6 @@ export const {
   useGetTemplatesQuery,
   useCreateTemplateMutation,
   useGetTemplateByIdQuery,
+  useGetReferenceByIdQuery,
+  useGetReferencesQuery,
 } = templateApi;

@@ -8,7 +8,7 @@ type SectionItemProps = {
 const SectionItem = ({ section, level = 0 }: SectionItemProps) => {
   return (
     <div style={{ marginLeft: level * 24 }}>
-      <div className="font-bold text-base flex gap-2 mb-2">
+      <div className="font-bold text-base  flex gap-2 mb-2">
         <span>{section.number}</span>
         <span>{section.title}</span>
       </div>

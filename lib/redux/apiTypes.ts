@@ -233,7 +233,6 @@ export type Option = {
   value: string;
 };
 
-
 export type Section = {
   id: string;
   title: string;
@@ -279,3 +278,39 @@ export type GetTemplateByIdResponse = {
   message: string;
   data: TemplateById;
 };
+
+export type Reference = {
+  id: string;
+  name: string;
+  version: string;
+  title: string;
+  typeId: string;
+  sourceType: string;
+  sourceUrl: null;
+  referenceFile: {
+    size: number;
+    fileName: string;
+    mimeType: string;
+  };
+  schemaMeta: null;
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type GetReferencesResponse = {
+  success: boolean;
+  message: string;
+  data: Reference[];
+};
+
+export type ReferenceById = Reference & {
+  section: Section[];
+};
+export type GetReferenceByIdResponse = {
+  success: boolean;
+  message: string;
+  data: ReferenceById;
+};
+
+

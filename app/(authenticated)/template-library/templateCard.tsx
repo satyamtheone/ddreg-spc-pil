@@ -64,6 +64,7 @@ const Templatecard: React.FC<TemplatecardProps> = ({ template }) => {
           icon={<MdOutlineRemoveRedEye size={20} />}
           onClick={() =>
             openDrawer({
+              width: "w-2/4",
               title: `${template?.name || "Template Preview"}`,
               children: <ViewTemplateDrawer templateId={template.id} />,
             })

@@ -16,7 +16,7 @@ export default function JoditEditorField({ value, onChange }: Props) {
   const config = useMemo(
     () => ({
       readonly: false,
-      height: 400,
+      height: 800,
       toolbarSticky: false,
       toolbarAdaptive: false,
 

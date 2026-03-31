@@ -7,6 +7,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import ReferenceContent from "./ReferenceContent";
 import FormikAwareCheckBox from "@/components/FormikComponents/FormikAwareCheckBox";
+import { goto } from "@/lib/navigation";
 
 export default function SelectReferenceForm() {
   const { formData, updateData, setStep } = useStepper();
@@ -55,6 +56,7 @@ export default function SelectReferenceForm() {
                 type="button"
                 variant="card"
                 icon={<FaArrowLeft />}
+                onClick={() => goto(`/generate-SPC-PIL`)}
               />
             </div>
             <div>

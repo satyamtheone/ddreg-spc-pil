@@ -1,13 +1,14 @@
 import { productDocuments } from "@/lib/utils";
 import React from "react";
 import SpcGridCard from "./spcGridCard";
+import { Reference } from "@/lib/redux/apiTypes";
 
-type SpcGridProps = {};
+type SpcGridProps = { references: Reference[] };
 
-const SpcGrid: React.FC<SpcGridProps> = (props) => {
+const SpcGrid: React.FC<SpcGridProps> = ({ references }) => {
   return (
     <div className=" flex  gap-4 flex-wrap">
-      {productDocuments.map((document, index) => (
+      {references.map((document, index) => (
         <SpcGridCard key={index} item={document} />
       ))}
     </div>
