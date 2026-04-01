@@ -9,7 +9,7 @@ import ReferenceContent from "./ReferenceContent";
 import FormikAwareCheckBox from "@/components/FormikComponents/FormikAwareCheckBox";
 import { goto } from "@/lib/navigation";
 
-export default function SelectReferenceForm() {
+export default function SelectReferenceForm({ referenceId }: { referenceId: string }) {
   const { formData, updateData, setStep } = useStepper();
 
   return (
@@ -24,7 +24,7 @@ export default function SelectReferenceForm() {
     >
       {({ isValid, dirty }) => (
         <Form className="flex flex-col gap-4">
-          <ReferenceContent />
+          <ReferenceContent referenceId={referenceId} />
           <div
             className={`${formData.slectedDocument == true ? "border-cyan-500 bg-cyan-50 shadow-md shadow-cyan-100 " : "border-slate-300 shadow-sm"} border  p-4 rounded-[10px]`}
           >

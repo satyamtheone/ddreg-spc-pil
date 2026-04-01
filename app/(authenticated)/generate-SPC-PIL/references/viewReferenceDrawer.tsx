@@ -1,0 +1,73 @@
+import { Reference, Section } from "@/lib/redux/apiTypes";
+import { useGetReferenceByIdQuery } from "@/lib/redux/slices/templateApi";
+import React from "react";
+import ReferenceDrawerItem from "./referenceDrawerItem";
+import ContentBoxes from "../generateDocument/generateDocumentForm/forms/contetntBoxes";
+import { formatedDate } from "@/lib/utilMethods";
+import DynamicButton from "@/components/common/DynamicButton";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
+import TemplateDrawerSkeleton from "@/components/common/skletons/templateDrwaerSkeleton";
+
+type ViewReferenceDrawerProps = {
+  references: Reference;
+};
+
+const ViewReferenceDrawer: React.FC<ViewReferenceDrawerProps> = ({
+  references,
+}) => {
+  const query = useGetReferenceByIdQuery(references.id);
+  const data = useQueryErrorHandler(query, "Get Reference By Id");
+
+  return (
+    <div className="w-full h-full flex flex-col gap-4 mt-4 justify-between">
+      {query.isLoading ? (
+        <TemplateDrawerSkeleton />
+      ) : (
+        <>
+          <div className="flex flex-col gap-4 animate-dialog-slide-down  ">
+            <div className="grid grid-cols-2  gap-4">
+              <ContentBoxes
+                title="Country / Authority"
+                // subTitle={data?.data?..country?.name}
+              />
+              <ContentBoxes
+                title="SourceType"
+                subTitle={data?.data?.sourceType}
+              />
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <ContentBoxes
+                title="Approval Date"
+                subTitle={formatedDate(data?.data?.updatedAt || "")}
+              />
+              <ContentBoxes
+                title="Version"
+                subTitle={data?.data?.version}
+                chipText="Latest"
+              />
+            </div>
+          </div>
+          <div className="spcBNS bg-purple-50 p-4 h-8/12 overflow-auto rounded-[10px] mb-15 animate-dialog-slide-down">
+            {data?.data?.sections.map((section, i) => (
+              <ReferenceDrawerItem section={section} key={i} />
+            ))}
+          </div>
+        </>
+      )}
+      <div className="absolute left-0 right-0 bg-white border-t border-gray-300  bottom-0">
+        <div className="w-full px-4 py-2">
+          <DynamicButton
+            isSubmitting={query.isLoading || query.isFetching}
+            icon={<IoMdCheckmarkCircleOutline size={24} />}
+            size="slim"
+            variant="submit"
+            text={"Select As A Reference"}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ViewReferenceDrawer;

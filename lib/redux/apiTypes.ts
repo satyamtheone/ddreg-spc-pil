@@ -305,7 +305,7 @@ export type GetReferencesResponse = {
 };
 
 export type ReferenceById = Reference & {
-  section: Section[];
+  sections: Section[];
 };
 export type GetReferenceByIdResponse = {
   success: boolean;

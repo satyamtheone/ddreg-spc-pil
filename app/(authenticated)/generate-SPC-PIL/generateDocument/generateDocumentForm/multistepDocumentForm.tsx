@@ -6,12 +6,12 @@ import GenerateTemplate from "./forms/GenerateTemplate";
 import SelectReferenceForm from "./forms/SelectReferenceForm";
 import SelectTemplateForm from "./forms/SelectTemplateForm";
 
-function FormController() {
+function FormController({ referenceId }: { referenceId: string }) {
   const { step } = useStepper();
 
   switch (step) {
     case 1:
-      return <SelectReferenceForm />;
+      return <SelectReferenceForm referenceId={referenceId} />;
     case 2:
       return <SelectTemplateForm />;
     case 3:
@@ -23,14 +23,18 @@ function FormController() {
   }
 }
 
-export default function MultistepDocumentForm() {
+export default function MultistepDocumentForm({
+  referenceId,
+}: {
+  referenceId: string;
+}) {
   return (
     <StepperProvider>
       <div className="max-w-xl mx-auto animate-dialog-slide-down ">
         <Stepper />
       </div>
       <div className="animate-dialog-slide-down">
-        <FormController />
+        <FormController referenceId={referenceId || ""} />
       </div>
     </StepperProvider>
   );

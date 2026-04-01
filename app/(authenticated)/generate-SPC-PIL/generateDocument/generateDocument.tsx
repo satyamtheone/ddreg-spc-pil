@@ -15,7 +15,7 @@ const GenerateDocument: React.FC<GenerateDocumentProps> = ({ referenceId }) => {
       />
       {referenceId}
       <div className="flex flex-col gap-4 spcBNS bg-white rounded-[10px] p-4">
-        <MultistepDocumentForm />
+        <MultistepDocumentForm referenceId={referenceId || ""} />
       </div>
     </div>
   );
