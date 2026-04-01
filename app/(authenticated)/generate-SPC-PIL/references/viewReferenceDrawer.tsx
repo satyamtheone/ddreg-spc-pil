@@ -8,6 +8,8 @@ import DynamicButton from "@/components/common/DynamicButton";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import TemplateDrawerSkeleton from "@/components/common/skletons/templateDrwaerSkeleton";
+import { goto } from "@/lib/navigation";
+import { useSearchParams } from "next/navigation";
 
 type ViewReferenceDrawerProps = {
   references: Reference;
@@ -16,6 +18,9 @@ type ViewReferenceDrawerProps = {
 const ViewReferenceDrawer: React.FC<ViewReferenceDrawerProps> = ({
   references,
 }) => {
+  const searchParams = useSearchParams();
+  const tempId = searchParams.get("templateId");
+  const templateId = tempId ? tempId : "";
   const query = useGetReferenceByIdQuery(references.id);
   const data = useQueryErrorHandler(query, "Get Reference By Id");
 
@@ -63,6 +68,11 @@ const ViewReferenceDrawer: React.FC<ViewReferenceDrawerProps> = ({
             size="slim"
             variant="submit"
             text={"Select As A Reference"}
+            onClick={() =>
+              goto(
+                `/generate-SPC-PIL/generateDocument?referenceId=${references.id}&templateId=${templateId}`,
+              )
+            }
           />
         </div>
       </div>

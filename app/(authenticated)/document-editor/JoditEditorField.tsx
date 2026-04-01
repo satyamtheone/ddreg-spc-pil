@@ -1,8 +1,6 @@
 "use client";
-
 import dynamic from "next/dynamic";
 import { useMemo, useRef } from "react";
-
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 type Props = {
@@ -21,26 +19,39 @@ export default function JoditEditorField({ value, onChange }: Props) {
       toolbarAdaptive: false,
 
       buttons: [
+        "undo",
+        "redo",
+        "|",
+
+        "paragraph",
+        "font",
+        "fontsize",
+        "|",
+
         "bold",
         "italic",
         "underline",
         "|",
-        "font",
-        "fontsize",
+
+        "subscript",
+        "superscript",
+        "|",
+        "brush",
+        "eraser",
+        "|",
         "lineHeight",
         "|",
-        "paragraph",
+        "align",
         "|",
         "ul",
         "ol",
-        "|",
-        "align",
+        "outdent",
+        "indent",
         "|",
         "table",
         "link",
         "|",
-        "undo",
-        "redo",
+        "hr",
       ],
 
       controls: {
@@ -65,7 +76,8 @@ export default function JoditEditorField({ value, onChange }: Props) {
 
         ol: {
           list: {
-            decimal: "Number List",
+            decimal: "1,2,3",
+            "decimal-leading-zero": "1,2,3",
             "lower-alpha": "a b c",
             "upper-alpha": "A B C",
             "lower-roman": "i ii iii",

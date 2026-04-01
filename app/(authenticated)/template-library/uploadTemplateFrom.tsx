@@ -42,10 +42,7 @@ const UploadTemplateFrom = () => {
       const formData = new FormData();
       formData.append("title", values.title);
       formData.append("country", "EU");
-      {
-        values.description &&
-          formData.append("description", values.description || "");
-      }
+      formData.append("description", values.description || "");
       formData.append("type", "SMPC");
       formData.append("templateFile", values.templateFile);
       const res = await createTemplate(formData).unwrap();
@@ -88,7 +85,7 @@ const UploadTemplateFrom = () => {
                   placeholder="e.g. France SPC Template"
                 />
                 <FormikInput
-                  name="templateDescription"
+                  name="description"
                   label="Template Description"
                   placeholder="e.g. France SPC Template"
                 />

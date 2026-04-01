@@ -32,7 +32,7 @@ const SpcGridCard: React.FC<SpcGridCardProps> = ({ item }) => {
       </div>
       <div className="flex gap-4 px-4">
         <div>
-          <MiniChip status={item?.sourceType} />
+          <MiniChip status={item?.type?.name} />
         </div>
         <div>{item?.version}</div>
         <div>
@@ -50,11 +50,11 @@ const SpcGridCard: React.FC<SpcGridCardProps> = ({ item }) => {
           <div className=" text-sm font-normal text-neutral-400">
             Active Ingredient
           </div>
-          <div className="">{item?.sourceType}</div>
+          <div className="">-</div>
         </div>
         <div>
           <div className=" text-sm font-normal text-neutral-400">Country</div>
-          <div className="">{item?.typeId}</div>
+          <div className=""> {item?.type?.country?.name}</div>
         </div>
       </div>
 

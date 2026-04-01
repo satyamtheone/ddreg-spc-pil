@@ -8,29 +8,46 @@ import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import RoleTableSkeleton from "@/components/common/skletons/tableSkeleton";
 import GridSkeleton from "@/components/common/skletons/gridSkeleton";
 import { useDrawer } from "@/components/hooks/DrawerProvider";
-import UploadTemplateFrom from "../../template-library/uploadTemplateFrom";
 import AddRefenceForm from "./addRefenceForm";
+import { useDebounce } from "@/components/hooks/useDebounce";
+import { Option } from "@/lib/redux/apiTypes";
 
 export type ViewType = "table" | "grid";
+export type ReferencesProps = {
+  options: Option[];
+  isLoading: boolean;
+  types: Option[];
+};
 
-const GenerateSpc: React.FC = () => {
+const GenerateSpc: React.FC<ReferencesProps> = ({ options, isLoading, types }) => {
   const [view, setView] = useState<ViewType>("table");
-  const [filter, setFilter] = useState<string | null>(null);
-  const [country, setCountry] = useState<string | null>(null);
+  const [params, setParams] = useState({
+    country: "",
+    type: "",
+    title: "",
+  });
   const { openDrawer } = useDrawer();
+  const debouncedParams = useDebounce(params, 500);
 
-  const query = useGetReferencesQuery();
+  const query = useGetReferencesQuery(debouncedParams);
   const data = useQueryErrorHandler(query, "Get References");
-  console.log("References Data:", data);
 
+  const handleSetParams = (key: string, value: string) => {
+    setParams((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  const handleSearch = (value: string) => {
+    handleSetParams("title", value);
+  };
   const handleFilterChange = (value: string) => {
-    setFilter(value);
-    console.log("Filter:", value);
+    handleSetParams("type", value);
   };
 
   const handleCountryChange = (value: string) => {
-    setCountry(value);
-    console.log("Country:", value);
+    handleSetParams("country", value);
   };
 
   const handleViewChange = (viewType: ViewType) => {
@@ -54,8 +71,14 @@ const GenerateSpc: React.FC = () => {
         onCountryChange={handleCountryChange}
         onViewChange={handleViewChange}
         onAddReference={handleAddReference}
+        handleSearch={handleSearch}
+        setParams={setParams}
+        params={params}
+        options={options}
+        types={types}
+        isLoading={isLoading || query.isLoading}
       />
-      {query.isLoading ? (
+      {query.isLoading || query.isFetching ? (
         view === "table" ? (
           <RoleTableSkeleton />
         ) : (
@@ -68,6 +91,6 @@ const GenerateSpc: React.FC = () => {
       )}
     </div>
   );
-};
+};;
 
 export default GenerateSpc;

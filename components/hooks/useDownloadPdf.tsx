@@ -4,31 +4,39 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
-export const useDownloadPdf = () => {
-  const [isDownloading, setIsDownloading] = useState(false);
+const amazonBucketname = "https://devtest-ddreg.s3.ap-south-1.amazonaws.com";
 
-  const download = async (url, filename) => {
+type DownloadFn = (url: string, filename: string) => Promise<void>;
+
+export const useDownloadPdf = () => {
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
+
+  const download: DownloadFn = async (url, filename) => {
     const toastId = toast.loading("Downloading...");
     setIsDownloading(true);
 
     try {
-      const response = await axios.get(url, {
+      const fullUrl = `${amazonBucketname}/${url}`;
+
+      const response = await axios.get(fullUrl, {
         responseType: "blob",
       });
 
-      const blobUrl = window.URL.createObjectURL(new Blob([response.data]));
+      const blobUrl = window.URL.createObjectURL(response.data);
 
       const link = document.createElement("a");
       link.href = blobUrl;
       link.setAttribute("download", filename);
+
       document.body.appendChild(link);
       link.click();
 
-      link.remove();
+      document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
 
       toast.success("Downloaded Successfully.", { id: toastId });
     } catch (error) {
+      console.error(error);
       toast.error("Download failed.", { id: toastId });
     } finally {
       setIsDownloading(false);

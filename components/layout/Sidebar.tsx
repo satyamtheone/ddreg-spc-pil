@@ -11,8 +11,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { NavData } from "@/lib/NavData";
-import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import UserAvatar from "@/app/(authenticated)/account/userAvatar";
+import { useGetMeQuery } from "@/lib/redux/slices/userApi";
+import { useQueryErrorHandler } from "../hooks/useQueryErrorHandler";
+import { useAuth } from "@/lib/AuthProvider";
 
 interface SidebarProps {
   open: boolean;
@@ -26,37 +29,8 @@ interface UserData {
 }
 
 export default function Sidebar({ open, setOpen }: SidebarProps) {
+  const { user, imageUrl } = useAuth();
   const pathname = usePathname();
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        try {
-          const parsedUser = JSON.parse(storedUser);
-          setUserData({
-            name: parsedUser.name || "",
-            email: parsedUser.email || "",
-            image: parsedUser.image || undefined,
-          });
-        } catch (error) {
-          console.error("Error parsing user data from localStorage:", error);
-        }
-      }
-    }
-  }, []);
-
-  const getAvatarInitials = (name: string) => {
-    if (!name) return "N/A";
-    return name
-      .split(" ")
-      .map((word) => word.charAt(0))
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
-
   const isActive = (link: string) => {
     const linkPattern = new RegExp(`^${link}(/|$)`);
     return linkPattern.test(pathname);
@@ -148,31 +122,24 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="p-2.5 border-t h-44.5">
-          <div
-            className={`flex flex-col items-center justify-center bg-[#E3F3FE] rounded-md space-y-3.5 ${open ? "p-2.5" : "p-0.5"}`}
-          >
+        <div className="p-2.5 border-t">
+          <div className={`flex  rounded-md`}>
             <Link
               href={"/account"}
-              className={`border border-sky-400 rounded-md w-full flex items-center justify-between gap-2 overflow-hidden ${open ? " py-1 px-2" : "p-0.5"}`}
+              className={`spcBNS rounded-md w-full flex items-center justify-between gap-2 overflow-hidden `}
             >
-              <div className="flex gap-2.5">
-                {userData?.image ? (
-                  <Image
-                    src={userData.image}
-                    alt="User Avatar"
-                    width={32}
-                    height={32}
-                    className="w-8 h-8 rounded-full object-cover"
+              <div className="flex ">
+                <div
+                  className={`bg-white h-9 w-9 flex items-center justify-center text-sm font-medium text-sky-400 `}
+                >
+                  <img
+                    src={imageUrl}
+                    alt="Logout Icon"
+                    className="object-contain rounded-md"
                   />
-                ) : (
-                  <div
-                    className={`${open ? "w-8 h-8" : "w-7 h-7"} bg-white flex items-center justify-center text-sm font-medium text-sky-400 rounded-full`}
-                  >
-                    {getAvatarInitials(userData?.name || "")}
-                  </div>
-                )}
-                <div>
+                </div>
+
+                <div className="pl-2 py-0.5">
                   {open && (
                     <motion.p
                       initial={{ opacity: 0, visibility: "hidden" }}
@@ -180,7 +147,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                       transition={{ duration: 0.3, delay: 0.2 }}
                       className="text-xs font-medium"
                     >
-                      {userData?.name || "User"}
+                      {user?.fName || "User"}
                     </motion.p>
                   )}
                   {open && (
@@ -190,27 +157,10 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                       transition={{ duration: 0.3, delay: 0.3 }}
                       className="text-xs text-gray-500"
                     >
-                      {userData?.email || "user@example.com"}
+                      {user?.email || "user@example.com"}
                     </motion.p>
                   )}
                 </div>
-              </div>
-              <div>
-                {open && (
-                  <motion.div
-                    initial={{ opacity: 0, visibility: "hidden" }}
-                    animate={{ opacity: 1, visibility: "visible" }}
-                    transition={{ duration: 0.3, delay: 0.4 }}
-                  >
-                    <Image
-                      src="/sidebar/footer/Icon-01.svg"
-                      alt="Logout Icon"
-                      width={12}
-                      height={12}
-                      className="object-contain"
-                    />
-                  </motion.div>
-                )}
               </div>
             </Link>
           </div>

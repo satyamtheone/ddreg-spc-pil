@@ -8,12 +8,16 @@ import { IoDocumentTextOutline } from "react-icons/io5";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { MdOutlineFileDownload } from "react-icons/md";
 import ViewTemplateDrawer from "./viewTemplateDrawer";
+import { useDownloadPdf } from "@/components/hooks/useDownloadPdf";
 
 type TemplatecardProps = {
   template: Template;
 };
 
 const Templatecard: React.FC<TemplatecardProps> = ({ template }) => {
+  const { download, isDownloading } = useDownloadPdf();
+  console.log(isDownloading);
+
   const { openDrawer } = useDrawer();
   return (
     <div className="spcBNS p-4 bg-white rounded-[10px] w-105 flex flex-col gap-2  ">
@@ -27,7 +31,7 @@ const Templatecard: React.FC<TemplatecardProps> = ({ template }) => {
       </div>
       <div className="text-xl font-medium">{template?.name}</div>
       <div className="text-base font-normal text-zinc-800">
-        Standard UK SPC template compliant with MHRA guidelines{" "}
+        {template?.description || "No description provided"}
       </div>
       <div className="text-xs font-normal text-neutral-400">
         {formatedDate(template?.createdAt)}
@@ -61,6 +65,7 @@ const Templatecard: React.FC<TemplatecardProps> = ({ template }) => {
         <DynamicButton
           text="Preview"
           variant="outline"
+          size="slim"
           icon={<MdOutlineRemoveRedEye size={20} />}
           onClick={() =>
             openDrawer({
@@ -71,8 +76,13 @@ const Templatecard: React.FC<TemplatecardProps> = ({ template }) => {
           }
         />
         <DynamicButton
+          isSubmitting={isDownloading || !template?.templateFile?.key}
+          size="slim"
           text="Download"
           variant="outline"
+          onClick={() =>
+            download(template?.templateFile?.key || "", `${template?.name}`)
+          }
           icon={<MdOutlineFileDownload size={20} />}
         />
       </div>

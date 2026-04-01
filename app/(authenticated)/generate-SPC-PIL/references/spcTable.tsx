@@ -38,9 +38,11 @@ const SPCTable: React.FC<SPCTableProps> = ({ references }) => {
                   } grid-cols-9 text-sm border-l-4 border-b-[0.5px] ${crudOperationChipColors({ variant: "Approved" }).border} `}
                 >
                   <div className="table-body-cell">{item?.name}</div>
-                  <div className="table-body-cell">{item?.sourceType}</div>
-                  <div className="table-body-cell">{item?.title}</div>
-                  <div className="table-body-cell">{item?.typeId}</div>
+                  <div className="table-body-cell">-</div>
+                  <div className="table-body-cell">
+                    {item?.type?.country?.name}
+                  </div>
+                  <div className="table-body-cell">{item?.type?.name}</div>
                   <div className="table-body-cell">{item?.version}</div>
                   <div className="table-body-cell">
                     {formatedDate(item?.updatedAt)}

@@ -19,10 +19,14 @@ export const templateApi = apiSlice.injectEndpoints({
       providesTags: ["getCountries"],
     }),
 
-    getTemplates: builder.query<GetTemplatesResponse, void>({
-      query: () => ({
+    getTemplates: builder.query<
+      GetTemplatesResponse,
+      { title?: string; country?: string; type?: string }
+    >({
+      query: ({ title, country, type }) => ({
         url: "/templates",
         method: "GET",
+        params: { title, country, type },
       }),
       providesTags: ["getTemplates"],
     }),
@@ -43,10 +47,14 @@ export const templateApi = apiSlice.injectEndpoints({
       }),
     }),
 
-    getReferences: builder.query<GetReferencesResponse, void>({
-      query: () => ({
+    getReferences: builder.query<
+      GetReferencesResponse,
+      { title?: string; country?: string; type?: string }
+    >({
+      query: ({ title, country, type }) => ({
         url: `/references`,
         method: "GET",
+        params: { title, country, type },
       }),
       providesTags: ["getReferences"],
     }),

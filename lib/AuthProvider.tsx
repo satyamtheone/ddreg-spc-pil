@@ -76,7 +76,6 @@ const deleteCookie = (name: string) => {
 /* ================= PROVIDER ================= */
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  /* 🔥 RTK Query handles everything */
   const accessToken = getCookie("accessToken");
   const { data, isLoading, refetch } = useGetMeQuery(undefined, {
     skip: !accessToken,

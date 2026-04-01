@@ -13,6 +13,7 @@ type SearchFormProps = {
   onSearchChange?: (value: string) => void;
   onSearchSubmit?: (value: string) => void;
   isLoading?: boolean;
+  value?: string;
 };
 
 const SearchFormSchema = Yup.object({
@@ -23,9 +24,10 @@ function SearchForm({
   onSearchChange,
   onSearchSubmit,
   isLoading,
+  value,
 }: SearchFormProps) {
   const initialValues: SearchFormValues = {
-    search: "",
+    search: value || "",
   };
 
   const handleSubmit = (
@@ -51,6 +53,7 @@ function SearchForm({
           <Form className="w-full animate-dialog-slide-down">
             <FormikInput
               disabled={isLoading}
+              value={value || ""}
               autoFocus
               name="search"
               type="text"

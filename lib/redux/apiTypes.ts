@@ -155,6 +155,7 @@ export type GetCountriesResponse = {
 };
 
 export type TemplateFile = {
+  key?: string;
   size: number;
   fileName: string;
   mimeType: string;
@@ -180,6 +181,7 @@ export type Template = {
   id: string;
   name: string;
   version: string;
+  description?: string;
   title: string;
   typeId: string;
   sourceType: "UPLOAD" | string;
@@ -193,6 +195,7 @@ export type Template = {
   sectionsCount: number;
   usageCount: number;
 };
+
 export type GetTemplatesResponse = {
   success: boolean;
   message: string;
@@ -284,18 +287,22 @@ export type Reference = {
   name: string;
   version: string;
   title: string;
+  description?: string;
   typeId: string;
   sourceType: string;
-  sourceUrl: null;
-  referenceFile: {
-    size: number;
-    fileName: string;
-    mimeType: string;
+  sourceUrl?: string;
+  referenceFile: TemplateFile;
+  schemaMeta: {
+    type: string;
+    version: string;
+    productName: string;
   };
-  schemaMeta: null;
+  type: TypeInfo;
   createdById: string;
   createdAt: string;
   updatedAt: string;
+  sectionsCount?: number;
+  usageCount: number;
 };
 
 export type GetReferencesResponse = {

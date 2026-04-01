@@ -5,6 +5,9 @@ import ContentBoxes from "../generate-SPC-PIL/generateDocument/generateDocumentF
 import { formatedDate } from "@/lib/utilMethods";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import TemplateDrawerSkeleton from "@/components/common/skletons/templateDrwaerSkeleton";
+import DynamicButton from "@/components/common/DynamicButton";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { goto } from "@/lib/navigation";
 
 type ViewTemplateDrawerProps = {
   templateId: string;
@@ -16,12 +19,12 @@ const ViewTemplateDrawer: React.FC<ViewTemplateDrawerProps> = ({
   const query = useGetTemplateByIdQuery(templateId);
   const data = useQueryErrorHandler(query, "Get Template By Id");
   return (
-    <div className="flex flex-col gap-6 mt-4 h-full">
+    <div className="flex flex-col gap-6 mt-4 h-full scrollbar-hide">
       {query.isLoading ? (
         <TemplateDrawerSkeleton />
       ) : (
         <>
-          <div className="flex flex-col gap-4 animate-dialog-slide-down  ">
+          <div className="flex flex-col gap-4">
             <div className="grid grid-cols-2  gap-4">
               <ContentBoxes
                 title="Country / Authority"
@@ -52,8 +55,22 @@ const ViewTemplateDrawer: React.FC<ViewTemplateDrawerProps> = ({
           <TemplateSections data={data?.data} />
         </>
       )}
+      <div className="absolute left-0 right-0 bg-white border-t border-gray-300  bottom-0">
+        <div className="w-full px-4 py-2">
+          <DynamicButton
+            isSubmitting={query.isLoading || query.isFetching}
+            icon={<IoMdCheckmarkCircleOutline size={24} />}
+            size="slim"
+            variant="submit"
+            text={"Select As A template"}
+            onClick={() => goto(`/generate-SPC-PIL?templateId=${templateId}`)}
+          />
+        </div>
+      </div>
     </div>
   );
 };
 
 export default ViewTemplateDrawer;
+
+
