@@ -52,6 +52,7 @@ export default function JoditEditorField({ value, onChange }: Props) {
         "link",
         "|",
         "hr",
+        "image",
       ],
 
       controls: {
@@ -68,20 +69,12 @@ export default function JoditEditorField({ value, onChange }: Props) {
 
         ul: {
           list: {
-            disc: "Bullet List",
-            circle: "Circle List",
-            square: "Square List",
+            disc: "Bullet",
           },
         },
-
         ol: {
           list: {
-            decimal: "1,2,3",
-            "decimal-leading-zero": "1,2,3",
-            "lower-alpha": "a b c",
-            "upper-alpha": "A B C",
-            "lower-roman": "i ii iii",
-            "upper-roman": "I II III",
+            decimal: "Numbered",
           },
         },
       },

@@ -16,11 +16,10 @@ type TemplatecardProps = {
 
 const Templatecard: React.FC<TemplatecardProps> = ({ template }) => {
   const { download, isDownloading } = useDownloadPdf();
-  console.log(isDownloading);
 
   const { openDrawer } = useDrawer();
   return (
-    <div className="spcBNS p-4 bg-white rounded-[10px] w-105 flex flex-col gap-2  ">
+    <div className="spcBNS p-4 bg-white rounded-[10px] w-105 flex flex-col gap-2 animate-fadeIn ">
       <div className="flex justify-between items-center">
         <div className="p-3 spcBNS max-w-min rounded-lg bg-gradient">
           <IoDocumentTextOutline size={24} />

@@ -13,18 +13,20 @@ interface FormikSelectProps {
   name: string;
   options: FormikOptonType[];
   isLoading?: boolean;
+  disabled?: boolean;
 }
 
 const FormikSelect: React.FC<FormikSelectProps> = ({
   label,
   options,
   isLoading,
+  disabled,
   ...props
 }) => {
   const [field, meta] = useField<string | number>(props.name);
 
   return (
-    <div className="relative flex flex-col items-start w-full mb-6">
+    <div className="relative flex flex-col items-start w-full mb-6 ">
       {isLoading ? (
         <InputSkeleton />
       ) : (
@@ -43,6 +45,7 @@ const FormikSelect: React.FC<FormikSelectProps> = ({
               {...field}
               {...props}
               id={field.name}
+              disabled={disabled}
               className="select md:select-xl border rounded-[6px] focus-visible:ring-teal-600 focus-visible:outline-none focus-visible:ring-1 border-slate-300 focus-visible:shadow-md hover:shadow-md md:px-4 md:py-4.5 py-2 px-2 w-full shadow-sm text-sm capitalize "
             >
               <option disabled value="">

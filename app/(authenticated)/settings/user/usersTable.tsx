@@ -66,7 +66,7 @@ const UsersTable: React.FC<Props> = ({ data = [], isLoading = false }) => {
                   {canDoAction(item.createdById || "") && (
                     <>
                       <div
-                        className="custom-button-hover-classes border p-2 border-gray-200"
+                        className="custom-button-hover-classes border bg-white p-2 border-gray-200"
                         onClick={() =>
                           openDrawer({
                             title: "Add User",
@@ -78,7 +78,7 @@ const UsersTable: React.FC<Props> = ({ data = [], isLoading = false }) => {
                       </div>
 
                       <div
-                        className="custom-button-hover-classes border p-2 border-red-400 text-red-400"
+                        className="custom-button-hover-classes bg-white border p-2 border-red-400 text-red-400"
                         onClick={() =>
                           openDialog({
                             children: (

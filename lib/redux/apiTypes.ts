@@ -297,6 +297,7 @@ export type Reference = {
     version: string;
     productName: string;
   };
+
   type: TypeInfo;
   createdById: string;
   createdAt: string;

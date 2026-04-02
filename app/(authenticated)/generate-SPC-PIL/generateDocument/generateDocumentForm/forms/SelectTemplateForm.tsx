@@ -22,11 +22,12 @@ export default function SelectTemplateForm() {
   return (
     <Formik
       initialValues={{
-        templateName: formData.templateName || "",
+        countryCode: formData.stepReference?.country || "",
+        templateId: formData.stepTemplate?.templateId || "",
       }}
-      validationSchema={step2Schema}
+      // validationSchema={step2Schema}
       onSubmit={(values) => {
-        updateData(values);
+        updateData({ stepTemplate: { templateId: values.templateId } });
         setStep(3);
       }}
     >
@@ -40,7 +41,8 @@ export default function SelectTemplateForm() {
           <div className="flex gap-4 items-center w-full">
             <div className="border border-gray-200 p-4 rounded-[10px] w-full">
               <FormikSelect
-                name="country"
+                disabled
+                name="countryCode"
                 label="Select Target Country"
                 isLoading={query.isLoading}
                 options={countryOptions}
@@ -53,7 +55,7 @@ export default function SelectTemplateForm() {
 
             <div className="border border-gray-200 p-4 rounded-[10px] w-full">
               <FormikSelect
-                name="country"
+                name="templateId"
                 label="Select Template"
                 isLoading={query.isLoading}
                 options={countryOptions}
@@ -91,7 +93,7 @@ export default function SelectTemplateForm() {
             </div>
             <div>
               <DynamicButton
-                isSubmitting={!dirty || !isValid}
+                // isSubmitting={!dirty || !isValid}
                 text="Continue To Product Input"
                 type="submit"
                 variant="submit"

@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -11,10 +10,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { NavData } from "@/lib/NavData";
-import { useState } from "react";
-import UserAvatar from "@/app/(authenticated)/account/userAvatar";
-import { useGetMeQuery } from "@/lib/redux/slices/userApi";
-import { useQueryErrorHandler } from "../hooks/useQueryErrorHandler";
 import { useAuth } from "@/lib/AuthProvider";
 
 interface SidebarProps {
@@ -122,24 +117,27 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="p-2.5 border-t">
-          <div className={`flex  rounded-md`}>
+        <div className="py-2.5 px-1 border-t">
+          <div className={`flex  rounded-xl`}>
             <Link
               href={"/account"}
-              className={`spcBNS rounded-md w-full flex items-center justify-between gap-2 overflow-hidden `}
+              className={`spcBNS rounded-xl w-full flex items-center justify-between gap-2 overflow-hidden `}
             >
               <div className="flex ">
                 <div
-                  className={`bg-white h-9 w-9 flex items-center justify-center text-sm font-medium text-sky-400 `}
+                  className={`bg-white h-12 w-12 flex items-center justify-center text-sm font-medium text-sky-400 `}
                 >
-                  <img
+                  <Image
+                    priority
                     src={imageUrl}
-                    alt="Logout Icon"
-                    className="object-contain rounded-md"
+                    width={60}
+                    height={60}
+                    className="h-full w-full object-cover rounded-xl"
+                    alt="login image"
                   />
                 </div>
 
-                <div className="pl-2 py-0.5">
+                <div className="p-2">
                   {open && (
                     <motion.p
                       initial={{ opacity: 0, visibility: "hidden" }}

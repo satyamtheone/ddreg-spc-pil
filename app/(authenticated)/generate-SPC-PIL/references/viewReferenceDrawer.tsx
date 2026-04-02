@@ -8,8 +8,9 @@ import DynamicButton from "@/components/common/DynamicButton";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import TemplateDrawerSkeleton from "@/components/common/skletons/templateDrwaerSkeleton";
-import { goto } from "@/lib/navigation";
 import { useSearchParams } from "next/navigation";
+import { useNavigation } from "@/components/hooks/useNavigation";
+import { useDrawer } from "@/components/hooks/DrawerProvider";
 
 type ViewReferenceDrawerProps = {
   references: Reference;
@@ -18,6 +19,8 @@ type ViewReferenceDrawerProps = {
 const ViewReferenceDrawer: React.FC<ViewReferenceDrawerProps> = ({
   references,
 }) => {
+  const { goTo } = useNavigation();
+  const { closeDrawer } = useDrawer();
   const searchParams = useSearchParams();
   const tempId = searchParams.get("templateId");
   const templateId = tempId ? tempId : "";
@@ -30,7 +33,7 @@ const ViewReferenceDrawer: React.FC<ViewReferenceDrawerProps> = ({
         <TemplateDrawerSkeleton />
       ) : (
         <>
-          <div className="flex flex-col gap-4 animate-dialog-slide-down  ">
+          <div className="flex flex-col gap-4 animate-dialog-slide-down">
             <div className="grid grid-cols-2  gap-4">
               <ContentBoxes
                 title="Country / Authority"
@@ -54,9 +57,10 @@ const ViewReferenceDrawer: React.FC<ViewReferenceDrawerProps> = ({
             </div>
           </div>
           <div className="spcBNS bg-purple-50 p-4 h-8/12 overflow-auto rounded-[10px] mb-15 animate-dialog-slide-down">
-            {data?.data?.sections.map((section, i) => (
-              <ReferenceDrawerItem section={section} key={i} />
-            ))}
+            {data?.data &&
+              data?.data?.sections.map((section, i) => (
+                <ReferenceDrawerItem section={section} key={i} />
+              ))}
           </div>
         </>
       )}
@@ -68,11 +72,12 @@ const ViewReferenceDrawer: React.FC<ViewReferenceDrawerProps> = ({
             size="slim"
             variant="submit"
             text={"Select As A Reference"}
-            onClick={() =>
-              goto(
+            onClick={() => {
+              goTo(
                 `/generate-SPC-PIL/generateDocument?referenceId=${references.id}&templateId=${templateId}`,
-              )
-            }
+              );
+              closeDrawer();
+            }}
           />
         </div>
       </div>

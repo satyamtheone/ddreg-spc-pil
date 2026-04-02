@@ -7,33 +7,54 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import ReferenceContent from "./ReferenceContent";
 import FormikAwareCheckBox from "@/components/FormikComponents/FormikAwareCheckBox";
-import { goto } from "@/lib/navigation";
+import { useNavigation } from "@/components/hooks/useNavigation";
+import { useGetReferenceByIdQuery } from "@/lib/redux/slices/templateApi";
+import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 
-export default function SelectReferenceForm({ referenceId }: { referenceId: string }) {
+export default function SelectReferenceForm({
+  referenceId,
+}: {
+  referenceId: string;
+}) {
+  const query = useGetReferenceByIdQuery(referenceId);
+  const data = useQueryErrorHandler(query, "Get Reference By Id");
   const { formData, updateData, setStep } = useStepper();
-
+  const { goTo } = useNavigation();
   return (
     <Formik
       initialValues={{
-        slectedDocument: formData.slectedDocument || "",
+        slectedDocument: formData.stepReference?.isSlectedDocument || false,
       }}
       validationSchema={step1Schema}
       onSubmit={(values) => {
+        updateData({
+          stepReference: {
+            country: data?.data?.type?.country?.code,
+            SlectedDocument: data?.data?.id,
+            type: data?.data?.type?.name,
+            isSlectedDocument: values.slectedDocument,
+          },
+        });
         setStep(2);
       }}
     >
       {({ isValid, dirty }) => (
         <Form className="flex flex-col gap-4">
-          <ReferenceContent referenceId={referenceId} />
+          <ReferenceContent
+            data={data}
+            isLoading={query.isLoading || query.isFetching}
+          />
           <div
-            className={`${formData.slectedDocument == true ? "border-cyan-500 bg-cyan-50 shadow-md shadow-cyan-100 " : "border-slate-300 shadow-sm"} border  p-4 rounded-[10px]`}
+            className={`${formData.stepReference?.isSlectedDocument == true ? "border-cyan-500 bg-cyan-50 shadow-md shadow-cyan-100 " : "border-slate-300 shadow-sm"} border  p-4 rounded-[10px]`}
           >
             <div className="flex gap-4 items-center">
               <div>
                 <FormikAwareCheckBox
                   name="slectedDocument"
                   onChange={(checked) =>
-                    updateData({ slectedDocument: checked })
+                    updateData({
+                      stepReference: { isSlectedDocument: checked },
+                    })
                   }
                 />
               </div>
@@ -56,7 +77,7 @@ export default function SelectReferenceForm({ referenceId }: { referenceId: stri
                 type="button"
                 variant="card"
                 icon={<FaArrowLeft />}
-                onClick={() => goto(`/generate-SPC-PIL`)}
+                onClick={() => goTo(`/generate-SPC-PIL`)}
               />
             </div>
             <div>

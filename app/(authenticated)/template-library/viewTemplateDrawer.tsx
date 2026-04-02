@@ -7,7 +7,8 @@ import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import TemplateDrawerSkeleton from "@/components/common/skletons/templateDrwaerSkeleton";
 import DynamicButton from "@/components/common/DynamicButton";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { goto } from "@/lib/navigation";
+import { useNavigation } from "@/components/hooks/useNavigation";
+import { useDrawer } from "@/components/hooks/DrawerProvider";
 
 type ViewTemplateDrawerProps = {
   templateId: string;
@@ -16,6 +17,8 @@ type ViewTemplateDrawerProps = {
 const ViewTemplateDrawer: React.FC<ViewTemplateDrawerProps> = ({
   templateId,
 }) => {
+  const { goTo } = useNavigation();
+  const { closeDrawer } = useDrawer();
   const query = useGetTemplateByIdQuery(templateId);
   const data = useQueryErrorHandler(query, "Get Template By Id");
   return (
@@ -63,7 +66,12 @@ const ViewTemplateDrawer: React.FC<ViewTemplateDrawerProps> = ({
             size="slim"
             variant="submit"
             text={"Select As A template"}
-            onClick={() => goto(`/generate-SPC-PIL?templateId=${templateId}`)}
+            onClick={() => {
+              goTo(
+                `/generate-SPC-PIL?templateId=${templateId}?countryCode=${data?.data?.type?.country?.code}?type=${data?.data?.type?.name}`,
+              );
+              closeDrawer();
+            }}
           />
         </div>
       </div>
