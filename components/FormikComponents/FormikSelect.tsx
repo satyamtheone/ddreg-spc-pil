@@ -1,7 +1,6 @@
 "use client";
 import { useField } from "formik";
 import React from "react";
-import InputSkeleton from "../common/skletons/inputSkeleton";
 
 export type FormikOptonType = {
   label: string;
@@ -14,6 +13,7 @@ interface FormikSelectProps {
   options: FormikOptonType[];
   isLoading?: boolean;
   disabled?: boolean;
+  onChange?: (e: any) => void;
 }
 
 const FormikSelect: React.FC<FormikSelectProps> = ({
@@ -21,6 +21,7 @@ const FormikSelect: React.FC<FormikSelectProps> = ({
   options,
   isLoading,
   disabled,
+  onChange,
   ...props
 }) => {
   const [field, meta] = useField<string | number>(props.name);
@@ -28,7 +29,10 @@ const FormikSelect: React.FC<FormikSelectProps> = ({
   return (
     <div className="relative flex flex-col items-start w-full mb-6 ">
       {isLoading ? (
-        <InputSkeleton />
+        <div className="w-full">
+          <div className="mb-2 w-1/2 skeleton skeleton-text "> {label}</div>
+          <div className="md:h-14 h-10 skeleton w-full"></div>
+        </div>
       ) : (
         <>
           {label && (
@@ -44,6 +48,10 @@ const FormikSelect: React.FC<FormikSelectProps> = ({
             <select
               {...field}
               {...props}
+              onChange={(e) => {
+                field.onChange(e);
+                onChange?.(e);
+              }}
               id={field.name}
               disabled={disabled}
               className="select md:select-xl border rounded-[6px] focus-visible:ring-teal-600 focus-visible:outline-none focus-visible:ring-1 border-slate-300 focus-visible:shadow-md hover:shadow-md md:px-4 md:py-4.5 py-2 px-2 w-full shadow-sm text-sm capitalize "

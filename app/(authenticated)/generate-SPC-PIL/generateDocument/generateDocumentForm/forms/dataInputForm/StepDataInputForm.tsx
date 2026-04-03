@@ -1,14 +1,14 @@
 "use client";
-
-import { Formik, Form, Field } from "formik";
-import { useStepper } from "../stepper/stepperContext,";
-import { step1Schema } from "../validation/schema";
-import FormikInput from "@/components/FormikComponents/FormikInput";
+import { Formik, Form } from "formik";
+import { useStepper } from "../../stepper/stepperContext,";
+import { step1Schema } from "../../validation/schema";
 import DynamicButton from "@/components/common/DynamicButton";
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoDocumentTextOutline } from "react-icons/io5";
+import DocumentDetailsChip from "./documentDetailsChip";
+import BasicInformationForm from "./basicInformationForm";
 
-export default function StepDataInput() {
+export default function StepDataInputForm() {
   const { formData, updateData, setStep } = useStepper();
 
   return (
@@ -18,17 +18,14 @@ export default function StepDataInput() {
       }}
       validationSchema={step1Schema}
       onSubmit={(values) => {
-        updateData(values);
+        updateData({});
         setStep(4);
       }}
     >
       {({ dirty, isValid }) => (
         <Form className="flex flex-col gap-4">
-          <FormikInput
-            name="fillData"
-            placeholder="Reference Name"
-            label="Reference Name"
-          />
+          <DocumentDetailsChip formData={formData} />
+          <BasicInformationForm />
           <div className="w-full flex justify-between">
             <div>
               <DynamicButton

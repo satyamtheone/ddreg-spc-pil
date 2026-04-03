@@ -7,7 +7,7 @@ export const step1Schema = Yup.object({
 });
 
 export const step2Schema = Yup.object({
-  templateName: Yup.string().required("Required"),
+  templateId: Yup.string().required("Required"),
 });
 
 export const step3Schema = Yup.object({

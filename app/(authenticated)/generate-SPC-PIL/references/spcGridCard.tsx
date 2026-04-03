@@ -1,11 +1,8 @@
-import DynamicButton from "@/components/common/DynamicButton";
+"use client";
 import MiniChip from "@/components/common/miniChip";
 import { crudOperationChipColors, formatedDate } from "@/lib/utilMethods";
-import { ProductDocument } from "@/lib/utils";
 import React from "react";
 import { CiCalendar } from "react-icons/ci";
-import { FaEye } from "react-icons/fa";
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import SpcActionButtons from "./spcActionButtons";
 import { Reference } from "@/lib/redux/apiTypes";
 
@@ -57,7 +54,6 @@ const SpcGridCard: React.FC<SpcGridCardProps> = ({ item }) => {
           <div className=""> {item?.type?.country?.name}</div>
         </div>
       </div>
-
       <SpcActionButtons references={item} />
     </div>
   );

@@ -140,3 +140,18 @@ export const addSectionNumbers = (
     };
   });
 };
+
+export const mapToFormikOptions = <
+  T extends Record<string, any>,
+  K1 extends keyof T,
+  K2 extends keyof T,
+>(
+  data: T[],
+  labelKey: K1,
+  valueKey: K2,
+): FormikOptonType[] => {
+  return data.map((item) => ({
+    label: String(item[labelKey]),
+    value: item[valueKey] as string | number,
+  }));
+};

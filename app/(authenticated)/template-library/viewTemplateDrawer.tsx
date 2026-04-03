@@ -68,7 +68,7 @@ const ViewTemplateDrawer: React.FC<ViewTemplateDrawerProps> = ({
             text={"Select As A template"}
             onClick={() => {
               goTo(
-                `/generate-SPC-PIL?templateId=${templateId}?countryCode=${data?.data?.type?.country?.code}?type=${data?.data?.type?.name}`,
+                `/generate-SPC-PIL?templateId=${templateId}&countryCode=${data?.data?.type?.country?.code}&type=${data?.data?.type?.name}`,
               );
               closeDrawer();
             }}

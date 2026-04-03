@@ -11,6 +11,7 @@ import { useDrawer } from "@/components/hooks/DrawerProvider";
 import AddRefenceForm from "./addRefenceForm";
 import { useDebounce } from "@/components/hooks/useDebounce";
 import { Option } from "@/lib/redux/apiTypes";
+import { useSearchParams } from "next/navigation";
 
 export type ViewType = "table" | "grid";
 export type ReferencesProps = {
@@ -19,11 +20,20 @@ export type ReferencesProps = {
   types: Option[];
 };
 
-const GenerateSpc: React.FC<ReferencesProps> = ({ options, isLoading, types }) => {
+const GenerateSpc: React.FC<ReferencesProps> = ({
+  options,
+  isLoading,
+  types,
+}) => {
+  const searchParams = useSearchParams();
+  const country = searchParams.get("countryCode");
+  const type = searchParams.get("type");
+  const templateType = type ? type : "";
+  const countryCode = country ? country : "";
   const [view, setView] = useState<ViewType>("table");
   const [params, setParams] = useState({
-    country: "",
-    type: "",
+    country: countryCode,
+    type: templateType,
     title: "",
   });
   const { openDrawer } = useDrawer();

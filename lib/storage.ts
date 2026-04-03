@@ -12,14 +12,30 @@ export const loadForm = () => {
 export interface StepFormData {
   stepReference?: {
     isSlectedDocument?: boolean;
-    SlectedDocument?: string;
-    country?: string;
+    slectedReferenceId?: string;
+    countryCode?: string;
+    countryName?: string;
+    referenceName?: string;
+    activeIngredient?: string;
     type?: string;
   };
   stepTemplate?: {
     templateId?: string;
+    templateName?: string;
   };
-  fillData?: string;
+  fillData?: {
+    basicInformation: {
+      brandName: string;
+      strength: string;
+      dosageForm: string;
+      manufacturer: string;
+      shelfLife: string;
+      storagePrecautions: string;
+      MAHAddress: string;
+      packagingDetails: string;
+    };
+    clinicalInformation: {};
+  };
   generateTemplate?: string;
 }
 
