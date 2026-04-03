@@ -51,7 +51,7 @@ export default function SelectTemplateForm({
       onSubmit={(values) => {
         updateData({
           stepTemplate: {
-            templateId: values.templateId,
+            templateId: values.templateId || templateId,
             templateName: templateName,
           },
         });
@@ -133,7 +133,7 @@ export default function SelectTemplateForm({
               </div>
               <div>
                 <DynamicButton
-                  isSubmitting={!isValid || !dirty}
+                  // isSubmitting={!isValid || !dirty}
                   text="Continue To Product Input"
                   type="submit"
                   variant="submit"

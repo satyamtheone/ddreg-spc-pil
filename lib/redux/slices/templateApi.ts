@@ -1,6 +1,7 @@
 
 import {
   CreateTemplateResponse,
+  CreateUserResponse,
   GetCountriesResponse,
   GetReferenceByIdResponse,
   GetReferencesResponse,
@@ -74,37 +75,15 @@ export const templateApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["getReferences"],
     }),
-    // 🔹updatePreferences
-    // updatePreferences: builder.mutation<
-    //   UpdatePreferencesResponse,
-    //   UpdatePreferencesPayload
-    // >({
-    //   query: (body) => ({
-    //     url: "/users/updatePreferences",
-    //     method: "PATCH",
-    //     body,
-    //   }),
-    //   invalidatesTags: ["Me"],
-    // }),
 
-    // createRole: builder.mutation<CreateRoleResponse, CreateROleRequest>({
-    //   query: (body) => ({
-    //     url: "/roles",
-    //     method: "POST",
-    //     body,
-    //   }),
-    //   invalidatesTags: ["Auth"],
-    // }),
-
-    // updateRole: builder.mutation<CreateRoleResponse, UpdateRoleRequest>({
-    //   query: ({ id, body }) => ({
-    //     url: `/roles/${id}/permissions`,
-    //     method: "PATCH",
-    //     body,
-    //   }),
-    //   invalidatesTags: ["Auth"],
-    // }),
-
+    previewDocumentByIds: builder.mutation<CreateUserResponse, FormData>({
+      query: (body) => ({
+        url: "/users",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
     // deleteRole: builder.mutation({
     //   query: (id) => ({
     //     url: `/roles/${id}`,

@@ -7,9 +7,29 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import DocumentDetailsChip from "./documentDetailsChip";
 import BasicInformationForm from "./basicInformationForm";
+import { usePreviewDocumentMutation } from "@/lib/redux/slices/documentApi";
+import { useEffect } from "react";
 
 export default function StepDataInputForm() {
   const { formData, updateData, setStep } = useStepper();
+
+  const [previewDocument, { isLoading, isSuccess, isError, data }] =
+    usePreviewDocumentMutation();
+
+  const getPreviewDocument = async () => {
+    const response = await previewDocument({
+      referenceId: formData.stepReference?.slectedReferenceId,
+      productName: formData.stepReference?.referenceName,
+      templateId: formData.stepTemplate?.templateId,
+    });
+    return response.data;
+  };
+
+  useEffect(() => {
+    const res = getPreviewDocument();
+
+    console.log(res);
+  }, [formData.stepReference, formData.stepTemplate]);
 
   return (
     <Formik

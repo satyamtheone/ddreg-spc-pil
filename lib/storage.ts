@@ -12,7 +12,7 @@ export const loadForm = () => {
 export interface StepFormData {
   stepReference?: {
     isSlectedDocument?: boolean;
-    slectedReferenceId?: string;
+    slectedReferenceId: string;
     countryCode?: string;
     countryName?: string;
     referenceName?: string;
@@ -20,7 +20,7 @@ export interface StepFormData {
     type?: string;
   };
   stepTemplate?: {
-    templateId?: string;
+    templateId: string;
     templateName?: string;
   };
   fillData?: {

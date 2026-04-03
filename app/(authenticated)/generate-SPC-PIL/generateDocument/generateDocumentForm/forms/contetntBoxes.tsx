@@ -1,5 +1,5 @@
 import MiniChip from "@/components/common/miniChip";
-import React, { JSX } from "react";
+import React from "react";
 
 type ContentBoxesProps = {
   title: string;

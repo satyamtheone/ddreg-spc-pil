@@ -321,4 +321,32 @@ export type GetReferenceByIdResponse = {
   data: ReferenceById;
 };
 
+// ========================================================================== document types
 
+export type PreviewDocumentRequest = {
+  templateId?: string;
+  referenceId?: string;
+  productName?: string;
+  findReplace?: [
+    {
+      find: string;
+      replace: string;
+      caseSensitive: boolean;
+    },
+  ];
+};
+
+export type PreviewDocumentSection = {
+  id: string;
+  title: string;
+  content: string;
+  type: string;
+  required: boolean;
+  children: PreviewDocumentSection[];
+  matched: boolean;
+};
+export type PreviewDocumentResponse = {
+  templateId: string;
+  referenceId: string;
+  sections: PreviewDocumentSection[];
+};
