@@ -11,29 +11,30 @@ export default function AutoPopulateSectionsForm() {
       id: `${nextIndex}`,
       title: "",
       content: "",
-      type: "group",
+      type: "text",
       required: false,
       children: [],
       matched: false,
     };
-
     setFieldValue("sections", [...values.sections, newSection]);
   };
 
   return (
     <div>
-      {values.sections.map((section: any, index: number) => (
-        <FromSectionRenderer
-          key={section.id}
-          section={section}
-          path={`sections.${index}`}
-        />
-      ))}
+      <div>
+        {values.sections.map((section: any, index: number) => (
+          <FromSectionRenderer
+            key={section.id}
+            section={section}
+            path={`sections.${index}`}
+          />
+        ))}
+      </div>
 
       <button
         type="button"
         onClick={handleAddRootSection}
-        className="mt-4 text-blue-600"
+        className="mt-4 text-gradient"
       >
         + Add New Section
       </button>

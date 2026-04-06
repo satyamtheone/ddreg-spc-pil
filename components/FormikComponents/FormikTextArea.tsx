@@ -43,6 +43,7 @@ const FormikTextarea = forwardRef<HTMLTextAreaElement, FormikTextareaProps>(
             as="textarea"
             innerRef={ref}
             rows={rows}
+            cols="1"
             name={name}
             placeholder={placeholder}
             autoComplete="off"

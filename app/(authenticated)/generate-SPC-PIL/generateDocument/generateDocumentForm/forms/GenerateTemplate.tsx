@@ -1,12 +1,10 @@
 "use client";
 import { Formik, Form } from "formik";
 import { useStepper } from "../stepper/stepperContext,";
-import { step1Schema } from "../validation/schema";
 import { GoChecklist } from "react-icons/go";
 import DynamicButton from "@/components/common/DynamicButton";
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoDocumentTextOutline } from "react-icons/io5";
-import { MdInfoOutline } from "react-icons/md";
 import ContentBoxes from "./contetntBoxes";
 import MiniChip from "@/components/common/miniChip";
 
@@ -18,13 +16,14 @@ export default function GenerateTemplate() {
       initialValues={{
         generateTemplate: formData.generateTemplate || "",
       }}
-      // validationSchema={step1Schema}
       onSubmit={(values) => {
         updateData(values);
       }}
     >
       {() => (
-        <Form className="flex flex-col gap-4">
+        <Form
+          className={`flex flex-col gap-4 ${formData.basicInformation ? "" : "pointer-events-none opacity-50"}`}
+        >
           <div className="p-4 rounded-[10px] shadow-md shadow-cyan-100 border-cyan-500 border flex flex-col gap-2 bg-sky-50">
             <div>Reference Document</div>
             <div className="flex justify-between">
@@ -32,18 +31,18 @@ export default function GenerateTemplate() {
                 <div className="text-sm text-neutral-400 ">
                   Reference Document
                 </div>
-                <div>Aspirin 100mg</div>
+                <div>{formData.stepReference?.referenceName}</div>
               </div>
               <div className="flex flex-col items-start gap-2">
                 <div className="text-sm text-neutral-400 ">
                   Active Ingredient
                 </div>
-                <div>Acetylsalicylic Acid</div>
+                <div>{formData.stepReference?.activeIngredient}</div>
               </div>
               <div className="flex flex-col items-start gap-2">
                 <div className="text-sm text-neutral-400 ">Document Type</div>
                 <div>
-                  <MiniChip status={"SPC"} />
+                  <MiniChip status={formData.stepReference?.type || ""} />
                 </div>
               </div>
               <div className="flex flex-col items-start gap-2">
@@ -59,11 +58,11 @@ export default function GenerateTemplate() {
             <div className="flex justify-between">
               <div className="flex flex-col items-start gap-2">
                 <div className="text-sm text-neutral-400 ">Country</div>
-                <div>Germany</div>
+                <div>{formData.stepReference?.countryName}</div>
               </div>
               <div className="flex flex-col items-start gap-2">
                 <div className="text-sm text-neutral-400 ">Template</div>
-                <div>Germany SPC Template 2026</div>
+                <div>{formData.stepTemplate?.templateName}</div>
               </div>
               <div className="flex flex-col items-start gap-2">
                 <div className="text-sm text-neutral-400 ">Version</div>
@@ -84,24 +83,39 @@ export default function GenerateTemplate() {
             <div className="text-xl font-medium mb-4">Product Information</div>
             <div className="flex flex-col gap-4 w-full">
               <div className="flex gap-4 w-full justify-evenly">
-                <ContentBoxes title="Brand Name" subTitle="DDReg Plus" />
-                <ContentBoxes title="Strength" subTitle="200mg" />
-                <ContentBoxes title="Dosage Form" subTitle="Tablet" />
-                <ContentBoxes title="Manufacturer" subTitle="DDReg Pharma" />
-                <ContentBoxes title="Shelf Life" subTitle="3 Years" />
+                <ContentBoxes
+                  title="Brand Name"
+                  subTitle={formData.basicInformation?.brandName}
+                />
+                <ContentBoxes
+                  title="Strength"
+                  subTitle={formData.basicInformation?.strength}
+                />
+                <ContentBoxes
+                  title="Dosage Form"
+                  subTitle={formData.basicInformation?.dosageForm}
+                />
+                <ContentBoxes
+                  title="Manufacturer"
+                  subTitle={formData.basicInformation?.manufacturer}
+                />
+                <ContentBoxes
+                  title="Shelf Life"
+                  subTitle={formData.basicInformation?.shelfLife}
+                />
               </div>
               <div className="flex gap-4">
                 <ContentBoxes
                   title="MAH Address"
-                  subTitle="Units 444-451, Tower B2 4, SPAZE ITECH PARK, Sohna Rd, Sector 49, Gurugram, Haryana 122018"
+                  subTitle={formData.basicInformation?.MAHAddress}
                 />
                 <ContentBoxes
-                  title="Date of first authorisation/renewal of the authorisation"
-                  subTitle="21 December 2025"
+                  title="Storage Precautions*"
+                  subTitle={formData.basicInformation?.storagePrecautions}
                 />
                 <ContentBoxes
-                  title="Date of first authorisation/renewal of the authorisation"
-                  subTitle="25 December 2025"
+                  title="Packaging Details*"
+                  subTitle={formData.basicInformation?.packagingDetails}
                 />
               </div>
             </div>
@@ -134,7 +148,7 @@ export default function GenerateTemplate() {
             </div>
             <div>
               <DynamicButton
-                // isSubmitting={!dirty || !isValid}
+                isSubmitting={!formData.basicInformation}
                 text="Generate SPC / PIL Document"
                 type="submit"
                 variant="submit"

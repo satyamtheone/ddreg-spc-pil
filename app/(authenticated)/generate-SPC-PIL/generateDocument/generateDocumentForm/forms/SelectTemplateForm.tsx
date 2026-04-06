@@ -14,7 +14,7 @@ import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import { getCountryLabel, mapToFormikOptions } from "@/lib/utilMethods";
 import { step2Schema } from "../validation/schema";
 import TemplateDetailsChip from "./templateDetailsChip";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SelectTemplateForm({
   templateId,
@@ -62,6 +62,9 @@ export default function SelectTemplateForm({
         const templateById = templatesByCountry?.data.find(
           (template) => template.id === values.templateId,
         );
+        useEffect(()=>{
+
+        },[])
         return (
           <Form className="flex flex-col gap-4">
             <SelectedDocumentDetailsChip
@@ -133,7 +136,7 @@ export default function SelectTemplateForm({
               </div>
               <div>
                 <DynamicButton
-                  // isSubmitting={!isValid || !dirty}
+                  isSubmitting={!isValid || !dirty}
                   text="Continue To Product Input"
                   type="submit"
                   variant="submit"

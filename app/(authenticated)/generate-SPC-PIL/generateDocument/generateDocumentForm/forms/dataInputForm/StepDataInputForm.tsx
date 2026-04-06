@@ -1,7 +1,7 @@
 "use client";
 import { Formik, Form } from "formik";
 import { useStepper } from "../../stepper/stepperContext,";
-import { step1Schema } from "../../validation/schema";
+import { step3Schema } from "../../validation/schema";
 import DynamicButton from "@/components/common/DynamicButton";
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoDocumentTextOutline } from "react-icons/io5";
@@ -11,10 +11,10 @@ import { usePreviewDocumentMutation } from "@/lib/redux/slices/documentApi";
 import { useEffect, useState } from "react";
 import AutoPopulateSectionsForm from "./autoPopulateSectionsForm";
 import { PreviewDocumentResponse } from "@/lib/redux/apiTypes";
+import AutoPopulateSectionSkeleton from "@/components/common/skletons/autoPopulateSectionSkeleton";
 
 export default function StepDataInputForm() {
   const { formData, updateData, setStep } = useStepper();
-
   const [previewDocument, { isLoading, isSuccess, isError }] =
     usePreviewDocumentMutation();
 
@@ -43,53 +43,61 @@ export default function StepDataInputForm() {
     }
   }, [formData.stepReference, formData.stepTemplate]);
 
-  if (isLoading || (!previewData && !formData.fillData)) {
-    return (
-      <div className="w-full flex justify-center items-center py-10">
-        Loading document preview...
-      </div>
-    );
-  }
+  // if (isLoading || (!previewData && !formData.basicInformation)) {
+  //   return (
+  //     <div className="w-full flex justify-center items-center py-10">
+  //       Loading document preview...
+  //     </div>
+  //   );
+  // }
 
   return (
     <Formik
       enableReinitialize
       initialValues={{
-        sections:
-          formData.fillData?.clinicalInformation.sections ||
-          previewData?.data.sections ||
-          [],
+        sections: formData.sections || previewData?.data.sections || [],
+        basicInformation: {
+          brandName: formData.basicInformation?.brandName || "",
+          strength: formData.basicInformation?.strength || "",
+          dosageForm: formData.basicInformation?.dosageForm || "",
+          manufacturer: formData.basicInformation?.manufacturer || "",
+          shelfLife: formData.basicInformation?.shelfLife || "",
+          storagePrecautions:
+            formData.basicInformation?.storagePrecautions || "",
+          MAHAddress: formData.basicInformation?.MAHAddress || "",
+          packagingDetails: formData.basicInformation?.packagingDetails || "",
+        },
       }}
-      validationSchema={step1Schema}
+      validationSchema={step3Schema}
       onSubmit={(values) => {
         updateData({
-          fillData: {
-            clinicalInformation: {
-              sections: values.sections,
-            },
-            basicInformation: {
-              brandName: "",
-              strength: "",
-              dosageForm: "",
-              manufacturer: "",
-              shelfLife: "",
-              storagePrecautions: "",
-              MAHAddress: "",
-              packagingDetails: "",
-            },
+          sections: values.sections,
+          basicInformation: {
+            brandName: values.basicInformation.brandName,
+            strength: values.basicInformation.strength,
+            dosageForm: values.basicInformation.dosageForm,
+            manufacturer: values.basicInformation.manufacturer,
+            shelfLife: values.basicInformation.shelfLife,
+            storagePrecautions: values.basicInformation.storagePrecautions,
+            MAHAddress: values.basicInformation.MAHAddress,
+            packagingDetails: values.basicInformation.packagingDetails,
           },
         });
-
         setStep(4);
       }}
     >
-      {({ dirty, isValid, values }) => {
-        console.log(values.sections);
+      {({ dirty, isValid }) => {
         return (
           <Form className="flex flex-col gap-4">
             <DocumentDetailsChip formData={formData} />
             <BasicInformationForm />
-            <AutoPopulateSectionsForm />
+            <div className="text-xl mt-4 font-semibold">Sections</div>
+            <hr />
+            {isLoading ? (
+              <AutoPopulateSectionSkeleton />
+            ) : (
+              <AutoPopulateSectionsForm />
+            )}
             <div className="w-full flex justify-between">
               <div>
                 <DynamicButton

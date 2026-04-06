@@ -74,11 +74,10 @@ const FromSectionRenderer: React.FC<Props> = ({ section, path }) => {
           </div>
         )}
 
-        {/* REMOVE BUTTON (only for new sections) */}
         {!section.matched && (
           <div>
             <DynamicButton
-              icon={<FaXmark />}
+              icon={<FaXmark size={20} />}
               variant="danger"
               onClick={handleRemoveSection}
             />
@@ -86,7 +85,11 @@ const FromSectionRenderer: React.FC<Props> = ({ section, path }) => {
         )}
       </div>
       {section.type === "text" && (
-        <FormikTextarea name={`${path}.content`} rows={6} />
+        <FormikTextarea
+          name={`${path}.content`}
+          rows={6}
+          placeholder="Write Content..."
+        />
       )}
 
       {section.children?.map((child, index) => (

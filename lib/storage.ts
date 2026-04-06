@@ -28,21 +28,18 @@ export interface StepFormData {
     templateId: string;
     templateName?: string;
   };
-  fillData?: {
-    basicInformation: {
-      brandName: string;
-      strength: string;
-      dosageForm: string;
-      manufacturer: string;
-      shelfLife: string;
-      storagePrecautions: string;
-      MAHAddress: string;
-      packagingDetails: string;
-    };
-    clinicalInformation: {
-      sections: PreviewDocumentSectionType[];
-    };
+
+  basicInformation?: {
+    brandName: string;
+    strength: string;
+    dosageForm: string;
+    manufacturer: string;
+    shelfLife: string;
+    storagePrecautions: string;
+    MAHAddress: string;
+    packagingDetails: string;
   };
+  sections?: PreviewDocumentSectionType[];
   generateTemplate?: string;
 }
 
