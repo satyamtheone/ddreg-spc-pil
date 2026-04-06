@@ -336,17 +336,28 @@ export type PreviewDocumentRequest = {
   ];
 };
 
-export type PreviewDocumentSection = {
+export type PreviewDocumentResponse = {
+  success: boolean;
+  message: string;
+
+  data: {
+    templateId: string;
+    referenceId: string;
+    matchingStrategy: string;
+    sections: PreviewDocumentSectionType[];
+  };
+};
+
+export type PreviewDocumentSectionType = {
   id: string;
   title: string;
   content: string;
-  type: string;
+  type: "text" | "group";
   required: boolean;
-  children: PreviewDocumentSection[];
+  children: PreviewDocumentSectionType[];
   matched: boolean;
 };
-export type PreviewDocumentResponse = {
-  templateId: string;
-  referenceId: string;
-  sections: PreviewDocumentSection[];
+
+export type DocumentFormValues = {
+  sections: PreviewDocumentSectionType[];
 };

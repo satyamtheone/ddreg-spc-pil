@@ -29,13 +29,13 @@ export default function SelectReferenceForm({
       onSubmit={(values) => {
         updateData({
           stepReference: {
-            referenceName: data?.data?.name,
+            referenceName: data?.data?.name || "",
             activeIngredient: "Active Ingredient",
-            countryCode: data?.data?.type?.country?.code,
-            slectedReferenceId: data?.data?.id,
+            countryCode: data?.data?.type?.country?.code || "",
+            slectedReferenceId: data?.data?.id || "",
             type: data?.data?.type?.name,
             isSlectedDocument: values.slectedDocument,
-            countryName: data?.data?.type.country.name,
+            countryName: data?.data?.type.country.name || "",
           },
         });
         setStep(2);

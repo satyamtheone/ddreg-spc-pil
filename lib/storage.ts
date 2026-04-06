@@ -1,3 +1,8 @@
+import {
+  DocumentFormValues,
+  PreviewDocumentSectionType,
+} from "./redux/apiTypes";
+
 const KEY = "multi-step-form";
 
 export const saveForm = (data: any) => {
@@ -12,7 +17,7 @@ export const loadForm = () => {
 export interface StepFormData {
   stepReference?: {
     isSlectedDocument?: boolean;
-    slectedReferenceId: string;
+    slectedReferenceId?: string;
     countryCode?: string;
     countryName?: string;
     referenceName?: string;
@@ -34,7 +39,9 @@ export interface StepFormData {
       MAHAddress: string;
       packagingDetails: string;
     };
-    clinicalInformation: {};
+    clinicalInformation: {
+      sections: PreviewDocumentSectionType[];
+    };
   };
   generateTemplate?: string;
 }

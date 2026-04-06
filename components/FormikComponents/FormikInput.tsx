@@ -49,7 +49,8 @@ const FormikInput = forwardRef<HTMLInputElement, FormikInputProps>(
               iconPosition === "left" ? "pl-10" : "px-3"
             } py-1 border-slate-300 placeholder:text-neutral-500 focus-visible:shadow-md hover:shadow-md focus-visible:ring-cyan-600 bg-transparent text-sm shadow-sm transition-all duration-200 ease-in-out file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-700 dark:placeholder:text-neutral-400 dark:focus-visible:ring-neutral-300 ${className}`}
             placeholder={placeholder}
-            type={type}
+            type="textarea"
+            rows={6}
             name={name}
             autoComplete="off"
             {...props}
