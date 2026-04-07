@@ -75,7 +75,7 @@ const GenerateSpc: React.FC<ReferencesProps> = ({
     <div className="flex flex-col gap-4 p-4 bg-white spcBNS rounded-[10px] min-h-120">
       <SpcTableHeader
         view={view}
-        totalDocuments={24}
+        totalDocuments={data?.data.length}
         onFilterChange={handleFilterChange}
         onCountryChange={handleCountryChange}
         onViewChange={handleViewChange}

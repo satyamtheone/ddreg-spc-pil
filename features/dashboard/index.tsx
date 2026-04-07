@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { SearchDocument } from "@/components/common/SearchDocument";
+import { SearchDocument } from "@/components/common/webSearch/SearchDocument";
 import { Cards } from "@/features/dashboard/components/Cards";
 import { LineGraph } from "@/features/dashboard/components/LineGraph";
 import { BarGraph } from "@/features/dashboard/components/BarGraph";

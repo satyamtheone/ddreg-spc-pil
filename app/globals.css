@@ -385,6 +385,15 @@ body {
 .text-gradient {
   @apply bg-linear-to-l  from-teal-500 via-sky-400 to-sky-600 text-transparent bg-clip-text
 }
+.tooltip-info {
+  @layer daisyui.l1.l2 {
+    --tt-bg: var(--color-info) /* var(--color-info) */;
+    > .tooltip-content,
+    &[data-tip]:before {
+      @apply bg-gradient-to-r from-sky-600 to-teal-500 text-white py-2.5;
+    }
+  }
+}
 
 /* Jodit Editor CLasses =============================================== */
 

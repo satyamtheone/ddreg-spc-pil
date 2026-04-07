@@ -1,5 +1,5 @@
 "use client";
-import { SearchDocument } from "@/components/common/SearchDocument";
+import { SearchDocument } from "@/components/common/webSearch/SearchDocument";
 import GenerateSpc from "./references/generateSpc";
 import { useGetCountriesQuery } from "@/lib/redux/slices/templateApi";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";

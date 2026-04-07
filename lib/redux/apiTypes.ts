@@ -312,6 +312,25 @@ export type GetReferencesResponse = {
   data: Reference[];
 };
 
+export type ReferencesFromWeb = {
+  name: string;
+  region: string;
+  lastUpdated: string;
+  status: string;
+  activeSubstance: string;
+  documents: [
+    {
+      type: string;
+      url: string;
+    },
+  ];
+};
+export type GetReferencesFromWebResponse = {
+  success: boolean;
+  message: string;
+  data: ReferencesFromWeb[];
+};
+
 export type ReferenceById = Reference & {
   sections: Section[];
 };

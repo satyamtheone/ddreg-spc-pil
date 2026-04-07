@@ -44,6 +44,7 @@ export const crudOperationChipColors = ({
     case "APPROVER":
     case "Latest":
     case "Approved":
+    case "Authorised":
       return {
         border: "border-green-500",
         hover: "hover:bg-green-500 hover:text-white",
@@ -155,3 +156,4 @@ export const mapToFormikOptions = <
     value: item[valueKey] as string | number,
   }));
 };
+

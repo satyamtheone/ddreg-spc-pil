@@ -53,7 +53,7 @@ const SpcTableHeader: React.FC<SpcTableHeaderProps> = ({
   return (
     <div className="flex  w-full justify-between items-center gap-6 flex-wrap">
       <div>
-        <div className="text-xl font-medium">Search Results</div>
+        <div className="text-xl font-medium">Local Results</div>
         <div className="text-base font-normal">
           {totalDocuments} Documents Found
         </div>
@@ -79,14 +79,14 @@ const SpcTableHeader: React.FC<SpcTableHeaderProps> = ({
         ) : (
           <div className="flex gap-4 items-center">
             <SelectForFilter
+              label="Select Country"
               handleOptionChange={onCountryChange}
-              optionTitle="Filter by"
               options={options}
             />
 
             <SelectForFilter
+              label="Select Type"
               handleOptionChange={onFilterChange}
-              optionTitle="Filter by"
               options={types}
             />
           </div>

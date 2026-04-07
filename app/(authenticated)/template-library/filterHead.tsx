@@ -71,12 +71,14 @@ const FilterHead: React.FC<FilterHeadProps> = ({
       ) : (
         <div className="flex gap-4 items-center">
           <SelectForFilter
+            label="Select Country"
             handleOptionChange={handleSetCountry}
             optionTitle="Filter by"
             options={options}
           />
 
           <SelectForFilter
+            label="Select type"
             handleOptionChange={handleSetType}
             optionTitle="Filter by"
             options={types}

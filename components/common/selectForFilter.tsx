@@ -12,13 +12,14 @@ type SelectForFilterProps = {
   handleOptionChange: (value: string) => void;
   options: OptionType[];
   optionTitle?: string;
+  label: string;
 };
-
 
 const SelectForFilter: React.FC<SelectForFilterProps> = ({
   handleOptionChange,
   options,
   optionTitle,
+  label,
 }) => {
   return (
     <div className="relative min-w-70 cursor-pointer animate-dialog-slide-down">
@@ -33,22 +34,36 @@ const SelectForFilter: React.FC<SelectForFilterProps> = ({
         }
         className="
           w-full appearance-none
-          rounded-md border border-gray-200
+          rounded-md border 
           md:px-10 md:h-14 h-10 p-2.5 pl-10
-          text-sm text-gray-700
+          text-sm 
           transition-all duration-200 ease-in-out
           hover:border-gray-300
           focus:outline-none
           focus:ring-[0.5px] focus:ring-cyan-600
-          focus:border-cyan-600
-          focus:bg-white
+          focus:border-cyan-800
+          hover:shadow-md
           shadow-sm
           cursor-pointer
-          
         "
       >
+        <option
+          value={""}
+          hidden
+          style={{
+            color: "grey",
+          }}
+        >
+          {label}
+        </option>
         {options.map((a, index) => (
-          <option key={index} value={a.value}>
+          <option
+            key={index}
+            value={a.value}
+            style={{
+              color: "black",
+            }}
+          >
             {optionTitle ? optionTitle : "Filter By"} {a.option}
           </option>
         ))}

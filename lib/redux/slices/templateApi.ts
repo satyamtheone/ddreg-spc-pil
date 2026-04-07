@@ -4,6 +4,7 @@ import {
   CreateUserResponse,
   GetCountriesResponse,
   GetReferenceByIdResponse,
+  GetReferencesFromWebResponse,
   GetReferencesResponse,
   GetTemplateByIdResponse,
   GetTemplatesResponse,
@@ -60,6 +61,17 @@ export const templateApi = apiSlice.injectEndpoints({
       providesTags: ["getReferences"],
     }),
 
+    getReferencesFromWeb: builder.query<
+      GetReferencesFromWebResponse,
+      { search?: string; region?: string; type?: string }
+    >({
+      query: ({ search, region, type }) => ({
+        url: `/regulatories/products`,
+        method: "GET",
+        params: { search, region, type },
+      }),
+      keepUnusedDataFor: 0,
+    }),
     getReferenceById: builder.query<GetReferenceByIdResponse, string>({
       query: (id) => ({
         url: `/references/${id}`,
@@ -101,5 +113,7 @@ export const {
   useGetTemplateByIdQuery,
   useGetReferenceByIdQuery,
   useGetReferencesQuery,
+  useGetReferencesFromWebQuery,
+  useLazyGetReferencesFromWebQuery,
   useCreateReferenceMutation,
 } = templateApi;
