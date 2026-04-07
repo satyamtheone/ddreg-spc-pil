@@ -25,7 +25,9 @@ export const SearchDocument: React.FC = () => {
     search: "",
   });
   const debounceParams = useDebounce(params, 400);
-  const referencesQuery = useGetReferencesFromWebQuery(debounceParams);
+  const referencesQuery = useGetReferencesFromWebQuery(debounceParams, {
+    skip: !params.region,
+  });
   const references = useQueryErrorHandler(
     referencesQuery,
     "Get References from the web",

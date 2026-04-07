@@ -1,5 +1,6 @@
 import PageHeader from "@/components/common/pageHeader";
 import WorkFlowStatsCard, { variantStyles } from "./workFlowStatsCard";
+import WorkFlowTaskColumns from "./workFlowTaskColumns";
 
 export const metadata = {
   title: "Workflow Management",
@@ -45,18 +46,7 @@ export default function WorkflowManagement() {
         />
       </div>
 
-      <div className="grid grid-cols-4 gap-4 my-6">
-        <div
-          className={`${variantStyles["sky"].bg} ${variantStyles["sky"].border} border h-4  col-span-1`}
-        >
-          sdef
-        </div>
-        <div
-          className={`${variantStyles["emerald"].bg} ${variantStyles["emerald"].border} border h-4  col-span-1`}
-        >
-          sdef
-        </div>
-      </div>
+      <WorkFlowTaskColumns />
     </div>
   );
 }

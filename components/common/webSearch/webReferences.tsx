@@ -27,7 +27,7 @@ const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
                   <div className="text-sm">{reference.name}</div>
                 </div>
                 <div className="flex flex-col gap-1 ">
-                  <div className="font-semibold text-gradient">Reagion</div>
+                  <div className="font-semibold text-gradient">Region</div>
                   <div className="text-sm">{reference.region}</div>
                 </div>
                 <div className="flex flex-col gap-1 ">
