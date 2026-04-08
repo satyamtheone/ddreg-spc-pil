@@ -42,10 +42,10 @@ const AddRefenceForm = () => {
       const formData = new FormData();
       formData.append("title", values.title);
       formData.append("country", "EU");
-      {
-        values.description &&
-          formData.append("description", values.description || "");
-      }
+      // {
+      //   values.description &&
+      //     formData.append("description", values.description || "");
+      // }
       formData.append("type", "SMPC");
       formData.append("referenceFile", values.referenceFile);
       const res = await createReference(formData).unwrap();

@@ -10,7 +10,7 @@ type WorkFlowTaskColumnsProps = {};
 const WorkFlowTaskColumns: React.FC<WorkFlowTaskColumnsProps> = (props) => {
   const { openDrawer } = useDrawer();
   return (
-    <div className="grid grid-cols-4 gap-4 my-6">
+    <div className="grid grid-cols-4 gap-4">
       <div
         className={`${variantStyles["indigo"].bg} ${variantStyles["indigo"].border} border  p-4 rounded-md col-span-1`}
       >

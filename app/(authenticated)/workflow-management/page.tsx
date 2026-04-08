@@ -6,9 +6,7 @@ export const metadata = {
   title: "Workflow Management",
   description: "Workflow Management for SPC - PIL",
 };
-{
-  /* type Variant = "sky" | "amber" | "emerald" | "indigo"; */
-}
+
 export default function WorkflowManagement() {
   return (
     <div>
@@ -46,6 +44,7 @@ export default function WorkflowManagement() {
         />
       </div>
 
+      <div className="h-20 w-full spcBNS bg-white rounded-[10px] my-6"></div>
       <WorkFlowTaskColumns />
     </div>
   );
