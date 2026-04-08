@@ -11,20 +11,16 @@ import {
 } from "@/components/ui/tooltip";
 import { NavData } from "@/lib/NavData";
 import { useAuth } from "@/lib/AuthProvider";
+import image from "../../public/loginUser.svg";
 
 interface SidebarProps {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
-interface UserData {
-  name: string;
-  email: string;
-  image?: string;
-}
-
 export default function Sidebar({ open, setOpen }: SidebarProps) {
   const { user, imageUrl } = useAuth();
+  const loginImage = imageUrl || image;
   const pathname = usePathname();
   const isActive = (link: string) => {
     const linkPattern = new RegExp(`^${link}(/|$)`);
@@ -129,7 +125,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                 >
                   <Image
                     priority
-                    src={imageUrl}
+                    src={loginImage}
                     width={60}
                     height={60}
                     className="h-full w-full object-cover rounded-xl"

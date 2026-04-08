@@ -4,15 +4,26 @@ import { toast } from "react-hot-toast";
 import image from "../../public/auth/mainLogo.svg";
 import { POST } from "@/lib/http-methods";
 import Image from "next/image";
-import ForgotPasswordOTPForm, { OtpValues } from "./ForgotPasswordOTPForm";
+import ForgotPasswordOTPForm from "./ForgotPasswordOTPForm";
 import ForgotPasswordForm from "./ForgotPasswordForm";
 import OTPForm from "./OTPForm";
 import LoginForm from "./LoginForm";
+import { useAuth } from "@/lib/AuthProvider";
+import { useNavigation } from "@/components/hooks/useNavigation";
 
 // ---- TYPES ----
 type OtpArray = string[];
 
 function SignIn() {
+  const { isAuthenticated, isUserLoading } = useAuth();
+  const { goTo } = useNavigation();
+
+  useEffect(() => {
+    if (!isUserLoading && isAuthenticated) {
+      goTo("/dashboard");
+    }
+  }, [isAuthenticated, isUserLoading]);
+
   const [showOtpForm, setShowOtpForm] = useState(false);
   const [showForgotPasswordForm, setShowForgotPasswordForm] = useState(false);
   const [showForgotOtpForm, setShowForgotOtpForm] = useState(false);

@@ -28,9 +28,9 @@ export function proxy(request: NextRequest) {
   }
 
   // ✅ Already logged in → prevent going to login
-  if (isAuthRoute && accessToken) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
+if (isAuthRoute && (accessToken || refreshToken)) {
+  return NextResponse.redirect(new URL("/dashboard", request.url));
+}
 
   return NextResponse.next();
 }

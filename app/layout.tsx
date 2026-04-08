@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html suppressHydrationWarning={true} lang="en">
+    <html suppressHydrationWarning={true} lang="en" data-theme="light">
       <body className={`${poppins.variable} antialiased custom-scrollbar`}>
         <ReduxProvider>
           <AuthProvider>

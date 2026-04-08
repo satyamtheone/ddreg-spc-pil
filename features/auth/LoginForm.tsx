@@ -14,6 +14,7 @@ import DynamicButton from "@/components/common/DynamicButton";
 import LoginLinks from "./loginLinks";
 import { useLoginMutation } from "@/lib/redux/slices/authApi";
 import { validationSchema } from "@/lib/utilsSchema";
+import { useAuth } from "@/lib/AuthProvider";
 
 // ---- TYPES ----
 type LoginValues = {
@@ -28,7 +29,6 @@ type Props = {
   setUserEmail: (email: string) => void;
 };
 
-
 function LoginForm({
   initialValues,
   handleForgotPasswordClick,
@@ -37,8 +37,8 @@ function LoginForm({
 }: Props) {
   const router = useRouter();
   const [type, setType] = useState<"password" | "text">("password");
-
-  const [login, { isLoading ,isError,error}] = useLoginMutation();
+  const { refreshUser } = useAuth();
+  const [login, { isLoading, isError, error }] = useLoginMutation();
 
   const onSubmit = async (
     values: LoginValues,
@@ -56,6 +56,7 @@ function LoginForm({
         document.cookie = `refreshToken=${data.data?.refreshToken}; path=/`;
         router.push("/dashboard");
         toast.success("Logged in Successfully.");
+        refreshUser();
       } else if (data?.data?.otp === true) {
         localStorage.setItem("userInfo", JSON.stringify(data));
         setShowOtpForm(true);
@@ -63,6 +64,7 @@ function LoginForm({
       } else {
         toast.error("Login Failed! Try Again.");
       }
+      refreshUser();
     } catch (error: any) {
       setShowOtpForm(false);
       toast.error(error?.data?.message || "Login failed");
