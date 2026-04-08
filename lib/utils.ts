@@ -1,5 +1,31 @@
+"use";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { JSX, ReactNode } from "react";
+import { GoStack } from "react-icons/go";
+import { TbListDetails } from "react-icons/tb";
+import { GrUpdate } from "react-icons/gr";
+import { AiOutlineHome } from "react-icons/ai";
+import { FiEdit } from "react-icons/fi";
+import { MdOutlineDashboard } from "react-icons/md";
+import { BiGitCompare } from "react-icons/bi";
+import { TbTemplate } from "react-icons/tb";
+import { HiOutlineDocumentText } from "react-icons/hi";
+import { FiSettings } from "react-icons/fi";
+import { MdOutlineNotifications } from "react-icons/md";
+import { LuWorkflow } from "react-icons/lu";
+import { RiFolderOpenLine } from "react-icons/ri";
+import { FaRegUser } from "react-icons/fa";
+import { MdHistory } from "react-icons/md";
+import { IconType } from "react-icons";
+
+export type NavLinkItem = {
+  icon: IconType;
+  title: string;
+  link: string;
+  isAllowed?: boolean;
+  children?: NavLinkItem[];
+};
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -266,5 +292,75 @@ export const productDocuments: ProductDocument[] = [
     version: 2.0,
     lastModified: "2026-01-10",
     status: ["Draft"],
+  },
+];
+
+export const NavData: NavLinkItem[] = [
+  {
+    title: "Dashboard",
+    icon: MdOutlineDashboard,
+    link: "/dashboard",
+  },
+  {
+    title: "Generate SPC/PIL",
+    icon: HiOutlineDocumentText,
+    link: "/generate-SPC-PIL",
+    children: [
+      {
+        title: "Generate Document",
+        icon: HiOutlineDocumentText,
+        link: "/generate-SPC-PIL/generateDocument",
+      },
+    ],
+  },
+  {
+    title: "Document Editor",
+    icon: FiEdit,
+    link: "/document-editor",
+  },
+  {
+    title: "Workflow Management",
+    icon: LuWorkflow,
+    link: "/workflow-management",
+  },
+  {
+    title: "Document Repository",
+    icon: RiFolderOpenLine,
+    link: "/document-repository",
+  },
+  {
+    title: "Template Library",
+    icon: TbTemplate,
+    link: "/template-library",
+  },
+  {
+    title: "Regulatory Intelligence",
+    icon: AiOutlineHome,
+    link: "/regulatory-intelligence",
+  },
+  {
+    title: "Compare Documents",
+    icon: BiGitCompare,
+    link: "/compare-documents",
+  },
+  {
+    title: "Audit & Version History",
+    icon: MdHistory,
+    link: "/audit-version-history",
+  },
+  {
+    title: "Notification Center",
+    icon: MdOutlineNotifications,
+    link: "/notification-center",
+  },
+  {
+    title: "Settings",
+    icon: FiSettings,
+    link: "/settings",
+  },
+  {
+    title: "Account",
+    icon: FaRegUser,
+    link: "/account",
   },
 ];

@@ -1,10 +1,10 @@
 "use client";
-
 import "../globals.css";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
+import HomeBreadCrumbs from "@/components/common/Breadcrumb";
 
 export default function AuthenticatedLayout({
   children,
@@ -36,6 +36,7 @@ export default function AuthenticatedLayout({
           animate={{ marginLeft: open ? 255 : 75 }}
           transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
         >
+          <HomeBreadCrumbs />
           {children}
         </motion.main>
       </div>
