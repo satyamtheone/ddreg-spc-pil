@@ -358,7 +358,6 @@ export type PreviewDocumentRequest = {
 export type PreviewDocumentResponse = {
   success: boolean;
   message: string;
-
   data: {
     templateId: string;
     referenceId: string;
@@ -370,13 +369,70 @@ export type PreviewDocumentResponse = {
 export type PreviewDocumentSectionType = {
   id: string;
   title: string;
-  content: string;
+  content?: string;
   type: "text" | "group";
-  required: boolean;
+  required?: boolean;
   children: PreviewDocumentSectionType[];
-  matched: boolean;
+  matched?: boolean;
 };
 
 export type DocumentFormValues = {
   sections: PreviewDocumentSectionType[];
+};
+
+export type CreateDocumentRequest = {
+  title: string;
+  templateId: string;
+  referenceId: string;
+  description: string;
+  strength: string;
+  dosageForm: string;
+  manufacturer: string;
+  shelfLife: string;
+  storagePrecautions: string;
+  mahAddress: string;
+  packagingDetails: string;
+  country: string;
+  regulatoryBody: string;
+  sections: PreviewDocumentSectionType[];
+};
+
+export type CreateDocumentResponse = {
+  success: boolean;
+  message: string;
+  data: {
+    document: {
+      id: string;
+      title: string;
+      strength: string;
+      dosageForm: string;
+      manufacturer: string;
+      shelfLife: string;
+      storagePrecautions: string;
+      mahAddress: string;
+      packagingDetails: string;
+      country: string;
+      regulatoryBody: string;
+      createdAt: string;
+      createdById: string;
+      currentVersionId: string;
+    };
+    version: {
+      id: string;
+      documentId: string;
+      templateId: string;
+      referenceId: string;
+      versionNumber: string;
+      changeType: string;
+      description: string;
+      createdById: string;
+      createdAt: string;
+      approvedAt: string | null;
+      isLocked: boolean;
+      parentVersionId: string | null;
+      status: string;
+      updatedAt: string;
+      sections: PreviewDocumentSectionType[];
+    };
+  };
 };

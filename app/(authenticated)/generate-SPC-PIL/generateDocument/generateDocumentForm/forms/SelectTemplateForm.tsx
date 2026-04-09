@@ -23,6 +23,7 @@ export default function SelectTemplateForm({
 }) {
   const { formData, updateData, setStep } = useStepper();
   const [templateName, setTemplateName] = useState("");
+  const [regulatorybodyName, setRegulatoryBodyName] = useState("");
   const query = useGetCountriesQuery();
   const data = useQueryErrorHandler(query, "Get Countries");
   const templateQuery = useGetTemplatesQuery({
@@ -40,7 +41,13 @@ export default function SelectTemplateForm({
   const countriesData = data?.data || [];
   const countryOptions = getCountryLabel(countriesData);
 
-  console.log(templateName);
+  useEffect(() => {
+    const regulatory = countriesData.find(
+      (country) => country.code === formData.stepReference?.countryCode,
+    )?.regulatoryBody;
+    setRegulatoryBodyName(regulatory || "");
+  }, [countriesData]);
+
   return (
     <Formik
       initialValues={{
@@ -53,6 +60,7 @@ export default function SelectTemplateForm({
           stepTemplate: {
             templateId: values.templateId || templateId,
             templateName: templateName,
+            regulatoryBody: regulatorybodyName,
           },
         });
         setStep(3);
@@ -62,9 +70,7 @@ export default function SelectTemplateForm({
         const templateById = templatesByCountry?.data.find(
           (template) => template.id === values.templateId,
         );
-        useEffect(()=>{
-
-        },[])
+        useEffect(() => {}, []);
         return (
           <Form className="flex flex-col gap-4">
             <SelectedDocumentDetailsChip
@@ -86,12 +92,7 @@ export default function SelectTemplateForm({
                 ) : (
                   <SelectedDocumentDetailsChip
                     subtitleOne="Regulatory Authority"
-                    subtitleTwo={
-                      countriesData.find(
-                        (country) =>
-                          country.code === formData.stepReference?.countryCode,
-                      )?.regulatoryBody
-                    }
+                    subtitleTwo={regulatorybodyName}
                   />
                 )}
               </div>

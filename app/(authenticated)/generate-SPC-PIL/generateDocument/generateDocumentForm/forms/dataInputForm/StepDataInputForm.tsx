@@ -43,14 +43,6 @@ export default function StepDataInputForm() {
     }
   }, [formData.stepReference, formData.stepTemplate]);
 
-  // if (isLoading || (!previewData && !formData.basicInformation)) {
-  //   return (
-  //     <div className="w-full flex justify-center items-center py-10">
-  //       Loading document preview...
-  //     </div>
-  //   );
-  // }
-
   return (
     <Formik
       enableReinitialize
@@ -88,7 +80,9 @@ export default function StepDataInputForm() {
     >
       {({ dirty, isValid }) => {
         return (
-          <Form className="flex flex-col gap-4">
+          <Form
+            className={`flex flex-col gap-4 ${formData.stepTemplate?.templateId ? "" : "pointer-events-none opacity-50"}`}
+          >
             <DocumentDetailsChip formData={formData} />
             <BasicInformationForm />
             <div className="text-xl mt-4 font-semibold">Sections</div>

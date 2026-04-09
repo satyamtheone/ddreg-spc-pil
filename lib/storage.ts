@@ -23,10 +23,12 @@ export interface StepFormData {
     referenceName?: string;
     activeIngredient?: string;
     type?: string;
+    description?: string;
   };
   stepTemplate?: {
     templateId: string;
     templateName?: string;
+    regulatoryBody: string;
   };
 
   basicInformation?: {

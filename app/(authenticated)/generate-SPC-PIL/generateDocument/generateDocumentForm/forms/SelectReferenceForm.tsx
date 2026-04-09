@@ -36,6 +36,7 @@ export default function SelectReferenceForm({
             type: data?.data?.type?.name,
             isSlectedDocument: values.slectedDocument,
             countryName: data?.data?.type.country.name || "",
+            description: data?.data?.description || "",
           },
         });
         setStep(2);

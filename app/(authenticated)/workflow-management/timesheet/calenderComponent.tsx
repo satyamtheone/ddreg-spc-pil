@@ -106,11 +106,7 @@ export default function calenderComponent({ renderCell }: Props) {
       </div>
 
       {/* Calendar Grid */}
-      <div
-        className={`grid grid-cols-7 shadow-md  ${
-          view === "month" ? "grid-rows-6" : "grid-rows-1"
-        }`}
-      >
+      <div className={`grid grid-cols-7  shadow-md `}>
         {days.map((date) => {
           const weekend = isWeekend(date);
           const todayCell = isToday(date);
@@ -119,7 +115,7 @@ export default function calenderComponent({ renderCell }: Props) {
             <div
               key={date.toISOString()}
               className={`border min-h-28 p-1 flex flex-col 
-                ${weekend ? "bg-gray-50" : ""}
+                ${weekend ? "bg-white" : ""}
                 ${todayCell ? "border-blue-500 bg-blue-500/10 border-2" : ""}
               `}
             >

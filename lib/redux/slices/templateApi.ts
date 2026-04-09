@@ -1,5 +1,7 @@
 
 import {
+  CreateDocumentRequest,
+  CreateDocumentResponse,
   CreateTemplateResponse,
   CreateUserResponse,
   GetCountriesResponse,
@@ -94,8 +96,19 @@ export const templateApi = apiSlice.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Auth"],
     }),
+
+    createDocument: builder.mutation<
+      CreateDocumentResponse,
+      CreateDocumentRequest
+    >({
+      query: (body) => ({
+        url: "/documents",
+        method: "POST",
+        body,
+      }),
+    }),
+
     // deleteRole: builder.mutation({
     //   query: (id) => ({
     //     url: `/roles/${id}`,
@@ -116,4 +129,5 @@ export const {
   useGetReferencesFromWebQuery,
   useLazyGetReferencesFromWebQuery,
   useCreateReferenceMutation,
+  useCreateDocumentMutation,
 } = templateApi;
