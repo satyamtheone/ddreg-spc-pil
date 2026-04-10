@@ -96,7 +96,7 @@ const DocumentPreviewNavigator = ({ sections }: Props) => {
   return (
     <div className="grid grid-cols-12 gap-x-3 h-135 overflow-auto pb-2  ">
       <div className="col-span-4  p-3 h-full bg-white overflow-auto border shadow-md border-t-0 rounded-t-none  rounded-[10px]">
-        <h3 className="text-sm font-semibold mb-3 text-gray-600">
+        <h3 className="text-sm font-semibold mb-3 text-gray-600  text-gradient">
           Document Sections
         </h3>
         <SidebarSections items={sections} />
@@ -105,7 +105,7 @@ const DocumentPreviewNavigator = ({ sections }: Props) => {
       <div className="col-span-8 flex flex-col h-full overflow-auto rounded-b-[10px] shadow-md">
         <div className="flex-1 overflow-auto p-6 border-l border-r bg-white">
           <h2 className="text-xl font-semibold">
-            {currentSection?.id} {currentSection?.title}
+            {currentSection?.id}. {currentSection?.title}
           </h2>
 
           <div className="mt-4 text-sm leading-relaxed whitespace-pre-wrap">
@@ -113,7 +113,7 @@ const DocumentPreviewNavigator = ({ sections }: Props) => {
           </div>
         </div>
 
-        <div className="border-t p-4 flex items-center bg-purple-50 rounded-b-[10px] border justify-between">
+        <div className="border-t px-4 py-1 flex items-center bg-purple-50 rounded-b-[10px] border justify-between">
           <div>
             <DynamicButton
               text="Previous Section"
@@ -132,6 +132,7 @@ const DocumentPreviewNavigator = ({ sections }: Props) => {
           <div>
             <DynamicButton
               text=" Next Section"
+              iconPosition="right"
               onClick={goNext}
               size="slim"
               variant="card"

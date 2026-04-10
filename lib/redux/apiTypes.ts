@@ -436,3 +436,50 @@ export type CreateDocumentResponse = {
     };
   };
 };
+
+export type RepoDocument = {
+  id: string;
+  title: string;
+  strength: string;
+  dosageForm: string;
+  manufacturer: string;
+  shelfLife: string;
+  storagePrecautions: string;
+  mahAddress: string;
+  packagingDetails: string;
+  country: string;
+  regulatoryBody: string;
+  createdAt: string;
+  createdById: string;
+  currentVersionId: string;
+  currentVersion: {
+    id: string;
+    documentId: string;
+    templateId: string;
+    referenceId: string;
+    versionNumber: string;
+    changeType: string;
+    description: string;
+    createdById: string;
+    createdAt: string;
+    approvedAt: string | null;
+    isLocked: boolean;
+    parentVersionId: string | null;
+    status: string;
+    updatedAt: string;
+    contributors: [];
+  };
+};
+export type GetDocumentResponse = {
+  success: boolean;
+  message: string;
+  data: {
+    data: RepoDocument[];
+    pagination: {
+      page: number;
+      pageSize: number;
+      total: number;
+      totalPages: number;
+    };
+  };
+};

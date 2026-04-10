@@ -4,7 +4,6 @@ import { useStepper } from "../stepper/stepperContext,";
 import DynamicButton from "@/components/common/DynamicButton";
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoDocumentTextOutline } from "react-icons/io5";
-import { useCreateDocumentMutation } from "@/lib/redux/slices/templateApi";
 import { CreateDocumentRequest } from "@/lib/redux/apiTypes";
 import toast from "react-hot-toast";
 import { useNavigation } from "@/components/hooks/useNavigation";
@@ -12,6 +11,7 @@ import GenerateDocumentStepDetails from "./generateDocumentStepDetails";
 import { useDialog } from "@/components/hooks/DialogProvider";
 import ModalProvider from "@/components/dialog/Dialog";
 import LoadingComponent from "@/components/common/loadingComponent";
+import { useCreateDocumentMutation } from "@/lib/redux/slices/documentApi";
 
 export default function GenerateTemplate() {
   const { formData, setStep } = useStepper();
@@ -52,7 +52,7 @@ export default function GenerateTemplate() {
       if (response?.success) {
         sessionStorage.setItem("generatedDocument", JSON.stringify(response));
         toast.success("Document created successfully");
-        goTo("/generate-SPC-PIL/previewDocument");
+        goTo("/document-repository/previewDocument");
       }
     } catch (err: any) {
       toast.error(err?.data?.message || "Document creation failed");

@@ -34,7 +34,9 @@ const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
                   <div className="font-semibold text-gradient">
                     Last Updated
                   </div>
-                  <div className="text-sm">{reference.lastUpdated}</div>
+                  <div className="text-sm">
+                    {reference.lastUpdated || "Recently"}
+                  </div>
                 </div>
                 <div
                   className="flex flex-col gap-1 tooltip tooltip-info tooltip-left "
@@ -50,7 +52,10 @@ const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
                 <div className="flex flex-col gap-1 ">
                   <div className="font-semibold text-gradient">Status</div>
                   <div className="text-sm">
-                    <MiniChip status={reference.status} size="small" />
+                    <MiniChip
+                      status={reference.status || "Approved"}
+                      size="small"
+                    />
                   </div>
                 </div>
                 <div className="flex flex-col gap-1  ">

@@ -53,6 +53,7 @@ export default function JoditEditorField({ value, onChange }: Props) {
         "|",
         "hr",
         "image",
+        "preview",
       ],
 
       controls: {
@@ -100,8 +101,8 @@ export default function JoditEditorField({ value, onChange }: Props) {
         ref={toolbarRef}
         className="sticky top-0 z-50 bg-white p-2 spcBNS rounded-[10px]"
       />
-      <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-2 spcBNS rounded-[10px]"></div>
+      <div className="">
+        {/* <div className="col-span-2 spcBNS rounded-[10px]"></div> */}
         <div className="overflow-hidden spcBNS rounded-[10px] col-span-8">
           <JoditEditor
             value={value}
@@ -109,7 +110,7 @@ export default function JoditEditorField({ value, onChange }: Props) {
             onBlur={(content: string) => onChange(content)}
           />
         </div>
-        <div className="col-span-2 spcBNS rounded-[10px]"></div>
+        {/* <div className="col-span-2 spcBNS rounded-[10px]"></div> */}
       </div>
     </div>
   );

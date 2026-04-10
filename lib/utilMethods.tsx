@@ -157,4 +157,28 @@ export const mapToFormikOptions = <
   }));
 };
 
+export type ParamsType = {
+  page: number;
+  [key: string]: string | number;
+};
 
+export const updateParam = (
+  key: string,
+  value: string | number,
+  setParams: React.Dispatch<React.SetStateAction<ParamsType>>,
+) => {
+  setParams((prev: ParamsType) => {
+    if (key === "page") {
+      return {
+        ...prev,
+        page: Number(value),
+      };
+    }
+
+    return {
+      ...prev,
+      [key]: value,
+      page: 1,
+    };
+  });
+};
