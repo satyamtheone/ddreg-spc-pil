@@ -37,11 +37,11 @@ const ViewReferenceDrawer: React.FC<ViewReferenceDrawerProps> = ({
             <div className="grid grid-cols-2  gap-4">
               <ContentBoxes
                 title="Country / Authority"
-                // subTitle={data?.data?..country?.name}
+                subTitle={data?.data?.type?.country?.name}
               />
               <ContentBoxes
-                title="SourceType"
-                subTitle={data?.data?.sourceType}
+                title="Regulatory Body"
+                subTitle={data?.data?.type?.country?.regulatoryBody}
               />
             </div>
             <div className="grid grid-cols-3 gap-4">

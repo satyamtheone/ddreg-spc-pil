@@ -17,7 +17,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div className="w-full py-4">
-      <div className="flex w-full justify-end items-center gap-4">
+      <div className="flex w-full justify-end items-start gap-4">
         <div
           onClick={() => updateCurrenPage(currentPage - 1)}
           className={`${
@@ -27,19 +27,21 @@ const Pagination: React.FC<PaginationProps> = ({
           <span>Previous</span>
         </div>
 
-        {Array.from({ length: totalpageCount }, (_, i) => (
-          <div
-            key={i}
-            onClick={() => updateCurrenPage(i + 1)}
-            className={`${
-              i + 1 === currentPage
-                ? "bg-gradient text-white"
-                : "hover:bg-cyan-200"
-            } border cursor-pointer custom-dynamicButton-hover-classes flex items-center justify-center h-9 w-9 rounded-sm`}
-          >
-            {i + 1}
-          </div>
-        ))}
+        <div className="flex max-w-200 gap-3 overflow-auto">
+          {Array.from({ length: totalpageCount }, (_, i) => (
+            <div
+              key={i}
+              onClick={() => updateCurrenPage(i + 1)}
+              className={`${
+                i + 1 === currentPage
+                  ? "bg-gradient text-white"
+                  : "hover:bg-cyan-200"
+              } border cursor-pointer custom-dynamicButton-hover-classes flex items-center justify-center h-9 w-9 min-w-max p-2 rounded-sm`}
+            >
+              {i + 1}
+            </div>
+          ))}
+        </div>
 
         <div
           onClick={() => updateCurrenPage(currentPage + 1)}

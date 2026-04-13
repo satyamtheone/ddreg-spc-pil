@@ -1,21 +1,17 @@
 "use";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { JSX, ReactNode } from "react";
-import { GoStack } from "react-icons/go";
-import { TbListDetails } from "react-icons/tb";
-import { GrUpdate } from "react-icons/gr";
-import { AiOutlineHome } from "react-icons/ai";
+import { AiOutlineFolderView, AiOutlineHome } from "react-icons/ai";
 import { FiEdit } from "react-icons/fi";
-import { MdOutlineDashboard } from "react-icons/md";
+import { MdDashboard, MdOutlineDashboard, MdPreview } from "react-icons/md";
 import { BiGitCompare } from "react-icons/bi";
 import { TbTemplate } from "react-icons/tb";
-import { HiOutlineDocumentText } from "react-icons/hi";
+import { HiDocumentAdd, HiOutlineDocumentText } from "react-icons/hi";
 import { FiSettings } from "react-icons/fi";
 import { MdOutlineNotifications } from "react-icons/md";
 import { LuWorkflow } from "react-icons/lu";
-import { RiFolderOpenLine } from "react-icons/ri";
-import { FaRegUser } from "react-icons/fa";
+import { RiAiGenerateText, RiFolderOpenLine } from "react-icons/ri";
+import { FaFolderOpen, FaRegUser } from "react-icons/fa";
 import { MdHistory } from "react-icons/md";
 import { IconType } from "react-icons";
 
@@ -298,17 +294,17 @@ export const productDocuments: ProductDocument[] = [
 export const NavData: NavLinkItem[] = [
   {
     title: "Dashboard",
-    icon: MdOutlineDashboard,
+    icon: MdDashboard,
     link: "/dashboard",
   },
   {
     title: "Generate SPC/PIL",
-    icon: HiOutlineDocumentText,
+    icon: HiDocumentAdd,
     link: "/generate-SPC-PIL",
     children: [
       {
         title: "Generate Document",
-        icon: HiOutlineDocumentText,
+        icon: RiAiGenerateText,
         link: "/generate-SPC-PIL/generateDocument",
       },
     ],
@@ -325,8 +321,15 @@ export const NavData: NavLinkItem[] = [
   },
   {
     title: "Document Repository",
-    icon: RiFolderOpenLine,
+    icon: FaFolderOpen,
     link: "/document-repository",
+    children: [
+      {
+        title: "Preview Document",
+        icon: MdPreview,
+        link: "/document-repository/previewDocument",
+      },
+    ],
   },
   {
     title: "Template Library",

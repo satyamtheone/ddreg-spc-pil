@@ -14,6 +14,7 @@ type SearchFormProps = {
   onSearchSubmit?: (value: string) => void;
   isLoading?: boolean;
   value?: string;
+  isColorBackground?: boolean;
 };
 
 const SearchFormSchema = Yup.object({
@@ -25,6 +26,7 @@ function SearchForm({
   onSearchSubmit,
   isLoading,
   value,
+  isColorBackground,
 }: SearchFormProps) {
   const initialValues: SearchFormValues = {
     search: value || "",
@@ -58,7 +60,7 @@ function SearchForm({
               name="search"
               type="text"
               placeholder="Search"
-              className="ring-cyan-600 border border-cyan-600"
+              className={` ${isColorBackground ? "ring-white focus-visible:ring-1 bg-white/10 focus-visible:ring-white/90 border border-white placeholder:text-white" : " ring-cyan-600 border border-cyan-600"}`}
               sideIcon={<FcSearch className="h-6 w-6" />}
               iconPosition="left"
               containerMargin="mb-0"

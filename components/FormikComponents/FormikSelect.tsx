@@ -14,6 +14,8 @@ interface FormikSelectProps {
   isLoading?: boolean;
   disabled?: boolean;
   onChange?: (e: any) => void;
+  labelText?: string;
+  isGhost?: boolean;
 }
 
 const FormikSelect: React.FC<FormikSelectProps> = ({
@@ -22,6 +24,8 @@ const FormikSelect: React.FC<FormikSelectProps> = ({
   isLoading,
   disabled,
   onChange,
+  labelText,
+  isGhost,
   ...props
 }) => {
   const [field, meta] = useField<string | number>(props.name);
@@ -54,17 +58,21 @@ const FormikSelect: React.FC<FormikSelectProps> = ({
               }}
               id={field.name}
               disabled={disabled}
-              className="select md:select-xl border rounded-[6px] focus-visible:ring-teal-600 focus-visible:outline-none focus-visible:ring-1 border-slate-300 focus-visible:shadow-md hover:shadow-md md:px-4 md:py-4.5 py-2 px-2 w-full shadow-sm text-sm capitalize "
+              className={`select md:select-xl border rounded-[6px] focus-visible:ring-teal-600 focus-visible:outline-none focus-visible:ring-1  focus-visible:shadow-md hover:shadow-md md:px-4 md:py-4.5 py-2 px-2 w-full shadow-sm text-sm capitalize ${isGhost ? "select-ghost bg-white/10 border-white text-white" : "border-slate-300"}`}
             >
-              <option disabled value="">
-                Choose {label}
+              <option
+                disabled
+                value=""
+                className={`${isGhost ? "text-gray-400 bg-white rounded-b-none" : ""}`}
+              >
+                Choose {label || labelText}
               </option>
 
               {options.map((d, index) => (
                 <option
                   key={index}
                   value={d.value}
-                  className="text-sm hover:bg-gradient"
+                  className={`text-sm hover:bg-gradient ${isGhost ? "text-black bg-white hover:bg-sky-200 rounded-t-none shadow-2xl" : ""}`}
                 >
                   {d.label}
                 </option>

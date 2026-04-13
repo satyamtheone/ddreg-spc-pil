@@ -9,11 +9,12 @@ import { useDebounce } from "@/components/hooks/useDebounce";
 
 import { FaBoxOpen } from "react-icons/fa";
 import FilterHead from "./filterHead";
+import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";
 
 export type TemplatesProps = {
-  options: Option[];
+  options: FormikOptonType[];
   isLoading: boolean;
-  types: Option[];
+  types: FormikOptonType[];
 };
 
 const Templates: React.FC<TemplatesProps> = ({ options, isLoading, types }) => {

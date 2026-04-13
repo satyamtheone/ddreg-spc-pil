@@ -1,72 +1,119 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import SearchForm from "../../FormikComponents/SearchForm";
 import InputSkeleton from "../skletons/inputSkeleton";
-import SelectForFilter from "../selectForFilter";
 import {
   useGetCountriesQuery,
   useGetReferencesFromWebQuery,
 } from "@/lib/redux/slices/templateApi";
 import { useQueryErrorHandler } from "../../hooks/useQueryErrorHandler";
-import { getAllDocumentOptions, getCountryOptions } from "@/lib/utilMethods";
+import {
+  getAllDocumentOptions,
+  getCountryOptions,
+  updateParam,
+} from "@/lib/utilMethods";
 import DynamicButton from "../DynamicButton";
 import { X } from "lucide-react";
 import WebReferences from "./webReferences";
 import { useDebounce } from "@/components/hooks/useDebounce";
+import SelectForm from "@/components/FormikComponents/SelectForm";
+import Pagination from "../pagination";
+
+type ParamsType = {
+  page: number;
+  search?: string;
+  region?: string;
+  type?: string;
+};
 
 export const SearchDocument: React.FC = () => {
-  const query = useGetCountriesQuery();
-  const data = useQueryErrorHandler(query, "Get Countries");
-  const options = getCountryOptions(data?.data || []);
-  const allTypesOptions = getAllDocumentOptions(data?.data || []);
-  const [params, setParams] = useState({
+  const [params, setParams] = useState<ParamsType>({
     region: "",
     type: "",
     search: "",
+    page: 1,
   });
-  const debounceParams = useDebounce(params, 400);
-  const referencesQuery = useGetReferencesFromWebQuery(debounceParams, {
-    skip: !params.region,
+
+  const debouncedParams = useDebounce(params, 400);
+
+  const countriesQuery = useGetCountriesQuery();
+  const countriesData = useQueryErrorHandler(countriesQuery, "Get Countries");
+
+  const countryOptions = useMemo(
+    () => getCountryOptions(countriesData?.data || []),
+    [countriesData],
+  );
+
+  const typeOptions = useMemo(
+    () => getAllDocumentOptions(countriesData?.data || []),
+    [countriesData],
+  );
+
+  const shouldFetchReferences = !!params.region && !!params.search;
+
+  const referencesQuery = useGetReferencesFromWebQuery(debouncedParams, {
+    skip: !shouldFetchReferences,
   });
+
   const references = useQueryErrorHandler(
     referencesQuery,
     "Get References from the web",
   );
 
-  const handleSetParams = (key: string, value: string) => {
-    setParams((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+  const update = (key: keyof ParamsType, value: string | number) => {
+    updateParam(key, value, setParams);
   };
 
-  const handleSearch = (value: string) => {
-    handleSetParams("search", value);
-  };
-  const onFilterChange = (value: string) => {
-    handleSetParams("type", value);
+  const resetFilters = () => {
+    setParams({ region: "", type: "", search: "", page: 1 });
+    if (
+      params.region === "" ||
+      params.type === "" ||
+      params.search === "" ||
+      params.page === 1
+    ) {
+      return;
+    } else {
+      referencesQuery.refetch();
+    }
   };
 
-  const onCountryChange = (value: string) => {
-    handleSetParams("region", value);
-  };
+  // -------- UI Conditions --------
+  const isLoading = referencesQuery.isLoading || referencesQuery.isFetching;
+
+  const showPagination =
+    references?.data &&
+    references?.total > 0 &&
+    references?.totalPages > 1 &&
+    params.region &&
+    params.search;
+
+  const showClearButton = params.region || params.type || params.search;
+
+  const showResults = references?.data && params.region && params.search;
 
   return (
-    <div className="w-full  flex flex-col text-white ">
-      <div className="bg-gradient  py-7 px-5.5 rounded-lg rounded-b-none">
+    <div className="w-full flex flex-col">
+      {/* Header */}
+      <div className="bg-gradient py-7 px-4 rounded-lg rounded-b-none">
         <h1 className="text-2xl font-semibold mb-2">Web Search</h1>
         <p className="mb-6">
           Find the SPC or PIL document for your product on the web
         </p>
-        <div className="flex  items-center gap-6 flex-wrap">
+
+        <div className="flex items-start gap-x-6 gap-y-2 flex-wrap">
+          {/* Search */}
           <div className="min-w-140">
             <SearchForm
               value={params.search}
-              onSearchChange={handleSearch}
+              onSearchChange={(val) => update("search", val)}
               isLoading={referencesQuery.isLoading}
+              isColorBackground
             />
           </div>
-          {query.isLoading ? (
+
+          {/* Filters */}
+          {countriesQuery.isLoading ? (
             <div className="flex gap-4 items-center">
               <div className="min-w-70">
                 <InputSkeleton />
@@ -77,51 +124,66 @@ export const SearchDocument: React.FC = () => {
             </div>
           ) : (
             <div className="flex gap-4 items-center">
-              <SelectForFilter
-                label="Select Country"
-                handleOptionChange={onCountryChange}
-                optionTitle="Filter by"
-                options={options}
+              <SelectForm
+                isGhost
+                name="country"
+                labelText="Country"
+                options={countryOptions}
+                value={params.region}
+                onChange={(val) => update("region", val as string)}
               />
-
-              <SelectForFilter
-                label="Select Type"
-                handleOptionChange={onFilterChange}
-                optionTitle="Filter by"
-                options={allTypesOptions}
+              <SelectForm
+                isGhost
+                name="type"
+                labelText="Type"
+                options={typeOptions}
+                value={params.type}
+                onChange={(val) => update("type", val as string)}
               />
             </div>
           )}
 
-          {(params.region || params.type || params.search) && (
+          {/* Clear Button */}
+          {showClearButton && (
             <div>
               <DynamicButton
                 variant="danger"
                 icon={<X />}
-                onClick={() => setParams({ region: "", type: "", search: "" })}
+                onClick={() => resetFilters()}
               />
             </div>
           )}
         </div>
       </div>
+
+      {/* Content */}
       <div className="border border-t-0 p-4 rounded-[10px] rounded-t-none bg-white text-black">
-        {referencesQuery.isLoading || referencesQuery.isFetching ? (
-          <div className="flex flex-col gap-2 bg-white p-4 py-6 rounded-b-[10px]">
-            <div className="h-15 w-full skeleton"></div>
-            <div className="h-15 w-full skeleton"></div>
-            <div className="h-15 w-full skeleton"></div>
-            <div className="h-15 w-full skeleton"></div>
-            <div className="h-15 w-full skeleton"></div>
+        {isLoading ? (
+          <div className="flex flex-col gap-2 py-6">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="h-15 w-full skeleton"></div>
+            ))}
           </div>
+        ) : showResults ? (
+          <WebReferences references={references.data || []} />
         ) : (
-          <>
-            {references?.data && params.region ? (
-              <WebReferences references={references?.data || []} />
-            ) : (
-              <>Now You can search direct on the web</>
-            )}
-          </>
+          <div className="py-2 text-gray-500">
+            Now you can search directly on the web
+          </div>
         )}
+      </div>
+
+      <div className="flex w-full justify-end mt-4 ">
+        <div className=" spcBNS bg-white  max-w-max rounded-full px-4 ">
+          {showPagination && (
+            <Pagination
+              currentPage={params.page}
+              lengthPerPage={10}
+              totalDataLength={references?.total || 0}
+              updateCurrenPage={(val) => update("page", val)}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

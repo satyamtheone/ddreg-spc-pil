@@ -1,7 +1,9 @@
+"use client";
 import DynamicButton from "@/components/common/DynamicButton";
-import SelectForFilter from "@/components/common/selectForFilter";
 import InputSkeleton from "@/components/common/skletons/inputSkeleton";
+import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";
 import SearchForm from "@/components/FormikComponents/SearchForm";
+import SelectForm from "@/components/FormikComponents/SelectForm";
 import { X } from "lucide-react";
 import React from "react";
 export type Params = {
@@ -16,9 +18,9 @@ type FilterHeadProps = {
   handleSearch: (value: string) => void;
   handleSetCountry: (value: string) => void;
   handleSetType: (value: string) => void;
-  options: { option: string; value: string }[];
+  options: FormikOptonType[];
   isLoading: boolean;
-  types: { option: string; value: string }[];
+  types: FormikOptonType[];
   setParams: (
     value: React.SetStateAction<{
       country: string;
@@ -41,7 +43,7 @@ const FilterHead: React.FC<FilterHeadProps> = ({
   setParams,
 }) => {
   return (
-    <div className="spcBNS p-4 bg-white rounded-[10px] flex gap-4 items-center flex-wrap">
+    <div className="spcBNS p-4 pb-0 bg-white rounded-[10px] flex gap-4 items-start flex-wrap">
       {/* <DynamicTab
         tabs={[
           { label: "All", value: "All" },
@@ -60,7 +62,7 @@ const FilterHead: React.FC<FilterHeadProps> = ({
       </div>
 
       {isLoading ? (
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 pb-5 items-center">
           <div className="min-w-70">
             <InputSkeleton />
           </div>
@@ -70,18 +72,19 @@ const FilterHead: React.FC<FilterHeadProps> = ({
         </div>
       ) : (
         <div className="flex gap-4 items-center">
-          <SelectForFilter
-            label="Select Country"
-            handleOptionChange={handleSetCountry}
-            optionTitle="Filter by"
+          <SelectForm
+            name="mySelect"
+            labelText="Country"
             options={options}
+            value={params.country}
+            onChange={(val) => handleSetCountry(val as string)}
           />
-
-          <SelectForFilter
-            label="Select type"
-            handleOptionChange={handleSetType}
-            optionTitle="Filter by"
+          <SelectForm
+            name="mySelect"
+            labelText="Type"
             options={types}
+            value={params.type}
+            onChange={(val) => handleSetType(val as string)}
           />
         </div>
       )}

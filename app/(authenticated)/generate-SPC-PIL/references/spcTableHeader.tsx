@@ -1,5 +1,4 @@
 "use client";
-import SelectForFilter from "@/components/common/selectForFilter";
 import React from "react";
 import { TbTableDashed } from "react-icons/tb";
 import { FiGrid } from "react-icons/fi";
@@ -7,9 +6,10 @@ import DynamicButton from "@/components/common/DynamicButton";
 import { FaRegSquarePlus } from "react-icons/fa6";
 import { ViewType } from "./generateSpc";
 import SearchForm from "@/components/FormikComponents/SearchForm";
-import { Option } from "@/lib/redux/apiTypes";
 import InputSkeleton from "@/components/common/skletons/inputSkeleton";
 import { X } from "lucide-react";
+import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";
+import SelectForm from "@/components/FormikComponents/SelectForm";
 
 type SpcTableHeaderProps = {
   totalDocuments?: number;
@@ -24,9 +24,9 @@ type SpcTableHeaderProps = {
     type: string;
     title: string;
   };
-  options: Option[];
+  options: FormikOptonType[];
   isLoading: boolean;
-  types: Option[];
+  types: FormikOptonType[];
   setParams: (
     value: React.SetStateAction<{
       country: string;
@@ -51,7 +51,7 @@ const SpcTableHeader: React.FC<SpcTableHeaderProps> = ({
   setParams,
 }) => {
   return (
-    <div className="flex  w-full justify-between items-center gap-6 flex-wrap">
+    <div className="flex  w-full justify-between flex-col gap-6 flex-wrap">
       <div>
         <div className="text-xl font-medium">Local Results</div>
         <div className="text-base font-normal">
@@ -59,8 +59,8 @@ const SpcTableHeader: React.FC<SpcTableHeaderProps> = ({
         </div>
       </div>
       {/* FILTER 1 */}
-      <div className="flex  items-center gap-6 flex-wrap">
-        <div className="min-w-130">
+      <div className="flex  items-start gap-x-6 flex-wrap">
+        <div className="min-w-130 mb-6">
           <SearchForm
             value={params.title}
             onSearchChange={handleSearch}
@@ -78,16 +78,19 @@ const SpcTableHeader: React.FC<SpcTableHeaderProps> = ({
           </div>
         ) : (
           <div className="flex gap-4 items-center">
-            <SelectForFilter
-              label="Select Country"
-              handleOptionChange={onCountryChange}
+            <SelectForm
+              name="mySelect"
+              labelText="Country"
               options={options}
+              value={params.country}
+              onChange={(val) => onCountryChange(val as string)}
             />
-
-            <SelectForFilter
-              label="Select Type"
-              handleOptionChange={onFilterChange}
+            <SelectForm
+              name="mySelect"
+              labelText="Type"
               options={types}
+              value={params.type}
+              onChange={(val) => onFilterChange(val as string)}
             />
           </div>
         )}
@@ -101,14 +104,14 @@ const SpcTableHeader: React.FC<SpcTableHeaderProps> = ({
             />
           </div>
         )}
-        {/* TABLE VIEW */}
+
         <div
           className={`custom-button font-bold border flex gap-4 items-center cursor-pointer bg-white ${view == "table" && "bg-gradient"}`}
           onClick={() => onViewChange?.("table")}
         >
           <TbTableDashed size={24} />
         </div>
-        {/* GRID VIEW */}
+
         <div
           className={`custom-button font-bold border  flex gap-4 items-center cursor-pointer  bg-white ${view == "grid" && "bg-gradient"}`}
           onClick={() => onViewChange?.("grid")}

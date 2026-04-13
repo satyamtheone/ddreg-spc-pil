@@ -12,12 +12,13 @@ import AddRefenceForm from "./addRefenceForm";
 import { useDebounce } from "@/components/hooks/useDebounce";
 import { Option } from "@/lib/redux/apiTypes";
 import { SpcSearchParams } from "../page";
+import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";
 
 export type ViewType = "table" | "grid";
 export type ReferencesProps = {
-  options: Option[];
+  options: FormikOptonType[];
   isLoading: boolean;
-  types: Option[];
+  types: FormikOptonType[];
   searchparams: SpcSearchParams;
 };
 

@@ -13,7 +13,7 @@ type WebReferencesProps = {
 const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
   const { openDrawer } = useDrawer();
   return (
-    <div className=" max-h-100 overflow-auto">
+    <div className=" max-h-120 overflow-auto">
       {references.length > 0 ? (
         <>
           {references?.map((reference, index) => (
@@ -59,22 +59,23 @@ const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-1  ">
-                  {reference.documents.map((document, index) => (
-                    <div className="min-w-max flex gap-2" key={index}>
-                      <DynamicButton
-                        text="View Document"
-                        variant="card"
-                        size="slim"
-                        className="px-2"
-                        icon={<FaEye />}
-                        onClick={() =>
-                          openDrawer({
-                            title: "View Reference File",
-                            children: <DocumentViewer url={document.url} />,
-                          })
-                        }
-                      />
-                      {/* <DynamicButton
+                  {reference.documents.length >= 1 ? (
+                    reference.documents.map((document, index) => (
+                      <div className="min-w-max flex gap-2" key={index}>
+                        <DynamicButton
+                          text="View Document"
+                          variant="card"
+                          size="slim"
+                          className="px-2"
+                          icon={<FaEye />}
+                          onClick={() =>
+                            openDrawer({
+                              title: "View Reference File",
+                              children: <DocumentViewer url={document.url} />,
+                            })
+                          }
+                        />
+                        {/* <DynamicButton
                         text="Add Document"
                         variant="card"
                         size="slim"
@@ -82,8 +83,11 @@ const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
                         icon={<CiSquarePlus />}
                         onClick={() => {}}
                       /> */}
-                    </div>
-                  ))}
+                      </div>
+                    ))
+                  ) : (
+                    <p>No Document found</p>
+                  )}
                 </div>
               </div>
             </div>

@@ -65,12 +65,12 @@ export const templateApi = apiSlice.injectEndpoints({
 
     getReferencesFromWeb: builder.query<
       GetReferencesFromWebResponse,
-      { search?: string; region?: string; type?: string }
+      { search?: string; region?: string; type?: string; page?: number }
     >({
-      query: ({ search, region, type }) => ({
+      query: ({ search, region, type, page }) => ({
         url: `/regulatories/products`,
         method: "GET",
-        params: { search, region, type },
+        params: { search, region, type, page },
       }),
       keepUnusedDataFor: 0,
     }),

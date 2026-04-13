@@ -73,9 +73,9 @@ export const formatedDate = (dateString: string): string => {
   });
 };
 
-export const getCountryOptions = (data: CountryType[]): Option[] => {
+export const getCountryOptions = (data: CountryType[]): FormikOptonType[] => {
   return data.map((country) => ({
-    option: country.name,
+    label: country.name,
     value: country.code,
   }));
 };
@@ -87,10 +87,12 @@ export const getCountryLabel = (data: CountryType[]): FormikOptonType[] => {
   }));
 };
 
-export const getAllDocumentOptions = (data: CountryType[]): Option[] => {
+export const getAllDocumentOptions = (
+  data: CountryType[],
+): FormikOptonType[] => {
   return data.flatMap((country) =>
     country.documents.map((doc) => ({
-      option: doc.name,
+      label: doc.name,
       value: doc.name,
     })),
   );

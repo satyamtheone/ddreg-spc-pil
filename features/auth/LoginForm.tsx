@@ -16,7 +16,6 @@ import { useLoginMutation } from "@/lib/redux/slices/authApi";
 import { validationSchema } from "@/lib/utilsSchema";
 import { useAuth } from "@/lib/AuthProvider";
 
-// ---- TYPES ----
 type LoginValues = {
   email: string;
   password: string;

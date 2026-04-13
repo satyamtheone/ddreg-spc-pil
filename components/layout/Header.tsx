@@ -1,15 +1,13 @@
 "use client";
-
 import { useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { NavData } from "@/lib/NavData";
 import Image from "next/image";
-import { Input } from "@/components/ui/input";
-import { Button } from "../ui/button";
-import { IoLogOut } from "react-icons/io5";
 import ModalProvider from "../dialog/Dialog";
 import LogoutDialog from "@/features/auth/logoutDialog";
 import { useDialog } from "../hooks/DialogProvider";
+import DynamicButton from "../common/DynamicButton";
+import { RiLogoutCircleRLine } from "react-icons/ri";
 
 export default function Header() {
   const pathname = usePathname();
@@ -42,10 +40,10 @@ export default function Header() {
   }, [pathname]);
 
   return (
-    <header className={`mx-4 mt-4 border shadow-xs rounded-lg ${className}`}>
+    <header className={`mx-4 mt-4 border  shadow-xs rounded-lg ${className}`}>
       <div className="px-2 py-2.5">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 justify-between w-full">
+          <div className="flex items-center  gap-2">
             {/* Page Icon */}
             <Image
               src={`/sidebar/${iconFolder}/${icon}`}
@@ -54,13 +52,11 @@ export default function Header() {
               height={20}
               className="object-contain"
             />
-
-            {/* Page Title */}
             <h1 className="text-lg font-semibold">{title}</h1>
           </div>
 
           {/* Search Input */}
-          <div className="relative flex-1">
+          {/* <div className="relative flex-1">
             <Input
               type="text"
               placeholder="Search..."
@@ -73,11 +69,11 @@ export default function Header() {
               height={20}
               className="absolute left-3 top-1/2 transform -translate-y-1/2 object-contain"
             />
-          </div>
+          </div> */}
 
           {/* Search and Icon Buttons */}
           <div className="flex items-center gap-3">
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               className={`p-2 border rounded-lg transition-colors cursor-pointer ${iconFolder === "white" ? "text-white hover:bg-white/10 border-white" : "text-black hover:bg-gray-100"}`}
@@ -89,10 +85,13 @@ export default function Header() {
                 height={24}
                 className="object-contain"
               />
-            </Button>
+            </Button> */}
 
-            <Button
-              variant="ghost"
+            <DynamicButton
+              icon={<RiLogoutCircleRLine size={20} />}
+              size="slim"
+              variant="danger"
+              className="px-2 "
               onClick={() => {
                 openDialog({
                   children: (
@@ -104,10 +103,7 @@ export default function Header() {
                   ),
                 });
               }}
-              className={` border rounded-lg transition-colors cursor-pointer ${iconFolder === "white" ? "text-white hover:bg-white/10 border-white" : "text-black hover:bg-gray-100"}`}
-            >
-              <IoLogOut className="h-6 w-6" />
-            </Button>
+            />
           </div>
         </div>
       </div>

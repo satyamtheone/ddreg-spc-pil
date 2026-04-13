@@ -13,7 +13,7 @@ type SPCTableProps = {
 const SPCTable: React.FC<SPCTableProps> = ({ references }) => {
   return (
     <div className="">
-      <div className="w-full overflow-x-auto pb-2 animate-fadeIn ">
+      <div className="w-full overflow-x-auto pb-2 ">
         <div className="table-container spcBNS rounded-[10px] ">
           {/* Header */}
           <div className="grid grid-cols-9  text-white bg-sky-600 rounded-t-[10px] pl-1">
@@ -34,7 +34,7 @@ const SPCTable: React.FC<SPCTableProps> = ({ references }) => {
                   key={index}
                   className={`${index % 2 === 0 ? "bg-purple-50" : ""} ${
                     index + 1 === references.length ? "rounded-b-[10px]" : ""
-                  } transition-colors duration-150 group grid 
+                  } transition-colors duration-150 group grid  animate-dialog-slide-down
                   } grid-cols-9 text-sm border-l-4 border-b-[0.5px] ${crudOperationChipColors({ variant: "Approved" }).border} `}
                 >
                   <div className="table-body-cell">{item?.name}</div>

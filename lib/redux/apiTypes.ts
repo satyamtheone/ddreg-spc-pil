@@ -328,6 +328,10 @@ export type ReferencesFromWeb = {
 export type GetReferencesFromWebResponse = {
   success: boolean;
   message: string;
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
   data: ReferencesFromWeb[];
 };
 

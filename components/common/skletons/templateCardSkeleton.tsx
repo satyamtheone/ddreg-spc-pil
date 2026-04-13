@@ -7,8 +7,6 @@ const TemplateCardSkeleton: React.FC = () => {
       <div className="flex flex-col gap-4  w-105 spcBNS rounded-[10px] skeleton h-110 "></div>
       <div className="flex flex-col gap-4  w-105 spcBNS rounded-[10px] skeleton h-110 "></div>
       <div className="flex flex-col gap-4  w-105 spcBNS rounded-[10px] skeleton h-110 "></div>{" "}
-      <div className="flex flex-col gap-4  w-105 spcBNS rounded-[10px] skeleton h-110 "></div>
-      <div className="flex flex-col gap-4  w-105 spcBNS rounded-[10px] skeleton h-110 "></div>
     </div>
   );
 };

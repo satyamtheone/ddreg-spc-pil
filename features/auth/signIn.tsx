@@ -282,7 +282,7 @@ function SignIn() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-7">
+    <div className="flex flex-col justify-center w-full items-center gap-7">
       <div className="flex justify-start w-full">
         <Image priority src={image} alt="login image" />
       </div>
