@@ -154,7 +154,9 @@ export const SearchDocument: React.FC = () => {
             </div>
           )}
         </div>
-        {referencesQuery.isLoading ? <></> : (
+        {referencesQuery.isLoading ? (
+          <></>
+        ) : (
           <div className="w-full flex items-center justify-between">
             {showResults && (
               <div className="border-b max-w-max pb-2">
@@ -163,7 +165,7 @@ export const SearchDocument: React.FC = () => {
                 </p>
               </div>
             )}
-            <div className="text-black bg-white shadow-md px-4">
+            <div className="text-black bg-white shadow-md px-4 animate-dialog-slide-down">
               {showPagination && (
                 <Pagination
                   currentPage={params.page}
@@ -179,7 +181,7 @@ export const SearchDocument: React.FC = () => {
 
       {/* Content */}
       <div
-        className={`border border-t-0 p-4 rounded-[10px] rounded-t-none bg-white text-black ${showResults && "h-120"}`}
+        className={`border border-t-0 p-4 rounded-[10px] animate-dialog-slide-down transition-all duration-300 rounded-t-none bg-white text-black ${showResults && "h-120"}`}
       >
         {isLoading ? (
           <div className="flex flex-col gap-2 py-6">
