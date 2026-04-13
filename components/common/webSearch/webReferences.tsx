@@ -13,7 +13,7 @@ type WebReferencesProps = {
 const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
   const { openDrawer } = useDrawer();
   return (
-    <div className=" max-h-120 overflow-auto">
+    <div className=" max-h-110 overflow-auto">
       {references.length > 0 ? (
         <>
           {references?.map((reference, index) => (

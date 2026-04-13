@@ -154,10 +154,33 @@ export const SearchDocument: React.FC = () => {
             </div>
           )}
         </div>
+        {referencesQuery.isLoading ? <></> : (
+          <div className="w-full flex items-center justify-between">
+            {showResults && (
+              <div className="border-b max-w-max pb-2">
+                <p className="text-nowrap">
+                  {references?.total} Documents Found
+                </p>
+              </div>
+            )}
+            <div className="text-black bg-white shadow-md px-4">
+              {showPagination && (
+                <Pagination
+                  currentPage={params.page}
+                  lengthPerPage={10}
+                  totalDataLength={references?.total || 0}
+                  updateCurrenPage={(val) => update("page", val)}
+                />
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Content */}
-      <div className="border border-t-0 p-4 rounded-[10px] rounded-t-none bg-white text-black">
+      <div
+        className={`border border-t-0 p-4 rounded-[10px] rounded-t-none bg-white text-black ${showResults && "h-120"}`}
+      >
         {isLoading ? (
           <div className="flex flex-col gap-2 py-6">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -171,19 +194,6 @@ export const SearchDocument: React.FC = () => {
             Now you can search directly on the web
           </div>
         )}
-      </div>
-
-      <div className="flex w-full justify-end mt-4 ">
-        <div className=" spcBNS bg-white  max-w-max rounded-full px-4 ">
-          {showPagination && (
-            <Pagination
-              currentPage={params.page}
-              lengthPerPage={10}
-              totalDataLength={references?.total || 0}
-              updateCurrenPage={(val) => update("page", val)}
-            />
-          )}
-        </div>
       </div>
     </div>
   );
