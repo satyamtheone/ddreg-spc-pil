@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBinLine } from "react-icons/ri";
@@ -20,7 +19,7 @@ type Props = {
 };
 
 const RolesTable: React.FC<Props> = ({ data = [], isLoading = false }) => {
-  const { canDoAction } = useAuth();
+  const { canDoAction, isSuperAdmin } = useAuth();
   const { openDrawer } = useDrawer();
   const { openDialog } = useDialog();
 
@@ -63,7 +62,7 @@ const RolesTable: React.FC<Props> = ({ data = [], isLoading = false }) => {
                 </div>
 
                 <div className="table-body-actionCell">
-                  {canDoAction(item.createdById || "") && (
+                  {(canDoAction(item.createdById || "") || isSuperAdmin) && (
                     <>
                       <div
                         className="custom-button-hover-classes border bg-white p-2 border-gray-200"

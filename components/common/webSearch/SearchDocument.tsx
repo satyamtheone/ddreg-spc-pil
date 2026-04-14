@@ -93,7 +93,7 @@ export const SearchDocument: React.FC = () => {
   const showResults = references?.data && params.region && params.search;
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col transition-all duration-300">
       {/* Header */}
       <div className="bg-gradient py-7 px-4 rounded-lg rounded-b-none">
         <h1 className="text-2xl font-semibold mb-2">Web Search</h1>
@@ -109,7 +109,7 @@ export const SearchDocument: React.FC = () => {
               onSearchChange={(val) => update("search", val)}
               isLoading={referencesQuery.isLoading}
               isColorBackground
-              placeholder="Type the medicine name then Select the Country"
+              placeholder="Write the medicine name then Select the Country"
             />
           </div>
 
@@ -182,7 +182,7 @@ export const SearchDocument: React.FC = () => {
 
       {/* Content */}
       <div
-        className={`border border-t-0 p-4 rounded-[10px] animate-dialog-slide-down transition-all duration-300 rounded-t-none bg-white text-black ${showResults && "h-120"}`}
+        className={`border border-t-0 p-4 rounded-[10px]  transition-all duration-300 rounded-t-none bg-white text-black ${showResults && "h-120"}`}
       >
         {isLoading ? (
           <div className="flex flex-col gap-2 py-6">

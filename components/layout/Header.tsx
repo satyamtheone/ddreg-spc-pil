@@ -48,45 +48,14 @@ export default function Header() {
             <Image
               src={`/sidebar/${iconFolder}/${icon}`}
               alt="Page Icon"
-              width={20}
-              height={20}
+              width={25}
+              height={25}
               className="object-contain"
             />
             <h1 className="text-lg font-semibold">{title}</h1>
           </div>
 
-          {/* Search Input */}
-          {/* <div className="relative flex-1">
-            <Input
-              type="text"
-              placeholder="Search..."
-              className={`pl-10 pr-4 py-2 rounded-lg border ${iconFolder === "white" ? "border-white text-white focus:ring-0! focus:border-white! placeholder:text-white" : "text-black"} transition-colors w-full`}
-            />
-            <Image
-              src={`/header/${iconFolder}/Icon-01.svg`}
-              alt="Search Icon"
-              width={20}
-              height={20}
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 object-contain"
-            />
-          </div> */}
-
-          {/* Search and Icon Buttons */}
           <div className="flex items-center gap-3">
-            {/* <Button
-              variant="ghost"
-              size="icon"
-              className={`p-2 border rounded-lg transition-colors cursor-pointer ${iconFolder === "white" ? "text-white hover:bg-white/10 border-white" : "text-black hover:bg-gray-100"}`}
-            >
-              <Image
-                src={`/header/${iconFolder}/Icon-02.svg`}
-                alt="Icon 02"
-                width={24}
-                height={24}
-                className="object-contain"
-              />
-            </Button> */}
-
             <DynamicButton
               icon={<RiLogoutCircleRLine size={20} />}
               size="slim"

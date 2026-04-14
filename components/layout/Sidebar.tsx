@@ -63,10 +63,9 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
 
         {/* Sidebar Menu */}
         <nav className="flex-1 overflow-y-auto py-2 no-scrollbar">
-          <ul className="space-y-0.5 px-2">
+          <ul className="space-y-4 px-2">
             {NavData.filter((item) => !item.hidden).map((item, index) => {
               const active = isActive(item.link);
-
               return (
                 <li key={index}>
                   <Tooltip delayDuration={300}>
@@ -85,7 +84,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                             alt={item.title}
                             width={20}
                             height={20}
-                            className="shrink-0 flex-1 w-5 h-5"
+                            className=" flex-1 w-6 h-6"
                           />
                         </div>
                         {open && (
@@ -113,11 +112,11 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="py-2.5 px-1 border-t">
-          <div className={`flex  rounded-xl`}>
+        <div className="py-2.5 px-1 border-t  rounded-b-lg bg-gradient ">
+          <div className={`flex  rounded-xl animate-dialog-slide-down`}>
             <Link
               href={"/account"}
-              className={`spcBNS rounded-xl w-full flex items-center justify-between gap-2 overflow-hidden `}
+              className={` border-2 bg-white text-black border-white rounded-xl w-full flex items-center justify-between gap-2 overflow-hidden `}
             >
               <div className="flex ">
                 <div
@@ -132,9 +131,8 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                     alt="login image"
                   />
                 </div>
-
-                <div className="p-2">
-                  {open && (
+                {open && (
+                  <div className="p-2 border-l ">
                     <motion.p
                       initial={{ opacity: 0, visibility: "hidden" }}
                       animate={{ opacity: 1, visibility: "visible" }}
@@ -143,8 +141,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                     >
                       {user?.fName || "User"}
                     </motion.p>
-                  )}
-                  {open && (
+
                     <motion.p
                       initial={{ opacity: 0, visibility: "hidden" }}
                       animate={{ opacity: 1, visibility: "visible" }}
@@ -153,8 +150,8 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                     >
                       {user?.email || "user@example.com"}
                     </motion.p>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </Link>
           </div>

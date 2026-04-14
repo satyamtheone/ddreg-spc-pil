@@ -13,12 +13,12 @@ type WebReferencesProps = {
 const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
   const { openDrawer } = useDrawer();
   return (
-    <div className=" max-h-110 overflow-auto">
+    <div className=" max-h-110 overflow-auto ">
       {references.length > 0 ? (
         <>
           {references?.map((reference, index) => (
             <div
-              className="spcBNS px-4 py-2 w-full capitalize text-zinc-800 bg-white rounded-[6px]  my-2"
+              className="spcBNS px-4 py-2 w-full animate-dialog-slide-down capitalize text-zinc-800 bg-white rounded-[6px]  my-2"
               key={index}
             >
               <div className="grid grid-cols-6 gap-x-2 items-center animate-dialog-slide-down">

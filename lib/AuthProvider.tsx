@@ -1,5 +1,4 @@
 "use client";
-
 import React, {
   createContext,
   useContext,
@@ -8,6 +7,8 @@ import React, {
   useState,
   useEffect,
 } from "react";
+import { useLazyGetMeQuery } from "./redux/slices/userApi";
+import { MeResponse } from "./redux/apiTypes";
 
 /* ================= TYPES ================= */
 
@@ -92,6 +93,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   /* ================= FETCH USER ================= */
 
+  const [triggerGetMe] = useLazyGetMeQuery();
+
   const fetchUser = useCallback(async () => {
     const token = getCookie("accessToken");
 
@@ -110,16 +113,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         },
       });
 
-      const data = await res.json();
+      //  If token expired → fallback to RTK
+      if (res.status === 401) {
+        const result = await triggerGetMe().unwrap();
+        setUser(result?.data ?? null);
+        return;
+      }
 
+      const data = await res.json();
       setUser(data?.data ?? null);
     } catch (error) {
       console.error("Failed to fetch user:", error);
-      setUser(null);
+
+      // Also fallback on unexpected failure
+      try {
+        const result = await triggerGetMe().unwrap();
+        setUser(result?.data ?? null);
+      } catch {
+        setUser(null);
+      }
     } finally {
       setIsUserLoading(false);
     }
-  }, []);
+  }, [triggerGetMe]);
 
   /* ================= INITIAL LOAD ================= */
 

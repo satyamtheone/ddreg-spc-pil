@@ -8,11 +8,11 @@ import { FaEye } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { useDownloadPdf } from "@/components/hooks/useDownloadPdf";
 
-type DocumenrsTableProps = {
+type DocumentsTableProps = {
   documents: RepoDocument[];
 };
 
-const DocumenrsTable: React.FC<DocumenrsTableProps> = ({ documents }) => {
+const DocumentsTable: React.FC<DocumentsTableProps> = ({ documents }) => {
   const { download } = useDownloadPdf();
   return (
     <div>
@@ -95,4 +95,4 @@ const DocumenrsTable: React.FC<DocumenrsTableProps> = ({ documents }) => {
   );
 };
 
-export default DocumenrsTable;
+export default DocumentsTable;

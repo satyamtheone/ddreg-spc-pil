@@ -2,12 +2,12 @@
 import PageHeader from "@/components/common/pageHeader";
 import SearchForm from "@/components/FormikComponents/SearchForm";
 import { useGetDocumentQuery } from "@/lib/redux/slices/documentApi";
-import DocumenrsTable from "./documentsTable";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import { useState } from "react";
 import { useDebounce } from "@/components/hooks/useDebounce";
 import Pagination from "@/components/common/pagination";
 import { updateParam } from "@/lib/utilMethods";
+import DocumentsTable from "./documentsTable";
 
 type ParamsType = {
   page: number;
@@ -55,7 +55,7 @@ export default function DocumentRepository() {
             <div className="skeleton h-20"></div>
           </div>
         ) : (
-          <DocumenrsTable documents={data?.data.data || []} />
+          <DocumentsTable documents={data?.data.data || []} />
         )}
 
         {data?.data && data?.data?.pagination?.totalPages > 1 && (
