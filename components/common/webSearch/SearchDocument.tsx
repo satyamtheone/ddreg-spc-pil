@@ -109,6 +109,7 @@ export const SearchDocument: React.FC = () => {
               onSearchChange={(val) => update("search", val)}
               isLoading={referencesQuery.isLoading}
               isColorBackground
+              placeholder="Type the medicine name then Select the Country"
             />
           </div>
 
@@ -165,7 +166,7 @@ export const SearchDocument: React.FC = () => {
                 </p>
               </div>
             )}
-            <div className="text-black bg-white shadow-md px-4 animate-dialog-slide-down">
+            <div className="text-black bg-white shadow-md px-4 rounded-lg animate-dialog-slide-down">
               {showPagination && (
                 <Pagination
                   currentPage={params.page}

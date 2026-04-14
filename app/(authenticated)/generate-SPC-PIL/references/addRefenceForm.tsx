@@ -15,8 +15,8 @@ import { useDrawer } from "@/components/hooks/DrawerProvider";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import { getCountryLabel, getDocumentOptions } from "@/lib/utilMethods";
 import { AddRefenceFormSchema } from "@/lib/utilsSchema";
+import { ReferencesFromWeb } from "@/lib/redux/apiTypes";
 
-// ---- TYPES ----
 type FormValues = {
   title: string;
   country: string;
@@ -25,7 +25,13 @@ type FormValues = {
   referenceFile: File | string;
 };
 
-const AddRefenceForm = () => {
+const AddRefenceForm = ({
+  reference,
+  formType,
+}: {
+  reference?: ReferencesFromWeb;
+  formType?: "web";
+}) => {
   const query = useGetCountriesQuery();
   const data = useQueryErrorHandler(query, "Get Countries");
   const countriesData = data?.data || [];
@@ -41,13 +47,17 @@ const AddRefenceForm = () => {
     try {
       const formData = new FormData();
       formData.append("title", values.title);
-      formData.append("country", "EU");
-      // {
-      //   values.description &&
-      //     formData.append("description", values.description || "");
-      // }
-      formData.append("type", "SMPC");
-      formData.append("referenceFile", values.referenceFile);
+      formData.append("country", values.country);
+      {
+        values.description &&
+          formData.append("description", values.description || "");
+      }
+      {
+        formType === "web"
+          ? formData.append("documentUrl", "hi")
+          : formData.append("referenceFile", values.referenceFile);
+      }
+      formData.append("type", values.type);
       const res = await createReference(formData).unwrap();
       closeDrawer();
       toast.success(res.message || "Reference Uploaded ");
@@ -68,10 +78,10 @@ const AddRefenceForm = () => {
     <div>
       <Formik<FormValues>
         initialValues={{
-          country: "",
-          title: "",
+          country: reference?.region || "",
+          title: reference?.name || "",
           type: "",
-          referenceFile: "",
+          referenceFile: reference?.documents[0].url || "",
           description: "",
         }}
         validationSchema={AddRefenceFormSchema}
@@ -104,16 +114,26 @@ const AddRefenceForm = () => {
                     options={typeOptions}
                   />
                 )}
-                <div className="pt-4">
-                  <FormikAwareDocumentUploader name="referenceFile" />
-                </div>
+                {formType === "web" ? (
+                  <></>
+                ) : (
+                  <div className="pt-4">
+                    <FormikAwareDocumentUploader name="referenceFile" />
+                  </div>
+                )}
                 {/* Submit */}
                 <div className="absolute left-0 right-0 bg-white border-t border-gray-300  bottom-0">
                   <div className="w-full p-4">
                     <DynamicButton
                       icon={<LuCloudUpload size={24} />}
                       variant="submit"
-                      text={isLoading ? "Adding Reference..." : "Add Reference"}
+                      text={
+                        formType === "web"
+                          ? "Start Work On This"
+                          : isLoading
+                            ? "Adding Reference..."
+                            : "Add Reference"
+                      }
                       isSubmitting={
                         isLoading ||
                         isSubmitting ||

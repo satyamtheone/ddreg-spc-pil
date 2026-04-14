@@ -4,6 +4,8 @@ import UpdateProfilePicForm from "./updateProfilePicForm";
 import { useAuth } from "@/lib/AuthProvider";
 import { useDialog } from "@/components/hooks/DialogProvider";
 import { FaCameraRetro } from "react-icons/fa";
+import image from "../../../public/userProfileIcon.png";
+import Image from "next/image";
 
 type Props = {
   user?: User;
@@ -18,7 +20,7 @@ const UserAvatar = ({ size, padding, shadow, textSize }: Props) => {
   const { openDialog } = useDialog();
   const firstLetter = user?.fName?.charAt(0) || "";
   const lastLetter = user?.lName?.charAt(0) || "";
-  const logo = imageUrl;
+  const logo = imageUrl || image;
 
   return (
     <div
@@ -28,7 +30,10 @@ const UserAvatar = ({ size, padding, shadow, textSize }: Props) => {
       ${padding || "p-1"}`}
     >
       {logo ? (
-        <img
+        <Image
+          width={100}
+          height={100}
+          loading="eager"
           src={logo}
           alt="user-avatar"
           className="w-full h-full object-contain rounded-full"

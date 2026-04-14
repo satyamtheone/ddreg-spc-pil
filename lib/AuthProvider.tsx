@@ -184,7 +184,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   /* ================= IMAGE ================= */
 
-  const amazonBucketname = "https://devtest-ddreg.s3.ap-south-1.amazonaws.com";
+  const amazonBucketname = process.env.NEXT_PUBLIC_AWS_URL;
 
   const imageUrl = user?.userProfilePic
     ? `${amazonBucketname}/${user.userProfilePic}`
@@ -197,15 +197,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       user,
       isUserLoading,
       isAuthenticated: !!user,
-
       isSuperAdmin: !!isSuperAdmin,
       isAdmin: !!isAdmin,
       isUser: !!isUser,
-
       hasPermission,
       canDoAction,
       imageUrl,
-
       refreshUser: fetchUser,
       logout,
     }),

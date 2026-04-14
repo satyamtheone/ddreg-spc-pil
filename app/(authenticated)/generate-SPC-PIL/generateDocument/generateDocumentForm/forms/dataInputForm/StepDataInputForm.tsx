@@ -81,7 +81,7 @@ export default function StepDataInputForm() {
       {({ dirty, isValid }) => {
         return (
           <Form
-            className={`flex flex-col gap-4 ${formData.stepTemplate?.templateId ? "" : "pointer-events-none opacity-50"}`}
+            className={`relative flex flex-col gap-4 ${formData.stepTemplate?.templateId ? "" : "pointer-events-none opacity-50"}`}
           >
             <DocumentDetailsChip formData={formData} />
             <BasicInformationForm />
@@ -92,7 +92,7 @@ export default function StepDataInputForm() {
             ) : (
               <AutoPopulateSectionsForm />
             )}
-            <div className="w-full flex justify-between">
+            <div className="sticky -bottom-2 w-full flex justify-between bg-white py-2 border-t px-4">
               <div>
                 <DynamicButton
                   text="Back "

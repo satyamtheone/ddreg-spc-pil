@@ -107,10 +107,12 @@ const DocumentPreviewNavigator = ({ sections }: Props) => {
           <h2 className="text-xl font-semibold">
             {currentSection?.id}. {currentSection?.title}
           </h2>
-
-          <div className="mt-4 text-sm leading-relaxed whitespace-pre-wrap">
-            {currentSection?.content || "No content available"}
-          </div>
+          <div
+            className="mt-4 text-sm leading-relaxed whitespace-pre-wrap"
+            dangerouslySetInnerHTML={{
+              __html: currentSection?.content || "No content available",
+            }}
+          />
         </div>
 
         <div className="border-t px-4 py-1 flex items-center bg-purple-50 rounded-b-[10px] border justify-between">

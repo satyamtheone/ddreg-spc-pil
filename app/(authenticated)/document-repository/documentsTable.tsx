@@ -18,7 +18,7 @@ const DocumenrsTable: React.FC<DocumenrsTableProps> = ({ documents }) => {
     <div>
       {documents.map((document, index) => (
         <div
-          className={`border border-gray-300 grid grid-cols-12 shadow-md rounded-xl animate-dialog-slide-down px-4 mt-4 ${index % 2 === 0 ? "bg-purple-50" : ""}`}
+          className={`border border-gray-300 grid grid-cols-10 shadow-md rounded-xl animate-dialog-slide-down px-4 mt-4 ${index % 2 === 0 ? "bg-purple-50" : ""}`}
           key={index}
         >
           <div className="flex gap-2 items-start border-r p-4 col-span-2">
@@ -65,7 +65,7 @@ const DocumenrsTable: React.FC<DocumenrsTableProps> = ({ documents }) => {
               </div>
             </div>
           </div>
-          <div className="flex gap-2 items-start border-r p-4 col-span-1">
+          <div className="flex gap-2 items-start p-4 col-span-1">
             <div>
               <div className="text-sm text-gray-400">Status</div>
               <div>
@@ -73,7 +73,7 @@ const DocumenrsTable: React.FC<DocumenrsTableProps> = ({ documents }) => {
               </div>
             </div>
           </div>
-          <div className="flex gap-2 items-start p-4 col-span-3">
+          {/* <div className="flex gap-2 items-start p-4 col-span-3">
             <div>
               <div className="text-sm text-gray-400">Actions</div>
               <div className="flex gap-2 text-teal-900">
@@ -88,7 +88,7 @@ const DocumenrsTable: React.FC<DocumenrsTableProps> = ({ documents }) => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       ))}
     </div>

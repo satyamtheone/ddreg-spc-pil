@@ -8,8 +8,10 @@ import DynamicButton from "@/components/common/DynamicButton";
 import { formatedDate } from "@/lib/utilMethods";
 import noDataSvg from "../../../../public/noData.svg";
 import Image from "next/image";
+import { useNavigation } from "@/components/hooks/useNavigation";
 type PageProps = {};
 const Page: React.FC<PageProps> = (props) => {
+  const { goTo } = useNavigation();
   const [generatedDocument, setGeneratedDocument] =
     useState<CreateDocumentResponse>();
 
@@ -49,6 +51,7 @@ const Page: React.FC<PageProps> = (props) => {
                 size="slim"
                 variant="submit"
                 className="px-2"
+                onClick={() => goTo("/document-repository")}
               />
             </div>
           </div>

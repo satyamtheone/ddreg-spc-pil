@@ -71,7 +71,12 @@ const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
                           onClick={() =>
                             openDrawer({
                               title: "View Reference File",
-                              children: <DocumentViewer url={document.url} />,
+                              children: (
+                                <DocumentViewer
+                                  reference={reference}
+                                  url={document.url}
+                                />
+                              ),
                             })
                           }
                         />

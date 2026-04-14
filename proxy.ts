@@ -2,18 +2,22 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
 
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
   /* ================= API PROXY ================= */
   if (pathname.startsWith("/api")) {
-    const url = request.nextUrl.clone();
+    const baseUrl = process.env.PROD_URL;
+    console.log("baseUrl--->", baseUrl);
 
-    url.protocol = "https";
-    url.hostname = "labelling.ddregpharma.com";
-    url.port = "";
+    if (!baseUrl) {
+      throw new Error("PROD_URL is not defined");
+    }
+
+    const url = new URL(pathname + search, baseUrl);
+
     return NextResponse.rewrite(url);
   }
 
@@ -22,15 +26,15 @@ export function proxy(request: NextRequest) {
   const isAuthRoute = pathname === "/";
   const isProtectedRoute = pathname.startsWith("/dashboard");
 
-  // ❌ Not logged in → redirect to login
+  // Not logged in -> redirect to login
   if (isProtectedRoute && !accessToken && !refreshToken) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // ✅ Already logged in → prevent going to login
-if (isAuthRoute && (accessToken || refreshToken)) {
-  return NextResponse.redirect(new URL("/dashboard", request.url));
-}
+  // Already logged in -> prevent going to login
+  if (isAuthRoute && (accessToken || refreshToken)) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
 
   return NextResponse.next();
 }

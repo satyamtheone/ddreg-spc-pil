@@ -15,6 +15,7 @@ type SearchFormProps = {
   isLoading?: boolean;
   value?: string;
   isColorBackground?: boolean;
+  placeholder?: string;
 };
 
 const SearchFormSchema = Yup.object({
@@ -27,6 +28,7 @@ function SearchForm({
   isLoading,
   value,
   isColorBackground,
+  placeholder,
 }: SearchFormProps) {
   const initialValues: SearchFormValues = {
     search: value || "",
@@ -59,7 +61,7 @@ function SearchForm({
               autoFocus
               name="search"
               type="text"
-              placeholder="Search"
+              placeholder={placeholder ? placeholder : "Search"}
               className={` ${isColorBackground ? "ring-white focus-visible:ring-1 bg-white/10 focus-visible:ring-white/90 border border-white placeholder:text-white" : " ring-cyan-600 border border-cyan-600"}`}
               sideIcon={<FcSearch className="h-6 w-6" />}
               iconPosition="left"

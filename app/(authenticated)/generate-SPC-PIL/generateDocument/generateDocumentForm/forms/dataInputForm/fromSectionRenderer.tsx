@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
-import { Field, useFormikContext } from "formik";
+import React, { useState } from "react";
+import { useFormikContext } from "formik";
 import { PreviewDocumentSectionType } from "@/lib/redux/apiTypes";
 import FormikTextarea from "@/components/FormikComponents/FormikTextArea";
 import FormikInput from "@/components/FormikComponents/FormikInput";
@@ -18,6 +18,8 @@ type FormValues = {
 
 const FromSectionRenderer: React.FC<Props> = ({ section, path }) => {
   const { values, setFieldValue } = useFormikContext<FormValues>();
+
+  const [isPreview, setIsPreview] = useState(true);
 
   const childrenPath = `${path}.children`;
 
@@ -55,10 +57,18 @@ const FromSectionRenderer: React.FC<Props> = ({ section, path }) => {
     setFieldValue(parentPath, updated);
   };
 
+  const getContentValue = () => {
+    return (
+      path.split(".").reduce((acc: any, key) => acc?.[key], values)?.content ||
+      ""
+    );
+  };
+
   return (
     <div className="mb-6 p-4 spcBNS rounded-[10px]">
       <div className="flex items-center gap-2 mb-6 ">
         <div className="font-semibold">{section.id}</div>
+
         {section.matched ? (
           <div className="font-semibold">{section.title}</div>
         ) : (
@@ -84,12 +94,43 @@ const FromSectionRenderer: React.FC<Props> = ({ section, path }) => {
           </div>
         )}
       </div>
+
       {section.type === "text" && (
-        <FormikTextarea
-          name={`${path}.content`}
-          rows={6}
-          placeholder="Write Content..."
-        />
+        <>
+          {/* ✅ Toggle Button */}
+          <div className="flex justify-end mb-2">
+            <button
+              type="button"
+              onClick={() => setIsPreview((prev) => !prev)}
+              className="text-xs px-3 py-1 border rounded cursor-pointer"
+            >
+              {isPreview ? "Edit" : "Preview"}
+            </button>
+          </div>
+
+          {/* ✅ Conditional Rendering */}
+          {isPreview ? (
+            <div className="p-3 border spcBNS rounded-lg animate-dialog-slide-down bg-gray-50 max-h-100 text-sm overflow-auto">
+              {getContentValue() ? (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: getContentValue(),
+                  }}
+                />
+              ) : (
+                <div className="text-gray-400 text-sm">
+                  No content to preview
+                </div>
+              )}
+            </div>
+          ) : (
+            <FormikTextarea
+              name={`${path}.content`}
+              rows={6}
+              placeholder="Write HTML Content..."
+            />
+          )}
+        </>
       )}
 
       {section.children?.map((child, index) => (

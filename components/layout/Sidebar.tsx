@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/tooltip";
 import { NavData } from "@/lib/NavData";
 import { useAuth } from "@/lib/AuthProvider";
-import image from "../../public/loginUser.svg";
+import image from "../../public/userProfileIcon.png";
 
 interface SidebarProps {
   open: boolean;
