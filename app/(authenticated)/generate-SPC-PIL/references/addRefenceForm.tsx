@@ -16,6 +16,8 @@ import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import { getCountryLabel, getDocumentOptions } from "@/lib/utilMethods";
 import { AddRefenceFormSchema } from "@/lib/utilsSchema";
 import { ReferencesFromWeb } from "@/lib/redux/apiTypes";
+import { useNavigation } from "@/components/hooks/useNavigation";
+import { InfoIcon } from "lucide-react";
 
 type FormValues = {
   title: string;
@@ -28,10 +30,13 @@ type FormValues = {
 const AddRefenceForm = ({
   reference,
   formType,
+  url,
 }: {
   reference?: ReferencesFromWeb;
   formType?: "web";
+  url?: string;
 }) => {
+  const { goTo } = useNavigation();
   const query = useGetCountriesQuery();
   const data = useQueryErrorHandler(query, "Get Countries");
   const countriesData = data?.data || [];
@@ -48,26 +53,33 @@ const AddRefenceForm = ({
       const formData = new FormData();
       formData.append("title", values.title);
       formData.append("country", values.country);
-      {
-        values.description &&
-          formData.append("description", values.description || "");
-      }
-      {
-        formType === "web"
-          ? formData.append("documentUrl", "hi")
-          : formData.append("referenceFile", values.referenceFile);
-      }
       formData.append("type", values.type);
+      if (values.description) {
+        formData.append("description", values.description);
+      }
+      if (formType === "web") {
+        formData.append("documentURL", url || "");
+      } else {
+        if (values.referenceFile) {
+          formData.append("referenceFile", values.referenceFile);
+        }
+      }
       const res = await createReference(formData).unwrap();
-      closeDrawer();
-      toast.success(res.message || "Reference Uploaded ");
+      if (res.success) {
+        goTo(
+          `/generate-SPC-PIL/generateDocument?referenceId=${res.data.id}&type=${values.type}`,
+        );
+        toast.success(res.message || "Reference Uploaded");
+        closeDrawer();
+      } else {
+        toast.error(res.message || "Reference Upload failed");
+      }
     } catch (err: any) {
-      toast.error(err?.data?.message || "Reference Uploaded failed");
+      toast.error(err?.data?.message || "Reference Upload failed");
     } finally {
       actions.setSubmitting(false);
     }
   };
-
   useEffect(() => {
     if (isError) {
       toast.error((error as any)?.data?.message || "Reference Uploaded failed");
@@ -115,7 +127,12 @@ const AddRefenceForm = ({
                   />
                 )}
                 {formType === "web" ? (
-                  <></>
+                  <div className="flex mt-6 items-center gap-3 border border-green-600 p-4 rounded-lg shadow-md bg-green-600/10 text-black">
+                    <div className="p-2 bg-green-300 rounded-[10px]">
+                      <InfoIcon className="text-emerald-700" />
+                    </div>
+                    <div>{url}</div>
+                  </div>
                 ) : (
                   <div className="pt-4">
                     <FormikAwareDocumentUploader name="referenceFile" />
@@ -129,7 +146,9 @@ const AddRefenceForm = ({
                       variant="submit"
                       text={
                         formType === "web"
-                          ? "Start Work On This"
+                          ? isLoading
+                            ? "Getting data From the Document..."
+                            : "Get data from this Document"
                           : isLoading
                             ? "Adding Reference..."
                             : "Add Reference"

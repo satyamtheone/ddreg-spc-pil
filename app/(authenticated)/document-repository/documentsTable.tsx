@@ -3,9 +3,6 @@ import { RepoDocument } from "@/lib/redux/apiTypes";
 import { formatedDate } from "@/lib/utilMethods";
 import React from "react";
 import { IoDocumentTextOutline } from "react-icons/io5";
-import { IoMdCloudDownload } from "react-icons/io";
-import { FaEye } from "react-icons/fa";
-import { FaEdit } from "react-icons/fa";
 import { useDownloadPdf } from "@/components/hooks/useDownloadPdf";
 
 type DocumentsTableProps = {
@@ -69,7 +66,7 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({ documents }) => {
             <div>
               <div className="text-sm text-gray-400">Status</div>
               <div>
-                <MiniChip status={document.currentVersion.status} />
+                <MiniChip status={document?.currentVersion?.status} />
               </div>
             </div>
           </div>

@@ -9,6 +9,7 @@ import { IoIosCloudDownload } from "react-icons/io";
 
 type Props = {
   url: string;
+  documentName: string;
   reference: ReferencesFromWeb;
 };
 
@@ -32,13 +33,17 @@ const DocumentViewer = ({ url, reference }: Props) => {
 
   const handleSelectDocument = ({
     reference,
+    url,
   }: {
     reference: ReferencesFromWeb;
+    url: string;
   }) => {
     closeDrawer();
     openDrawer({
       title: "Select This Reference",
-      children: <AddRefenceForm reference={reference} formType="web" />,
+      children: (
+        <AddRefenceForm reference={reference} url={url} formType="web" />
+      ),
     });
   };
   return (
@@ -72,7 +77,7 @@ const DocumentViewer = ({ url, reference }: Props) => {
               text="Select this Document"
               variant="submit"
               size="slim"
-              onClick={() => handleSelectDocument({ reference })}
+              onClick={() => handleSelectDocument({ reference, url })}
               className="px-2"
               icon={<BsCheck2Circle size={20} />}
               iconPosition="right"

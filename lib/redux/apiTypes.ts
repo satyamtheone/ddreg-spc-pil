@@ -202,10 +202,26 @@ export type GetTemplatesResponse = {
   data: Template[];
 };
 
+export type CreateTemplate = {
+  id: string;
+  name: string;
+  version: string;
+  title: string;
+  description: null;
+  typeId: string;
+  sourceType: string;
+  sourceUrl: null;
+  referenceFile: {
+    key: string;
+    size: number | null;
+    fileName: string;
+    mimeType: string | null;
+  };
+};
 export type CreateTemplateResponse = {
   success: boolean;
   message: string;
-  data: [];
+  data: CreateTemplate;
 };
 
 export type CreateTemplateRequest = {

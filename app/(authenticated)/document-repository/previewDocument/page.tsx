@@ -47,7 +47,7 @@ const Page: React.FC<PageProps> = (props) => {
             </div>
             <div>
               <DynamicButton
-                text="Go To ypur Repository "
+                text="Go To your Repository "
                 size="slim"
                 variant="submit"
                 className="px-2"

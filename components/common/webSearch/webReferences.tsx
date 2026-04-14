@@ -75,6 +75,7 @@ const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
                                 <DocumentViewer
                                   reference={reference}
                                   url={document.url}
+                                  documentName={document.type}
                                 />
                               ),
                             })
