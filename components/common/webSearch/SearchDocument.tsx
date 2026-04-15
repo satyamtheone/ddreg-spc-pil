@@ -78,7 +78,7 @@ export const SearchDocument: React.FC = () => {
     }
   };
 
-  // -------- UI Conditions --------
+
   const isLoading = referencesQuery.isLoading || referencesQuery.isFetching;
 
   const showPagination =
@@ -133,14 +133,14 @@ export const SearchDocument: React.FC = () => {
                 value={params.region}
                 onChange={(val) => update("region", val as string)}
               />
-              <SelectForm
+              {/* <SelectForm
                 isGhost
                 name="type"
                 labelText="Type"
                 options={typeOptions}
                 value={params.type}
                 onChange={(val) => update("type", val as string)}
-              />
+              /> */}
             </div>
           )}
 

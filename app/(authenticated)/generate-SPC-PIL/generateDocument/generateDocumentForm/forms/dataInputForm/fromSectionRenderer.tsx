@@ -66,11 +66,11 @@ const FromSectionRenderer: React.FC<Props> = ({ section, path }) => {
 
   return (
     <div className="mb-6 p-4 spcBNS rounded-[10px]">
-      <div className="flex items-center gap-2 mb-6 ">
-        <div className="font-semibold">{section.id}</div>
+      <div className="flex items-start gap-2 mb-6 ">
+        <div className="font-semibold mt-4">{section.id}</div>
 
         {section.matched ? (
-          <div className="font-semibold">{section.title}</div>
+          <div className="font-semibold ">{section.title}</div>
         ) : (
           <div className="w-full">
             <FormikInput
@@ -94,44 +94,37 @@ const FromSectionRenderer: React.FC<Props> = ({ section, path }) => {
           </div>
         )}
       </div>
+      <>
+        <div className="flex justify-end mb-2">
+          <button
+            type="button"
+            onClick={() => setIsPreview((prev) => !prev)}
+            className="text-xs px-3 py-1 border rounded cursor-pointer"
+          >
+            {isPreview ? "Edit" : "Preview"}
+          </button>
+        </div>
 
-      {section.type === "text" && (
-        <>
-          {/* ✅ Toggle Button */}
-          <div className="flex justify-end mb-2">
-            <button
-              type="button"
-              onClick={() => setIsPreview((prev) => !prev)}
-              className="text-xs px-3 py-1 border rounded cursor-pointer"
-            >
-              {isPreview ? "Edit" : "Preview"}
-            </button>
+        {isPreview ? (
+          <div className="p-3 mb-4 border spcBNS rounded-lg animate-dialog-slide-down bg-gray-50 max-h-100 text-sm overflow-auto">
+            {getContentValue() ? (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: getContentValue(),
+                }}
+              />
+            ) : (
+              <div className="text-gray-400 text-sm">No content to preview</div>
+            )}
           </div>
-
-          {/* ✅ Conditional Rendering */}
-          {isPreview ? (
-            <div className="p-3 mb-4 border spcBNS rounded-lg animate-dialog-slide-down bg-gray-50 max-h-100 text-sm overflow-auto">
-              {getContentValue() ? (
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: getContentValue(),
-                  }}
-                />
-              ) : (
-                <div className="text-gray-400 text-sm">
-                  No content to preview
-                </div>
-              )}
-            </div>
-          ) : (
-            <FormikTextarea
-              name={`${path}.content`}
-              rows={6}
-              placeholder="Write HTML Content..."
-            />
-          )}
-        </>
-      )}
+        ) : (
+          <FormikTextarea
+            name={`${path}.content`}
+            rows={6}
+            placeholder="Write HTML Content..."
+          />
+        )}
+      </>
 
       {section.children?.map((child, index) => (
         <FromSectionRenderer

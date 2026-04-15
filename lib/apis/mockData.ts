@@ -78,12 +78,12 @@ export const mockNavCards = [
     icon: "Icon-01.svg",
     iconBgColor: "#17BDD3",
   },
-  {
-    title: "Compare Document",
-    link: "/compare-documents",
-    icon: "Icon-02.svg",
-    iconBgColor: "#0088FF",
-  },
+  // {
+  //   title: "Compare Document",
+  //   link: "/compare-documents",
+  //   icon: "Icon-02.svg",
+  //   iconBgColor: "#0088FF",
+  // },
   {
     title: "View Repository",
     link: "/document-repository",
