@@ -304,7 +304,7 @@ export type Reference = {
   version: string;
   title: string;
   description?: string;
-  activeIngredeint?: string;
+  activeIngredient?: string;
   typeId: string;
   sourceType: string;
   sourceUrl?: string;

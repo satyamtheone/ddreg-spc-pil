@@ -74,7 +74,9 @@ export default function SelectTemplateForm({
           setTemplateName(templateById?.name || "");
         }, [templateById]);
         return (
-          <Form className="flex flex-col gap-4">
+          <Form
+            className={`flex flex-col gap-4 ${formData.stepReference?.countryName ? "" : "pointer-events-none opacity-50"}`}
+          >
             <SelectedDocumentDetailsChip
               subtitleOne={formData.stepReference?.referenceName}
               subtitleTwo={formData.stepReference?.activeIngredient}

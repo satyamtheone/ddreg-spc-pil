@@ -10,8 +10,6 @@ export function proxy(request: NextRequest) {
   /* ================= API PROXY ================= */
   if (pathname.startsWith("/api")) {
     const baseUrl = process.env.PROD_URL;
-    console.log("baseUrl--->", baseUrl);
-
     if (!baseUrl) {
       throw new Error("PROD_URL is not defined");
     }

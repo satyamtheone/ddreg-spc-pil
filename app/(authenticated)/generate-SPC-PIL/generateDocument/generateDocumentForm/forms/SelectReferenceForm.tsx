@@ -30,7 +30,7 @@ export default function SelectReferenceForm({
         updateData({
           stepReference: {
             referenceName: data?.data?.name || "",
-            activeIngredient: "Active Ingredient",
+            activeIngredient: data?.data?.activeIngredient,
             countryCode: data?.data?.type?.country?.code || "",
             slectedReferenceId: data?.data?.id || "",
             type: data?.data?.type?.name,

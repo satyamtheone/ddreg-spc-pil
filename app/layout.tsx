@@ -5,6 +5,7 @@ import DrawerProvider from "@/components/hooks/DrawerProvider";
 import DialogProvider from "@/components/hooks/DialogProvider";
 import ReduxProvider from "@/lib/redux/reduxProvider";
 import { AuthProvider } from "@/lib/AuthProvider";
+import TitleUpdater from "@/components/common/tileUpdater";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -26,6 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning={true} lang="en" data-theme="light">
+      <TitleUpdater />
       <body className={`${poppins.variable} antialiased custom-scrollbar`}>
         <ReduxProvider>
           <AuthProvider>

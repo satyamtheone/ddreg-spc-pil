@@ -1,7 +1,7 @@
 "use client";
 import MiniChip from "@/components/common/miniChip";
 import { crudOperationChipColors, formatedDate } from "@/lib/utilMethods";
-import { productDocuments, SpcTableColumns } from "@/lib/utils";
+import { SpcTableColumns } from "@/lib/utils";
 import React from "react";
 import SpcActionButtons from "./spcActionButtons";
 import { Reference } from "@/lib/redux/apiTypes";
@@ -39,7 +39,7 @@ const SPCTable: React.FC<SPCTableProps> = ({ references }) => {
                 >
                   <div className="table-body-cell">{item?.name}</div>
                   <div className="table-body-cell">
-                    {item?.activeIngredeint || "-"}
+                    {item?.activeIngredient || "-"}
                   </div>
                   <div className="table-body-cell">
                     {item?.type?.country?.name}
