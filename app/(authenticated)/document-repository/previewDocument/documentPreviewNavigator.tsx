@@ -4,6 +4,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa";
 
 import React, { useMemo, useState } from "react";
+import { Section } from "@/lib/utilMethods";
 
 export type PreviewDocumentSectionType = {
   id: string;
@@ -11,21 +12,19 @@ export type PreviewDocumentSectionType = {
   content?: string;
   type: "text" | "group";
   required?: boolean;
-  children: PreviewDocumentSectionType[];
+  children: Section[];
   matched?: boolean;
 };
 
 type Props = {
-  sections: PreviewDocumentSectionType[];
+  sections: Section[];
 };
 
 const DocumentPreviewNavigator = ({ sections }: Props) => {
-  const flattenSections = (
-    items: PreviewDocumentSectionType[],
-  ): PreviewDocumentSectionType[] => {
-    const result: PreviewDocumentSectionType[] = [];
+  const flattenSections = (items: Section[]): Section[] => {
+    const result: Section[] = [];
 
-    const traverse = (list: PreviewDocumentSectionType[]) => {
+    const traverse = (list: Section[]) => {
       for (const item of list) {
         result.push(item);
 
@@ -64,7 +63,7 @@ const DocumentPreviewNavigator = ({ sections }: Props) => {
     items,
     level = 0,
   }: {
-    items: PreviewDocumentSectionType[];
+    items: Section[];
     level?: number;
   }) => {
     return (
@@ -84,8 +83,11 @@ const DocumentPreviewNavigator = ({ sections }: Props) => {
               <strong>{section.id}.</strong> {section.title}
             </div>
 
-            {section.children?.length > 0 && (
-              <SidebarSections items={section.children} level={level + 1} />
+            {section.children && section.children?.length > 0 && (
+              <SidebarSections
+                items={section?.children || []}
+                level={level + 1}
+              />
             )}
           </div>
         ))}
@@ -94,7 +96,7 @@ const DocumentPreviewNavigator = ({ sections }: Props) => {
   };
 
   return (
-    <div className="grid grid-cols-12 gap-x-3 h-135 overflow-auto pb-2  ">
+    <div className="grid grid-cols-12 gap-x-3 h-140 overflow-auto pb-2  ">
       <div className="col-span-4  p-3 h-full bg-white overflow-auto border shadow-md border-t-0 rounded-t-none  rounded-[10px]">
         <h3 className="text-sm font-semibold mb-3 text-gray-600  text-gradient">
           Document Sections

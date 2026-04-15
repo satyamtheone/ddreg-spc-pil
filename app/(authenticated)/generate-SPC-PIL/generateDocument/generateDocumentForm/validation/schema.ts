@@ -6,10 +6,15 @@ export const step1Schema = Yup.object({
     .required("Required"),
 });
 
-export const step2Schema = Yup.object({
-  countryCode: Yup.string().required("Required"),
-  templateId: Yup.string().required("Required"),
-});
+export const step2Schema = (templateId?: string) =>
+  Yup.object({
+    countryCode: Yup.string().required("Required"),
+    templateId: Yup.string().when([], {
+      is: () => !!templateId,
+      then: (schema) => schema.required("Required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  });
 
 export const step4Schema = Yup.object({
   findText: Yup.string().required(),

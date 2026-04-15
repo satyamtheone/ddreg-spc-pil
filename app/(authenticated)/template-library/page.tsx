@@ -46,25 +46,25 @@ export default function TemplateLibrary() {
         <TemplateStatsCard
           bg="bg-sky-600"
           icon={<IoDocumentTextOutline size={34} />}
-          stats="24"
+          stats={8}
           title="Total Templates"
         />
         <TemplateStatsCard
           bg="bg-cyan-600"
           icon={<IoEarthSharp size={34} />}
-          stats="8"
+          stats={4}
           title="Countries"
         />
         <TemplateStatsCard
           bg="bg-teal-500"
           icon={<IoIosTrendingUp size={34} />}
-          stats="892"
+          stats={6}
           title="Documents Created"
         />
         <TemplateStatsCard
           bg="bg-sky-900"
           icon={<FaRegStar size={34} />}
-          stats="4.5"
+          stats={4.5}
           title="Avg Rating"
         />
       </div>

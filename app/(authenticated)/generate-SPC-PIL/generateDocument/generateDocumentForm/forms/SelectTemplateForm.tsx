@@ -54,7 +54,7 @@ export default function SelectTemplateForm({
         countryCode: formData.stepReference?.countryCode || "",
         templateId: formData.stepTemplate?.templateId || templateId,
       }}
-      validationSchema={step2Schema}
+      validationSchema={step2Schema(templateId)}
       onSubmit={(values) => {
         updateData({
           stepTemplate: {
@@ -66,11 +66,13 @@ export default function SelectTemplateForm({
         setStep(3);
       }}
     >
-      {({ isValid, values, dirty }) => {
+      {({ values }) => {
         const templateById = templatesByCountry?.data.find(
           (template) => template.id === values.templateId,
         );
-        useEffect(() => {}, []);
+        useEffect(() => {
+          setTemplateName(templateById?.name || "");
+        }, [templateById]);
         return (
           <Form className="flex flex-col gap-4">
             <SelectedDocumentDetailsChip
@@ -137,7 +139,7 @@ export default function SelectTemplateForm({
               </div>
               <div>
                 <DynamicButton
-                  isSubmitting={!isValid || !dirty}
+                  isSubmitting={!values.templateId}
                   text="Continue To Product Input"
                   type="submit"
                   variant="submit"

@@ -1,6 +1,7 @@
 import {
   DocumentFormValues,
   PreviewDocumentSectionType,
+  Section,
 } from "./redux/apiTypes";
 
 const KEY = "multi-step-form";
@@ -41,7 +42,7 @@ export interface StepFormData {
     MAHAddress: string;
     packagingDetails: string;
   };
-  sections?: PreviewDocumentSectionType[];
+  sections?: Section[];
   generateTemplate?: string;
 }
 

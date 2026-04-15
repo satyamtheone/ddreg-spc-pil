@@ -1,7 +1,7 @@
 import React, { JSX } from "react";
 
 type TemplateStatsCardProps = {
-  stats?: string;
+  stats?: number;
   title?: string;
   icon?: JSX.Element;
   bg?: string;

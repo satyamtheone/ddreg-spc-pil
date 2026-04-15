@@ -93,9 +93,9 @@ export const SearchDocument: React.FC = () => {
   const showResults = references?.data && params.region && params.search;
 
   return (
-    <div className="w-full flex flex-col transition-all duration-300">
+    <div className="w-full flex flex-col  spcBNS rounded-xl transition-all duration-300">
       {/* Header */}
-      <div className="bg-gradient py-7 px-4 rounded-lg rounded-b-none">
+      <div className="bg-gradient py-7 px-4   rounded-lg rounded-b-none">
         <h1 className="text-2xl font-semibold mb-2">Web Search</h1>
         <p className="mb-6">
           Find the SPC or PIL document for your product on the web

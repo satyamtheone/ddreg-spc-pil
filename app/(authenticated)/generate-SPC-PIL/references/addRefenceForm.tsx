@@ -25,6 +25,7 @@ type FormValues = {
   type: string;
   description?: string;
   referenceFile: File | string;
+  activeingredient?: string;
 };
 
 const AddRefenceForm = ({
@@ -53,6 +54,7 @@ const AddRefenceForm = ({
       const formData = new FormData();
       formData.append("title", values.title);
       formData.append("country", values.country);
+      formData.append("activeIngredient", values?.activeingredient || "");
       formData.append("type", values.type);
       if (values.description) {
         formData.append("description", values.description);
@@ -92,6 +94,7 @@ const AddRefenceForm = ({
         initialValues={{
           country: reference?.region || "",
           title: reference?.name || "",
+          activeingredient: reference?.activeSubstance || "",
           type: "",
           referenceFile: reference?.documents[0].url || "",
           description: "",
@@ -113,6 +116,11 @@ const AddRefenceForm = ({
                   name="description"
                   label="Reference Description"
                   placeholder="e.g. France SPC Reference"
+                />
+                <FormikInput
+                  name="activeingredient"
+                  label="Active Ingredient"
+                  placeholder="Active Ingredient"
                 />
                 <FormikSelect
                   name="country"

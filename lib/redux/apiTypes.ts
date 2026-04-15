@@ -304,6 +304,7 @@ export type Reference = {
   version: string;
   title: string;
   description?: string;
+  activeIngredeint?: string;
   typeId: string;
   sourceType: string;
   sourceUrl?: string;
@@ -313,7 +314,6 @@ export type Reference = {
     version: string;
     productName: string;
   };
-
   type: TypeInfo;
   createdById: string;
   createdAt: string;
@@ -382,7 +382,7 @@ export type PreviewDocumentResponse = {
     templateId: string;
     referenceId: string;
     matchingStrategy: string;
-    sections: PreviewDocumentSectionType[];
+    sections: Section[];
   };
 };
 
@@ -397,7 +397,7 @@ export type PreviewDocumentSectionType = {
 };
 
 export type DocumentFormValues = {
-  sections: PreviewDocumentSectionType[];
+  sections: Section[];
 };
 
 export type CreateDocumentRequest = {
@@ -414,7 +414,7 @@ export type CreateDocumentRequest = {
   packagingDetails: string;
   country: string;
   regulatoryBody: string;
-  sections: PreviewDocumentSectionType[];
+  sections: Section[];
 };
 
 export type CreateDocumentResponse = {
@@ -452,7 +452,7 @@ export type CreateDocumentResponse = {
       parentVersionId: string | null;
       status: string;
       updatedAt: string;
-      sections: PreviewDocumentSectionType[];
+      sections: Section[];
     };
   };
 };

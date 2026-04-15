@@ -22,7 +22,7 @@ const ViewTemplateDrawer: React.FC<ViewTemplateDrawerProps> = ({
   const query = useGetTemplateByIdQuery(templateId);
   const data = useQueryErrorHandler(query, "Get Template By Id");
   return (
-    <div className="flex flex-col gap-6 mt-4 h-full scrollbar-hide">
+    <div className="flex flex-col gap-6 mt-4 h-full pb-13 scrollbar-hide">
       {query.isLoading ? (
         <TemplateDrawerSkeleton />
       ) : (

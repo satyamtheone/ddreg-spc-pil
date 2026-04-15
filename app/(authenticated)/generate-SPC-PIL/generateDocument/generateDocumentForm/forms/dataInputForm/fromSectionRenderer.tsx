@@ -110,7 +110,7 @@ const FromSectionRenderer: React.FC<Props> = ({ section, path }) => {
 
           {/* ✅ Conditional Rendering */}
           {isPreview ? (
-            <div className="p-3 border spcBNS rounded-lg animate-dialog-slide-down bg-gray-50 max-h-100 text-sm overflow-auto">
+            <div className="p-3 mb-4 border spcBNS rounded-lg animate-dialog-slide-down bg-gray-50 max-h-100 text-sm overflow-auto">
               {getContentValue() ? (
                 <div
                   dangerouslySetInnerHTML={{

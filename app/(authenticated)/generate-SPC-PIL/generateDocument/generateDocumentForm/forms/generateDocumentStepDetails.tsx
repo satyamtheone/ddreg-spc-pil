@@ -34,7 +34,7 @@ const GenerateDocumentStepDetails: React.FC<
           <div className="flex flex-col items-start gap-2">
             <div className="text-sm text-neutral-400 ">Version</div>
             <div className="flex gap-2 items-center">
-              3.1 <MiniChip status={"Latest"} />
+              1.0 <MiniChip status={"Latest"} />
             </div>
           </div>
         </div>
@@ -53,7 +53,7 @@ const GenerateDocumentStepDetails: React.FC<
           <div className="flex flex-col items-start gap-2">
             <div className="text-sm text-neutral-400 ">Version</div>
             <div className="flex gap-2 items-center">
-              5.2 <MiniChip status={"Latest"} />
+              1.0 <MiniChip status={"Latest"} />
             </div>
           </div>
           <div className="flex flex-col items-start gap-2">
@@ -113,7 +113,8 @@ const GenerateDocumentStepDetails: React.FC<
           <div className="flex flex-col gap-2">
             <div className="text-zinc-800 ">Ready to Generate</div>
             <div className="text-zinc-800 text-sm">
-              This is the current approved template for Germany
+              This is the current approved template for{" "}
+              <strong>{formData.stepReference?.countryName}</strong>
             </div>
           </div>
         </div>

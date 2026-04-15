@@ -38,7 +38,9 @@ const SPCTable: React.FC<SPCTableProps> = ({ references }) => {
                   } grid-cols-9 text-sm border-l-4 border-b-[0.5px] ${crudOperationChipColors({ variant: "Approved" }).border} `}
                 >
                   <div className="table-body-cell">{item?.name}</div>
-                  <div className="table-body-cell">-</div>
+                  <div className="table-body-cell">
+                    {item?.activeIngredeint || "-"}
+                  </div>
                   <div className="table-body-cell">
                     {item?.type?.country?.name}
                   </div>
