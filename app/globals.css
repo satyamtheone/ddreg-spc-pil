@@ -120,7 +120,10 @@ body {
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
-
+.pdf-safe * {
+  color: #000 !important;
+  background-color: #fff !important;
+}
 @layer base {
   * {
     @apply border-border outline-ring/50;

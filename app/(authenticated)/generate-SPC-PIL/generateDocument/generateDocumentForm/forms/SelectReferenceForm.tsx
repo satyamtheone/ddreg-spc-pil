@@ -35,7 +35,7 @@ export default function SelectReferenceForm({
             slectedReferenceId: data?.data?.id || "",
             type: data?.data?.type?.name,
             isSlectedDocument: values.slectedDocument,
-            countryName: data?.data?.type.country.name || "",
+            countryName: data?.data?.type?.country.name || "",
             description: data?.data?.description || "",
           },
         });
