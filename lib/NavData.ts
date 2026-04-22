@@ -32,14 +32,14 @@ export const NavData: NavItem[] = [
     className: "bg-gradient border-transparent text-white",
     iconFolder: "white",
   },
-  // {
-  //   title: "Workflow Management",
-  //   icon: "Icon-04.svg",
-  //   link: "/workflow-management",
-  //   hidden: false,
-  //   className: "bg-gradient border-transparent text-white",
-  //   iconFolder: "white",
-  // },
+  {
+    title: "Workflow Management",
+    icon: "Icon-04.svg",
+    link: "/workflow-management",
+    hidden: false,
+    className: "bg-gradient border-transparent text-white",
+    iconFolder: "white",
+  },
   {
     title: "Document Repository",
     icon: "Icon-05.svg",
