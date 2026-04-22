@@ -38,8 +38,13 @@ const SPCTable: React.FC<SPCTableProps> = ({ references }) => {
                   } grid-cols-9 text-sm border-l-4 border-b-[0.5px] ${crudOperationChipColors({ variant: "Approved" }).border} `}
                 >
                   <div className="table-body-cell">{item?.name}</div>
-                  <div className="table-body-cell">
-                    {item?.activeIngredient || "-"}
+                  <div
+                    className={`table-body-cell  ${item?.activeIngredient && item?.activeIngredient?.length > 50 ? "tooltip tooltip-info tooltip-top" : ""} `}
+                    data-tip={item?.activeIngredient}
+                  >
+                    <p className="line-clamp-4">
+                      {item?.activeIngredient || "-"}
+                    </p>
                   </div>
                   <div className="table-body-cell">
                     {item?.type?.country?.name}
@@ -50,7 +55,7 @@ const SPCTable: React.FC<SPCTableProps> = ({ references }) => {
                     {formatedDate(item?.updatedAt)}
                   </div>
 
-                  <div className="table-body-cell flex items-center gap-2">
+                  <div className="table-body-cell flex items-start gap-2">
                     <MiniChip status={"Approved"} />
                   </div>
                   <div className="col-span-2 flex gap-4 items-center w-full">

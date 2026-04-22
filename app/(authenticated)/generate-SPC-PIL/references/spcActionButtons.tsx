@@ -16,6 +16,12 @@ const { goTo } = useNavigation();
   const tempId = searchParams.get("templateId");
   const templateId = tempId ? tempId : "";
   const { openDrawer } = useDrawer();
+  const handleNavigate = () => {
+    localStorage.setItem("multi-step-form", JSON.stringify({}));
+    goTo(
+      `/generate-SPC-PIL/generateDocument?referenceId=${references.id}&templateId=${templateId}`,
+    );
+  };
   return (
     <div className="flex gap-4 w-full px-4">
       <DynamicButton
@@ -38,11 +44,7 @@ const { goTo } = useNavigation();
         size="slim"
         icon={<IoMdCheckmarkCircleOutline size={20} />}
         iconPosition="right"
-        onClick={() =>
-          goTo(
-            `/generate-SPC-PIL/generateDocument?referenceId=${references.id}&templateId=${templateId}`,
-          )
-        }
+        onClick={() => handleNavigate()}
       />
     </div>
   );

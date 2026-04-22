@@ -68,6 +68,7 @@ const AddRefenceForm = ({
       }
       const res = await createReference(formData).unwrap();
       if (res.success) {
+        localStorage.setItem("multi-step-form", JSON.stringify({}));
         goTo(
           `/generate-SPC-PIL/generateDocument?referenceId=${res.data.id}&type=${values.type}`,
         );
@@ -105,7 +106,7 @@ const AddRefenceForm = ({
         {({ dirty, errors, isSubmitting, values }) => {
           const typeOptions = getDocumentOptions(countriesData, values.country);
           return (
-            <div className="w-full  pt-4  ">
+            <div className="w-full  pt-4 pb-20  ">
               <Form className="w-full flex flex-col">
                 <FormikInput
                   name="title"
