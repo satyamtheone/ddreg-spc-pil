@@ -18,10 +18,10 @@ const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
         <>
           {references?.map((reference, index) => (
             <div
-              className="spcBNS px-4 py-2 w-full animate-dialog-slide-down capitalize text-zinc-800 bg-white rounded-[6px]  my-2"
+              className="spcBNS px-4 py-2 w-full  capitalize text-zinc-800 bg-white rounded-[6px]  my-2"
               key={index}
             >
-              <div className="grid grid-cols-6 gap-x-2 items-center animate-dialog-slide-down">
+              <div className="grid grid-cols-6 gap-x-2 items-center">
                 <div className="flex flex-col gap-1 ">
                   <div className="font-semibold text-gradient">Name</div>
                   <div className="text-sm">{reference.name}</div>
@@ -39,7 +39,7 @@ const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
                   </div>
                 </div>
                 <div
-                  className="flex flex-col gap-1 tooltip tooltip-info tooltip-left "
+                  className={`flex flex-col gap-1 ${reference.activeSubstance && reference.activeSubstance.length > 20 ? "tooltip tooltip-info tooltip-left" : ""}`}
                   data-tip={reference.activeSubstance}
                 >
                   <div className="font-semibold text-gradient">
