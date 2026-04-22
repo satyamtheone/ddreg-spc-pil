@@ -62,6 +62,7 @@ export const countries = [
   { value: "GR", label: "Greece" },
   { value: "HU", label: "Hungary" },
   { value: "IE", label: "Ireland" },
+  { value: "IN", label: "India" },
   { value: "IT", label: "Italy" },
   { value: "LV", label: "Latvia" },
   { value: "LT", label: "Lithuania" },

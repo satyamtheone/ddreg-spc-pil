@@ -1,8 +1,4 @@
-import {
-  DocumentFormValues,
-  PreviewDocumentSectionType,
-  Section,
-} from "./redux/apiTypes";
+import { Section } from "./redux/apiTypes";
 
 const KEY = "multi-step-form";
 
