@@ -17,7 +17,10 @@ const { goTo } = useNavigation();
   const templateId = tempId ? tempId : "";
   const { openDrawer } = useDrawer();
   const handleNavigate = () => {
-    localStorage.setItem("multi-step-form", JSON.stringify({}));
+    localStorage.setItem(
+      "multi-step-form",
+      JSON.stringify({ formData: {}, step: 1 }),
+    );
     goTo(
       `/generate-SPC-PIL/generateDocument?referenceId=${references.id}&templateId=${templateId}`,
     );
