@@ -2,7 +2,8 @@ import {
   CreateDocumentRequest,
   CreateDocumentResponse,
   GetDocumentResponse,
-  GetTemplatesResponse,
+  GetDocumentVersionsResponse,
+  GetSingleDocumentVersionResponse,
   PreviewDocumentRequest,
   PreviewDocumentResponse,
 } from "../apiTypes";
@@ -44,6 +45,27 @@ export const documentApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["getDocuments"],
     }),
+
+    getDocumentVersions: builder.query<
+      GetDocumentVersionsResponse,
+      { docId: string; page?: number; pageSize?: number }
+    >({
+      query: ({ docId, page, pageSize = 10 }) => ({
+        url: `/documents/${docId}/versions?page=${page}&pageSize=${pageSize}`,
+        method: "GET",
+        params: { page, pageSize },
+      }),
+    }),
+
+    getSingleDocumentVersions: builder.query<
+      GetSingleDocumentVersionResponse,
+      { docId: string }
+    >({
+      query: ({ docId }) => ({
+        url: `/documents/${docId}/version`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -51,4 +73,6 @@ export const {
   usePreviewDocumentMutation,
   useCreateDocumentMutation,
   useGetDocumentQuery,
+  useGetDocumentVersionsQuery,
+  useGetSingleDocumentVersionsQuery,
 } = documentApi;

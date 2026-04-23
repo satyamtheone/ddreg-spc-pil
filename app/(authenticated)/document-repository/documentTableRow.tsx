@@ -1,0 +1,176 @@
+import MiniChip from "@/components/common/miniChip";
+import { useGetDocumentVersionsQuery } from "@/lib/redux/slices/documentApi";
+import { formatedDate } from "@/lib/utilMethods";
+import React from "react";
+import { FaEdit, FaEye } from "react-icons/fa";
+import { IoMdCloudDownload } from "react-icons/io";
+import { MdKeyboardDoubleArrowDown } from "react-icons/md";
+import { MdKeyboardDoubleArrowUp } from "react-icons/md";
+
+import { IoDocumentTextOutline } from "react-icons/io5";
+import { useNavigation } from "@/components/hooks/useNavigation";
+import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
+
+type DocumentTableRowProps = {
+  document: {
+    title: string;
+    country: string;
+    currentVersion: {
+      versionNumber: string;
+      status: string;
+    };
+    currentVersionId?: string;
+    createdAt: string;
+    createdById: string;
+    id: string;
+    referenceFile?: string;
+  };
+  index: number;
+  isParent?: boolean;
+};
+
+const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
+  document,
+  index,
+  isParent,
+}) => {
+  const { goTo } = useNavigation();
+  const [showVersions, setShowVersions] = React.useState(false);
+  const query = useGetDocumentVersionsQuery(
+    { docId: document.id },
+    { skip: !showVersions },
+  );
+  const data = useQueryErrorHandler(query, "Get Versions");
+  return (
+    <div
+      className={` rounded-xl transition-all  ${showVersions ? "border border-sky-600 shadow-xl scale-3d scale-101" : "shadow-md border  px-4 border-gray-300"} ${index % 2 === 0 ? "bg-purple-50" : ""} `}
+    >
+      <div className={` grid grid-cols-12   animate-dialog-slide-down   `}>
+        <div className="flex gap-2 items-start border-r p-4 col-span-3">
+          <div className="bg-gradient p-1 h-10 w-10 rounded-md shadow-md text-white">
+            <IoDocumentTextOutline strokeWidth={1} size={30} />
+          </div>
+          <div>
+            <div className="text-sm text-gray-400">Product Name</div>
+            <div>{document?.title}</div>
+          </div>
+        </div>
+        <div className="flex gap-2 items-start border-r p-4 col-span-2">
+          <div>
+            <div className="text-sm text-gray-400">Country</div>
+            <div>{document?.country}</div>
+          </div>
+        </div>
+        <div className="flex gap-2 items-start border-r p-4 col-span-1">
+          <div>
+            <div className="text-sm text-gray-400">Type</div>
+            <div>
+              <MiniChip status={"type"} />
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-2 items-start border-r p-4 col-span-1">
+          <div>
+            <div className="text-sm text-gray-400">Version</div>
+            <div>{document?.currentVersion?.versionNumber}</div>
+          </div>
+        </div>
+        <div className="flex gap-2 items-start border-r p-4 col-span-1">
+          <div>
+            <div className="text-sm text-gray-400">Last Modified</div>
+            <div>{formatedDate(document.createdAt)}</div>
+          </div>
+        </div>
+        <div className="flex gap-2 items-start overflow-hidden border-r p-4 col-span-1">
+          <div>
+            <div className="text-sm text-gray-400">Author</div>
+            <div className=" wrap-break-word"> {document.createdById}</div>
+          </div>
+        </div>
+        <div className="flex gap-2 items-start p-4 col-span-1  border-r">
+          <div>
+            <div className="text-sm text-gray-400">Status</div>
+            <div>
+              <MiniChip status={document?.currentVersion?.status} />
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-2 items-start p-4 col-span-2">
+          <div>
+            <div className="text-sm text-gray-400">Actions</div>
+            <div className="flex gap-2 text-teal-900  flex-wrap">
+              {!isParent && (
+                <div
+                  className="custom-button-hover-classes p-2 bg-white border"
+                  onClick={() => goTo(document?.referenceFile || "")}
+                >
+                  <IoMdCloudDownload size={20} />
+                </div>
+              )}
+              {/* <div className="custom-button-hover-classes p-2 bg-white border">
+                <FaEye size={20} />
+              </div> */}
+              <div
+                className="custom-button-hover-classes p-2 bg-white border"
+                onClick={() =>
+                  goTo(
+                    `/document-editor?documentId=${document?.currentVersionId || document.id}`,
+                  )
+                }
+              >
+                <FaEdit size={20} />
+              </div>
+              {isParent && (
+                <div
+                  className="custom-button-hover-classes p-2 bg-gradient  border"
+                  onClick={() => setShowVersions(!showVersions)}
+                >
+                  {showVersions ? (
+                    <MdKeyboardDoubleArrowUp size={20} />
+                  ) : (
+                    <MdKeyboardDoubleArrowDown size={20} />
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      {showVersions && (
+        <div className=" bg-white rounded-b-[10px] border-t py-4 px-2 animate-dialog-slide-down flex flex-col gap-4">
+          {query.isLoading || query.isFetching ? (
+            <div className="flex flex-col gap-4 mt-4">
+              <div className="skeleton h-20"></div>
+              <div className="skeleton h-20"></div>
+            </div>
+          ) : (
+            <>
+              {data?.data.versions
+                .filter((version) => version.id !== document.id)
+                .map((version, i) => (
+                  <DocumentTableRow
+                    document={{
+                      country: version?.reference?.type?.country?.name,
+                      createdAt: version?.createdAt,
+                      createdById: version?.createdById,
+                      currentVersion: {
+                        versionNumber: version?.versionNumber,
+                        status: version?.status,
+                      },
+                      id: version?.id,
+                      title: version?.reference?.title,
+                      referenceFile: version?.reference.referenceFile.key,
+                    }}
+                    index={i}
+                    key={i}
+                  />
+                ))}
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default DocumentTableRow;

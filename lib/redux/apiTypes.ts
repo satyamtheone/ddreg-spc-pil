@@ -503,3 +503,128 @@ export type GetDocumentResponse = {
     };
   };
 };
+
+export type VersionDocument = {
+  id: string;
+  title: string;
+  strength: string;
+  dosageForm: string;
+  manufacturer: string;
+  shelfLife: string;
+  storagePrecautions: string;
+  mahAddress: string;
+  packagingDetails: string;
+  country: string;
+  regulatoryBody: string;
+  createdById: string;
+  createdAt: string;
+  __v: number;
+  currentVersionId: string;
+};
+
+export type VersionReference = {
+  id: string;
+  name: string;
+  version: string;
+  title: string;
+  description: string;
+  activeIngredient: string;
+  typeId: string;
+  sourceType: string;
+  referenceFile: {
+    fileName: string;
+    mimeType: string | null;
+    size: string | null;
+    key: string;
+  };
+  schemaMeta: {
+    type: string;
+    version: string;
+    productName: string | null;
+  };
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: 0;
+  type: VersionType;
+};
+
+export type VersionType = {
+  id: string;
+  countryId: string;
+  name: string;
+  __v: number;
+  createdAt: string;
+  country: {
+    id: string;
+    code: string;
+    __v: 0;
+    createdAt: string;
+    name: string;
+    regulatoryBody: string;
+  };
+};
+
+export type documentVersion = {
+  id: string;
+  documentId: string;
+  templateId: string;
+  referenceId: string;
+  versionNumber: string;
+  changeType: string;
+  description: string;
+  createdById: string;
+  isLocked: boolean;
+  parentVersionId: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  reference: VersionReference;
+
+  task: string | null;
+  contributors: [];
+};
+
+export type DocumentVersions = {
+  document: VersionDocument;
+  versions: documentVersion[];
+  pagination: {
+    page: number;
+    pageSize: number;
+    total: number;
+    totalPages: number;
+  };
+};
+export type GetDocumentVersionsResponse = {
+  success: boolean;
+  message: string;
+  data: DocumentVersions;
+};
+
+export type SingleDocumentVersion = {
+  id: string;
+  documentId: string;
+  templateId: string;
+  referenceId: string;
+  versionNumber: string;
+  changeType: string;
+  description: string;
+  createdById: string;
+  isLocked: boolean;
+  parentVersionId: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  document: VersionDocument;
+  reference: VersionReference;
+  task: null;
+  contributors: [];
+  sections: Section[];
+};
+export type GetSingleDocumentVersionResponse = {
+  success: boolean;
+  message: string;
+  data: SingleDocumentVersion;
+};

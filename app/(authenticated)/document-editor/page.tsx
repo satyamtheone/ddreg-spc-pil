@@ -2,6 +2,7 @@ import DocumentEditor from "./DocumentEditor";
 
 export type SpcSearchParams = {
   referenceId?: string;
+  documentId?: string;
 };
 
 export default async function Page({
