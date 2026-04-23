@@ -15,13 +15,24 @@ type DocumentTableRowProps = {
   document: {
     title: string;
     country: string;
+    type?: string;
     currentVersion: {
       versionNumber: string;
       status: string;
+      reference?: {
+        schemaMeta?: {
+          type?: string;
+        };
+      };
     };
     currentVersionId?: string;
     createdAt: string;
-    createdById: string;
+    createdById: {
+      id?: string;
+      fName?: string;
+      lName?: string;
+      email?: string;
+    };
     id: string;
     referenceFile?: string;
   };
@@ -65,7 +76,11 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
           <div>
             <div className="text-sm text-gray-400">Type</div>
             <div>
-              <MiniChip status={"type"} />
+              <MiniChip
+                status={
+                  document?.currentVersion?.reference?.schemaMeta?.type || ""
+                }
+              />
             </div>
           </div>
         </div>
@@ -78,13 +93,16 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
         <div className="flex gap-2 items-start border-r p-4 col-span-1">
           <div>
             <div className="text-sm text-gray-400">Last Modified</div>
-            <div>{formatedDate(document.createdAt)}</div>
+            <div>{formatedDate(document?.createdAt)}</div>
           </div>
         </div>
         <div className="flex gap-2 items-start overflow-hidden border-r p-4 col-span-1">
           <div>
             <div className="text-sm text-gray-400">Author</div>
-            <div className=" wrap-break-word"> {document.createdById}</div>
+            <div className=" wrap-break-word">
+              {" "}
+              {document?.createdById?.fName} {document?.createdById?.lName}
+            </div>
           </div>
         </div>
         <div className="flex gap-2 items-start p-4 col-span-1  border-r">
@@ -114,7 +132,7 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                 className="custom-button-hover-classes p-2 bg-white border"
                 onClick={() =>
                   goTo(
-                    `/document-editor?documentId=${document?.currentVersionId || document.id}`,
+                    `/document-editor?documentId=${document?.currentVersionId || document?.id}`,
                   )
                 }
               >
@@ -152,10 +170,15 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                     document={{
                       country: version?.reference?.type?.country?.name,
                       createdAt: version?.createdAt,
-                      createdById: version?.createdById,
+                      createdById: { fName: "", lName: "" },
                       currentVersion: {
                         versionNumber: version?.versionNumber,
                         status: version?.status,
+                        reference: {
+                          schemaMeta: {
+                            type: version?.reference?.schemaMeta?.type,
+                          },
+                        },
                       },
                       id: version?.id,
                       title: version?.reference?.title,
