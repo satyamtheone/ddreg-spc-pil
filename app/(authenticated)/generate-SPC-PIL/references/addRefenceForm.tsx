@@ -68,7 +68,10 @@ const AddRefenceForm = ({
       }
       const res = await createReference(formData).unwrap();
       if (res.success) {
-        localStorage.setItem("multi-step-form", JSON.stringify({}));
+        localStorage.setItem(
+          "multi-step-form",
+          JSON.stringify({ formData: {}, step: 1 }),
+        );
         goTo(
           `/generate-SPC-PIL/generateDocument?referenceId=${res.data.id}&type=${values.type}`,
         );
