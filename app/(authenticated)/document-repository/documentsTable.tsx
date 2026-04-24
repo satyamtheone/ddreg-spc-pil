@@ -58,7 +58,7 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({ documents }) => {
               <div className="text-sm text-gray-400">Author</div>
               <div className="line-clamp-1 text-clip ">
                 {" "}
-                {document.createdById}
+                {document.createdById.fName} {document.createdById.lName}
               </div>
             </div>
           </div>

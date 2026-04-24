@@ -470,7 +470,12 @@ export type RepoDocument = {
   country: string;
   regulatoryBody: string;
   createdAt: string;
-  createdById: string;
+  createdById: {
+    id: string;
+    fName: string;
+    lName: string;
+    email: string;
+  };
   currentVersionId: string;
   currentVersion: {
     id: string;
