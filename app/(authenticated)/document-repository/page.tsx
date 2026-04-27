@@ -14,6 +14,7 @@ type ParamsType = {
   search?: string;
   country?: string;
   type?: string;
+  pageSize?: number;
 };
 
 export default function DocumentRepository() {
@@ -22,6 +23,7 @@ export default function DocumentRepository() {
     country: "",
     type: "",
     search: "",
+    pageSize: 10,
   });
   const debouncedParams = useDebounce(params, 500);
   const query = useGetDocumentQuery(debouncedParams);

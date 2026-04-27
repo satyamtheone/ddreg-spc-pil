@@ -1,11 +1,6 @@
-import MiniChip from "@/components/common/miniChip";
 import { RepoDocument } from "@/lib/redux/apiTypes";
-import { formatedDate } from "@/lib/utilMethods";
 import React from "react";
-import { IoDocumentTextOutline } from "react-icons/io5";
 import { useDownloadPdf } from "@/components/hooks/useDownloadPdf";
-import { IoMdCloudDownload } from "react-icons/io";
-import { FaEdit, FaEye } from "react-icons/fa";
 import DocumentTableRow from "./documentTableRow";
 
 type DocumentsTableProps = {

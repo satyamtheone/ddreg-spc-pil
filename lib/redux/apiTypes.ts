@@ -470,7 +470,7 @@ export type RepoDocument = {
   country: string;
   regulatoryBody: string;
   createdAt: string;
-  createdById: {
+  createdBy: {
     id: string;
     fName: string;
     lName: string;
@@ -547,7 +547,6 @@ export type VersionReference = {
     version: string;
     productName: string | null;
   };
-  createdById: string;
   createdAt: string;
   updatedAt: string;
   __v: 0;
@@ -586,7 +585,12 @@ export type documentVersion = {
   updatedAt: string;
   __v: number;
   reference: VersionReference;
-
+  createdBy: {
+    id: string;
+    fName: string;
+    lName: string;
+    email: string;
+  };
   task: string | null;
   contributors: [];
 };
@@ -632,4 +636,88 @@ export type GetSingleDocumentVersionResponse = {
   success: boolean;
   message: string;
   data: SingleDocumentVersion;
+};
+
+// ================================================================================= Workflow Types
+
+export type DocumentVersion = {
+  id: string;
+  documentId: string;
+  templateId: string;
+  referenceId: string;
+  versionNumber: string;
+  changeType: string;
+  description: string;
+  createdById: string;
+  isLocked: boolean;
+  parentVersionId: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  document: {
+    id: string;
+    title: string;
+    strength: string;
+    dosageForm: string;
+    manufacturer: string;
+    shelfLife: string;
+    storagePrecautions: string;
+    mahAddress: string;
+    packagingDetails: string;
+    country: string;
+    regulatoryBody: string;
+    createdById: string;
+    createdAt: string;
+    __v: number;
+    currentVersionId: string;
+  };
+};
+
+export type Assignments = {
+  id: string;
+  taskId: string;
+  userId: string;
+  permissionType: string;
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED";
+  totalDurationSec: number;
+  __v: 0;
+  createdAt: string;
+  updatedAt: string;
+  user: {
+    id: string;
+    fName: string;
+    lName: string;
+    email: string;
+    role: string;
+    businessRoleId: string;
+  };
+  stageLogs: [];
+};
+
+export type Task = {
+  id: string;
+  documentVersionId: string;
+  title: string;
+  taskType: "MAJOR" | "MINOR" | "HOTFIX";
+  description: string;
+  dueDate: string;
+  status:
+    | "CREATED"
+    | "UNDER_EDITING"
+    | "UNDER_REVIEW"
+    | "UNDER_APPROVAL"
+    | "APPROVED";
+  rejectionCount: 0;
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  documentVersion: DocumentVersion;
+  assignments: Assignments[];
+};
+export type GetTaskResponse = {
+  success: boolean;
+  message: string;
+  data: Task[];
 };

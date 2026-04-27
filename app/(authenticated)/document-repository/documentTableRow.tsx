@@ -27,7 +27,7 @@ type DocumentTableRowProps = {
     };
     currentVersionId?: string;
     createdAt: string;
-    createdById: {
+    createdBy: {
       id?: string;
       fName?: string;
       lName?: string;
@@ -101,7 +101,7 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
             <div className="text-sm text-gray-400">Author</div>
             <div className=" wrap-break-word">
               {" "}
-              {document?.createdById?.fName} {document?.createdById?.lName}
+              {document?.createdBy?.fName} {document?.createdBy?.lName}
             </div>
           </div>
         </div>
@@ -170,7 +170,10 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                     document={{
                       country: version?.reference?.type?.country?.name,
                       createdAt: version?.createdAt,
-                      createdById: { fName: "", lName: "" },
+                      createdBy: {
+                        fName: version?.createdBy?.fName,
+                        lName: version?.createdBy?.lName,
+                      },
                       currentVersion: {
                         versionNumber: version?.versionNumber,
                         status: version?.status,
@@ -182,7 +185,7 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                       },
                       id: version?.id,
                       title: version?.reference?.title,
-                      referenceFile: version?.reference.referenceFile.key,
+                      referenceFile: version?.reference?.referenceFile?.key,
                     }}
                     index={i}
                     key={i}

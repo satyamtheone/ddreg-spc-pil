@@ -1,13 +1,20 @@
+"use client";
 import PageHeader from "@/components/common/pageHeader";
-import WorkFlowStatsCard, { variantStyles } from "./workFlowStatsCard";
+import WorkFlowStatsCard from "./workFlowStatsCard";
 import WorkFlowTaskColumns from "./workFlowTaskColumns";
-
-export const metadata = {
-  title: "Workflow Management",
-  description: "Workflow Management for SPC - PIL",
-};
+import DynamicButton from "@/components/common/DynamicButton";
+import { PlusSquare } from "lucide-react";
+import { useDrawer } from "@/components/hooks/DrawerProvider";
+import CreateTaskDrawer from "./tasks/createTaskDrawer";
+import { useGetTaskQuery } from "@/lib/redux/slices/workflowApis";
+import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 
 export default function WorkflowManagement() {
+  const query = useGetTaskQuery();
+  const tasks = useQueryErrorHandler(query, "Get Tasks");
+
+  console.log(tasks);
+  const { openDrawer } = useDrawer();
   return (
     <div>
       <PageHeader
@@ -21,21 +28,18 @@ export default function WorkflowManagement() {
           statValue={24}
           subtitle="Last 30 Days"
         />
-
         <WorkFlowStatsCard
           variant="amber"
           title="Pending Task"
           statValue={12}
           subtitle="Last 30 Days"
         />
-
         <WorkFlowStatsCard
           variant="emerald"
           title="Completed Task"
           statValue={18}
           subtitle="Last 30 Days"
         />
-
         <WorkFlowStatsCard
           variant="indigo"
           title="Active Workflow"
@@ -44,8 +48,26 @@ export default function WorkflowManagement() {
         />
       </div>
 
-      <div className="h-20 w-full spcBNS bg-white rounded-[10px] my-6"></div>
-      <WorkFlowTaskColumns />
+      <div className="p-4 w-full spcBNS bg-white rounded-[10px] my-6">
+        <div className="max-w-max">
+          <DynamicButton
+            text="Add Task"
+            variant="card"
+            icon={<PlusSquare />}
+            onClick={() =>
+              openDrawer({
+                title: "Add Task",
+                width: "w-2/3",
+                children: <CreateTaskDrawer />,
+              })
+            }
+          />
+        </div>
+      </div>
+      <WorkFlowTaskColumns
+        tasks={tasks?.data || []}
+        isLoading={query.isLoading}
+      />
     </div>
   );
 }

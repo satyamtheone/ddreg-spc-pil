@@ -13,12 +13,18 @@ export const documentApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDocument: builder.query<
       GetDocumentResponse,
-      { search?: string; country?: string; type?: string; page?: number }
+      {
+        search?: string;
+        country?: string;
+        type?: string;
+        page?: number;
+        pageSize?: number;
+      }
     >({
-      query: ({ search, country, type, page }) => ({
+      query: ({ search, country, type, page, pageSize }) => ({
         url: "/documents",
         method: "GET",
-        params: { search, country, type, page },
+        params: { search, country, type, page, pageSize },
       }),
       providesTags: ["getDocuments"],
     }),
