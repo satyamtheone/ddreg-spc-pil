@@ -3,7 +3,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiRead } from "react-icons/ci";
 import { GrUpdate } from "react-icons/gr";
 import { GrUserAdmin } from "react-icons/gr";
-import { CountryType, Option } from "./redux/apiTypes";
+import { Assignments, CountryType, Option, Task } from "./redux/apiTypes";
 import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";
 
 export const crudOperationChipColors = ({
@@ -51,6 +51,21 @@ export const crudOperationChipColors = ({
         bg: "bg-green-500 text-white",
         text: "text-green-500",
         icon: <IoCreateOutline size={size} />,
+      };
+    case "MAJOR":
+      return {
+        border: "bg-sky-600 text-white border-sky-600",
+        hover: "hover:bg-sky-600 hover:text-white",
+      };
+    case "HOTFIX":
+      return {
+        border: "bg-teal-400 text-white border-teal-400",
+        hover: "hover:bg-teal-400 hover:text-white",
+      };
+    case "MINOR":
+      return {
+        border: "bg-cyan-500 text-white border-cyan-500",
+        hover: "hover:bg-cyan-500 hover:text-white",
       };
     default:
       return {
@@ -184,3 +199,11 @@ export const updateParam = (
     };
   });
 };
+
+export const isBG = (user: Assignments, task: Task) =>
+  (task.status === "UNDER_REVIEW" &&
+    user.user.businessRoleId.permissions.some((p) => p.type === "EDITOR")) ||
+  (task.status === "UNDER_APPROVAL" &&
+    user.user.businessRoleId.permissions.some(
+      (p) => p.type === "EDITOR" || p.type === "REVIEWER",
+    ));

@@ -4,20 +4,79 @@ import { formatedDate } from "@/lib/utilMethods";
 import { FlagIcon } from "lucide-react";
 import React from "react";
 import { MdOutlineWatchLater } from "react-icons/md";
+import { HiDotsVertical } from "react-icons/hi";
+import { useDialog } from "@/components/hooks/DialogProvider";
+import ModalProvider from "@/components/dialog/Dialog";
+import MoveInEditorDialog from "./tasks/moveInEditDialog";
+import MoveInReviewDialog from "./tasks/moveInReviewDialog";
+import MoveInApproveDialog from "./tasks/moveInApproveDialog";
+import ApprovalDialog from "./tasks/approvalDialog";
+import DynamicButton from "@/components/common/DynamicButton";
+import { useNavigation } from "@/components/hooks/useNavigation";
 
 type TaskCardProps = {
   task: Task;
 };
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+  const { goTo } = useNavigation();
+  const { openDialog } = useDialog();
   return (
-    <div className="bg-white rounded-lg shadow-lg p-2 flex flex-col gap-4">
+    <div className="bg-white rounded-lg shadow-lg p-2 flex flex-col gap-4 animate-dialog-slide-down">
       <div className="flex justify-between items-center">
         <div>
           <FlagIcon size={14} />
         </div>
-        <div>
+        <div className="flex items-center">
           <MiniChip status={task?.taskType} />
+          <div
+            className="pl-4 hover:scale-3d hover:scale-110 active:scale-3d active:scale-95 cursor-pointer transition-all"
+            onClick={() => {
+              if (task.status === "CREATED") {
+                openDialog({
+                  children: (
+                    <ModalProvider
+                      size="md:w-200 w-11/12"
+                      title={`Move this task in Edit`}
+                      children={<MoveInEditorDialog task={task} />}
+                    />
+                  ),
+                });
+              } else if (task.status === "UNDER_EDITING") {
+                openDialog({
+                  children: (
+                    <ModalProvider
+                      size="md:w-200 w-11/12"
+                      title={`Move this task in Review `}
+                      children={<MoveInReviewDialog task={task} />}
+                    />
+                  ),
+                });
+              } else if (task.status === "UNDER_REVIEW") {
+                openDialog({
+                  children: (
+                    <ModalProvider
+                      size="md:w-200 w-11/12"
+                      title={`Move this task in Approve `}
+                      children={<MoveInApproveDialog task={task} />}
+                    />
+                  ),
+                });
+              } else if (task.status === "UNDER_APPROVAL") {
+                openDialog({
+                  children: (
+                    <ModalProvider
+                      size="md:w-200 w-11/12"
+                      title={`Approve this Task`}
+                      children={<ApprovalDialog task={task} />}
+                    />
+                  ),
+                });
+              }
+            }}
+          >
+            <HiDotsVertical />
+          </div>
         </div>
       </div>
       <div className="flex flex-col gap-2 ">
@@ -48,6 +107,15 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           {formatedDate(task?.dueDate || "")}
         </div>
       </div>
+
+      <DynamicButton
+        text="view this document"
+        size="slim"
+        variant="card"
+        onClick={() =>
+          goTo(`/document-editor?documentId=${task.documentVersionId}`)
+        }
+      />
     </div>
   );
 };

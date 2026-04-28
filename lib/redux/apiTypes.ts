@@ -690,7 +690,17 @@ export type Assignments = {
     lName: string;
     email: string;
     role: string;
-    businessRoleId: string;
+    businessRoleId: {
+      id: string;
+      name: string;
+      description: string;
+      permissions: [
+        {
+          id: string;
+          type: string;
+        },
+      ];
+    };
   };
   stageLogs: [];
 };
@@ -708,7 +718,7 @@ export type Task = {
     | "UNDER_REVIEW"
     | "UNDER_APPROVAL"
     | "APPROVED";
-  rejectionCount: 0;
+  rejectionCount: number;
   createdById: string;
   createdAt: string;
   updatedAt: string;
@@ -720,4 +730,25 @@ export type GetTaskResponse = {
   success: boolean;
   message: string;
   data: Task[];
+};
+
+export type CreateTaskRequest = {
+  title: string;
+  taskType: string;
+  description: string;
+  dueDate: string;
+  assignedUsers: {
+    editorIds: [string];
+    reviewerIds: [string];
+    approverIds: [string];
+  };
+};
+
+export type UpdateTasAction = {
+  action: "START" | "COMPLETE" | "APPROVE" | "REJECT";
+  comment?: string;
+};
+export type UpdateTasActionRequest = {
+  id: string;
+  body: UpdateTasAction;
 };

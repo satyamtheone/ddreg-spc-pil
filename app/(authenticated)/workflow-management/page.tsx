@@ -12,15 +12,9 @@ import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 export default function WorkflowManagement() {
   const query = useGetTaskQuery();
   const tasks = useQueryErrorHandler(query, "Get Tasks");
-
-  console.log(tasks);
   const { openDrawer } = useDrawer();
   return (
     <div>
-      <PageHeader
-        title="Workflow Management"
-        subTitle="Track and Manage document generation tasks"
-      />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
         <WorkFlowStatsCard
           variant="sky"
@@ -48,15 +42,17 @@ export default function WorkflowManagement() {
         />
       </div>
 
-      <div className="p-4 w-full spcBNS bg-white rounded-[10px] my-6">
+      <div className="p-4 w-full spcBNS bg-white rounded-[10px] flex justify-end my-4">
         <div className="max-w-max">
           <DynamicButton
-            text="Add Task"
-            variant="card"
+            size="slim"
+            text="Create Task"
+            variant="submit"
+            className="px-2"
             icon={<PlusSquare />}
             onClick={() =>
               openDrawer({
-                title: "Add Task",
+                title: "Create Task",
                 width: "w-2/3",
                 children: <CreateTaskDrawer />,
               })
@@ -64,10 +60,12 @@ export default function WorkflowManagement() {
           />
         </div>
       </div>
-      <WorkFlowTaskColumns
-        tasks={tasks?.data || []}
-        isLoading={query.isLoading}
-      />
+      <div className="h-140 overflow-hidden">
+        <WorkFlowTaskColumns
+          tasks={tasks?.data || []}
+          isLoading={query.isLoading}
+        />
+      </div>
     </div>
   );
 }

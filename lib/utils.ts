@@ -15,6 +15,7 @@ import { FaFolderOpen, FaRegUser } from "react-icons/fa";
 import { MdHistory } from "react-icons/md";
 import { IconType } from "react-icons";
 import { IoCalendarOutline } from "react-icons/io5";
+import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";
 
 export type NavLinkItem = {
   icon: IconType;
@@ -374,5 +375,20 @@ export const NavData: NavLinkItem[] = [
     title: "Account",
     icon: FaRegUser,
     link: "/account",
+  },
+];
+
+export const tasktypeOptions: FormikOptonType[] = [
+  {
+    label: "Major Task",
+    value: "MAJOR",
+  },
+  {
+    label: "Minor Task",
+    value: "MINOR",
+  },
+  {
+    label: "Hotfix Task",
+    value: "HOTFIX",
   },
 ];

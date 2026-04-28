@@ -53,16 +53,16 @@ const WorkFlowStatsCard: React.FC<WorkFlowStatsCardProps> = ({
 
   return (
     <div
-      className={`flex justify-between items-center text-zinc-800 p-4 h-30 w-full border rounded-[7px] ${styles.border} ${styles.bg}`}
+      className={`flex justify-between items-center text-zinc-800 p-4 h-20 w-full border rounded-[7px] ${styles.border} ${styles.bg}`}
     >
       <div>
-        <div className="text-4xl font-medium">{statValue}</div>
-        <div className="font-semibold">{title}</div>
-        <div>{subtitle}</div>
+        <div className="text-2xl font-medium">{statValue}</div>
+        <div className="font-semibold text-sm">{title}</div>
+        <div className="text-xs">{subtitle}</div>
       </div>
 
       <div
-        className={`h-[70px] w-[70px] flex justify-center items-center border rounded-[7px] p-4 ${styles.border} ${styles.bg}`}
+        className={`h-12 w-12 flex justify-center items-center border rounded-[7px] p-2 ${styles.border} ${styles.bg}`}
       >
         {styles.icon}
       </div>

@@ -4,24 +4,14 @@ import { Formik, Form, FormikHelpers } from "formik";
 import FormikInput from "@/components/FormikComponents/FormikInput";
 import DynamicButton from "@/components/common/DynamicButton";
 import toast from "react-hot-toast";
-import {
-  useCreateUserMutation,
-  useGetRolesQuery,
-  useGetUsersQuery,
-  useUpdateUserMutation,
-} from "@/lib/redux/slices/userApi";
+import { useGetUsersQuery } from "@/lib/redux/slices/userApi";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
-import { User } from "@/lib/redux/apiTypes";
 import { useDrawer } from "@/components/hooks/DrawerProvider";
-import { createUserValidationSchema } from "@/lib/utilsSchema";
-import FormikSelect, {
-  FormikOptonType,
-} from "@/components/FormikComponents/FormikSelect";
+import { CreatetaskFormSchema } from "@/lib/utilsSchema";
+import FormikSelect from "@/components/FormikComponents/FormikSelect";
 import FormikTextarea from "@/components/FormikComponents/FormikTextArea";
 import {
-  getAllDocumentOptions,
   getCountryLabel,
-  getCountryOptions,
   getDocumentOptions,
   mapToFormikOptions,
 } from "@/lib/utilMethods";
@@ -30,6 +20,10 @@ import {
   useGetDocumentVersionsQuery,
 } from "@/lib/redux/slices/documentApi";
 import { useGetCountriesQuery } from "@/lib/redux/slices/templateApi";
+import { useCreateTaskMutation } from "@/lib/redux/slices/workflowApis";
+import { tasktypeOptions } from "@/lib/utils";
+import InputSkeleton from "@/components/common/skletons/inputSkeleton";
+import TaskFormSkeleton from "@/components/common/skletons/taskFormSkeleton";
 
 type FormValues = {
   taskTitle: string;
@@ -45,22 +39,7 @@ type FormValues = {
   approverID: string;
 };
 
-const tasktypeOptions: FormikOptonType[] = [
-  {
-    label: "Major Task",
-    value: "MAJOR",
-  },
-  {
-    label: "Minor Task",
-    value: "MINOR",
-  },
-  {
-    label: "Hotfix Task",
-    value: "HOTFIX",
-  },
-];
-
-const CreateTaskDrawer = ({ user }: { user?: User }) => {
+const CreateTaskDrawer = () => {
   const countryQuery = useGetCountriesQuery();
   const countryQueryData = useQueryErrorHandler(countryQuery, "Get Countries");
   const countriesData = countryQueryData?.data || [];
@@ -91,32 +70,32 @@ const CreateTaskDrawer = ({ user }: { user?: User }) => {
   };
   const userOptions = usersOption();
   const iscommonLoading = countryQuery.isLoading || usersQuery.isLoading;
-  const [createUser, { isLoading, isError, error }] = useCreateUserMutation();
   const [
-    UpdateUser,
+    createTask,
     { isLoading: updateLoading, isError: updateError, error: updateerror },
-  ] = useUpdateUserMutation();
+  ] = useCreateTaskMutation();
 
   const handleSubmit = async (
     values: FormValues,
     { resetForm }: FormikHelpers<FormValues>,
   ) => {
-    const formData = new FormData();
-    formData.append("taskTitle", values.taskTitle);
-    formData.append("taskType", values.taskType);
-    formData.append("selectedDocument", values.selectedVersion);
-    formData.append("description", values.description);
-    formData.append("dueDate", values.dueDate);
-    formData.append("editorID", values.editorID);
-    formData.append("reviewerID", values.reviewerID);
-    formData.append("approverID", values.approverID);
-
+    const payload = {
+      title: values.taskTitle,
+      taskType: values.taskType,
+      description: values.description,
+      dueDate: values.dueDate,
+      assignedUsers: {
+        editorIds: [values.editorID] as [string],
+        reviewerIds: [values.reviewerID] as [string],
+        approverIds: [values.approverID] as [string],
+      },
+    };
     try {
-      const res = await UpdateUser({
-        id: user?.id || "",
-        body: formData,
+      const res = await createTask({
+        versionId: values.selectedVersion || "",
+        body: payload,
       }).unwrap();
-      toast.success(res?.message || "User Updated successfully");
+      toast.success(res?.message || "Task created successfully");
     } catch (error: any) {
       toast.error(error?.data?.message || "Failed to create user");
     } finally {
@@ -126,17 +105,15 @@ const CreateTaskDrawer = ({ user }: { user?: User }) => {
   };
 
   useEffect(() => {
-    if (isError || updateError) {
-      toast.error(
-        (error || (updateerror as any))?.data?.message || "Update failed",
-      );
+    if (updateError) {
+      toast.error((updateerror as any)?.data?.message || "Update failed");
     }
-  }, [isError, error, updateerror]);
+  }, [updateerror]);
 
   return (
     <>
       {iscommonLoading ? (
-        <p>Loading...</p>
+        <TaskFormSkeleton />
       ) : (
         <Formik<FormValues>
           initialValues={{
@@ -152,7 +129,7 @@ const CreateTaskDrawer = ({ user }: { user?: User }) => {
             reviewerID: "",
             approverID: "",
           }}
-          //   validationSchema={createUserValidationSchema(actionType || "")}
+          validationSchema={CreatetaskFormSchema()}
           onSubmit={handleSubmit}
         >
           {({ dirty, isValid, isSubmitting, values, setFieldValue }) => {
@@ -299,9 +276,9 @@ const CreateTaskDrawer = ({ user }: { user?: User }) => {
                     <DynamicButton
                       variant="submit"
                       isSubmitting={
-                        isLoading || !dirty || !isValid || isSubmitting
+                        updateLoading || !dirty || !isValid || isSubmitting
                       }
-                      text={isLoading ? "Creating Task..." : "Create Task"}
+                      text={updateLoading ? "Creating Task..." : "Create Task"}
                     />
                   </div>
                 </div>
