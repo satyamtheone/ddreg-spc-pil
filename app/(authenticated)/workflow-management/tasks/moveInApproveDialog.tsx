@@ -1,22 +1,19 @@
 import DynamicButton from "@/components/common/DynamicButton";
-import MiniChip from "@/components/common/miniChip";
 import { useDialog } from "@/components/hooks/DialogProvider";
-import { Assignments, Task, UpdateTasAction } from "@/lib/redux/apiTypes";
+import { Task, UpdateTasAction } from "@/lib/redux/apiTypes";
 import { useUpdateTaskActionMutation } from "@/lib/redux/slices/workflowApis";
-import { formatedDate, isBG } from "@/lib/utilMethods";
-import { CheckCircle2, Clock10Icon, User } from "lucide-react";
-import { type } from "os";
 import React from "react";
 import toast from "react-hot-toast";
-import { BsFillPatchCheckFill } from "react-icons/bs";
 import ReviewDialogContent from "./reviewDialogContent";
+import ModalProvider from "@/components/dialog/Dialog";
+import RejectTaskDialog from "./rejectTaskDialog";
 
 type MoveInApproveDialogProps = {
   task: Task;
 };
 
 const MoveInApproveDialog: React.FC<MoveInApproveDialogProps> = ({ task }) => {
-  const { closeDialog } = useDialog();
+  const { closeDialog, openDialog } = useDialog();
   const [updateTaskAction, { isLoading }] = useUpdateTaskActionMutation();
   const handleSubmit = async () => {
     const payload: UpdateTasAction = {
@@ -27,12 +24,24 @@ const MoveInApproveDialog: React.FC<MoveInApproveDialogProps> = ({ task }) => {
         id: task.id,
         body: payload,
       }).unwrap();
-      toast.success(res?.message || "Task created successfully");
+      toast.success(res?.message || "Task Moved successfully");
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to create user");
+      toast.error(error?.data?.message || "Failed to move task");
     } finally {
       closeDialog();
     }
+  };
+  const handleRejectTask = (task: Task) => {
+    closeDialog();
+    openDialog({
+      children: (
+        <ModalProvider
+          size="md:w-200 w-11/12"
+          title={`Move this task in Edit`}
+          children={<RejectTaskDialog task={task} />}
+        />
+      ),
+    });
   };
 
   return (
@@ -42,7 +51,7 @@ const MoveInApproveDialog: React.FC<MoveInApproveDialogProps> = ({ task }) => {
         <DynamicButton
           text="Send Back to Editing"
           variant="card"
-          onClick={closeDialog}
+          onClick={() => handleRejectTask(task)}
         />
         <DynamicButton
           isSubmitting={isLoading}

@@ -207,3 +207,4 @@ export const isBG = (user: Assignments, task: Task) =>
     user.user.businessRoleId.permissions.some(
       (p) => p.type === "EDITOR" || p.type === "REVIEWER",
     ));
+    

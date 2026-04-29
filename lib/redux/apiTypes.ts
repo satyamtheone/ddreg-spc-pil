@@ -697,7 +697,7 @@ export type Assignments = {
       permissions: [
         {
           id: string;
-          type: string;
+          type: "EDITOR" | "REVIEWER" | "APPROVER";
         },
       ];
     };

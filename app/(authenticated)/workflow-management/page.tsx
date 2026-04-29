@@ -1,5 +1,4 @@
 "use client";
-import PageHeader from "@/components/common/pageHeader";
 import WorkFlowStatsCard from "./workFlowStatsCard";
 import WorkFlowTaskColumns from "./workFlowTaskColumns";
 import DynamicButton from "@/components/common/DynamicButton";
@@ -8,8 +7,12 @@ import { useDrawer } from "@/components/hooks/DrawerProvider";
 import CreateTaskDrawer from "./tasks/createTaskDrawer";
 import { useGetTaskQuery } from "@/lib/redux/slices/workflowApis";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
+import { useAuth } from "@/lib/AuthProvider";
+import SearchForm from "@/components/FormikComponents/SearchForm";
+import SelectForm from "@/components/FormikComponents/SelectForm";
 
 export default function WorkflowManagement() {
+  const { isUser } = useAuth();
   const query = useGetTaskQuery();
   const tasks = useQueryErrorHandler(query, "Get Tasks");
   const { openDrawer } = useDrawer();
@@ -42,23 +45,34 @@ export default function WorkflowManagement() {
         />
       </div>
 
-      <div className="p-4 w-full spcBNS bg-white rounded-[10px] flex justify-end my-4">
-        <div className="max-w-max">
-          <DynamicButton
-            size="slim"
-            text="Create Task"
-            variant="submit"
-            className="px-2"
-            icon={<PlusSquare />}
-            onClick={() =>
-              openDrawer({
-                title: "Create Task",
-                width: "w-2/3",
-                children: <CreateTaskDrawer />,
-              })
-            }
-          />
-        </div>
+      <div className="p-4 pb-0 w-full spcBNS bg-white rounded-[10px] flex justify-end gap-4 my-4">
+        <SearchForm />
+        <SelectForm
+          name="country"
+          labelText="user"
+          options={[]}
+          value={""}
+          // onChange={(val) => update("region", val as string)}
+        />
+
+        {!isUser && (
+          <div className="max-w-max">
+            <DynamicButton
+              size="slim"
+              text="Create Task"
+              variant="submit"
+              className="px-2"
+              icon={<PlusSquare />}
+              onClick={() =>
+                openDrawer({
+                  title: "Create Task",
+                  width: "w-2/3",
+                  children: <CreateTaskDrawer />,
+                })
+              }
+            />
+          </div>
+        )}
       </div>
       <div className="h-140 overflow-hidden">
         <WorkFlowTaskColumns

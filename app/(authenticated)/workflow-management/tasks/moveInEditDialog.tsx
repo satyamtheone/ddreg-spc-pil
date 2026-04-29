@@ -2,7 +2,7 @@ import DynamicButton from "@/components/common/DynamicButton";
 import { useDialog } from "@/components/hooks/DialogProvider";
 import { Task, UpdateTasAction } from "@/lib/redux/apiTypes";
 import { useUpdateTaskActionMutation } from "@/lib/redux/slices/workflowApis";
-import React, { useEffect } from "react";
+import React from "react";
 import toast from "react-hot-toast";
 import EditDialogContent from "./editDialogContent";
 

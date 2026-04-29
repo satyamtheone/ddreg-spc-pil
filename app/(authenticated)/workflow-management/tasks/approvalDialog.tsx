@@ -1,25 +1,23 @@
 import DynamicButton from "@/components/common/DynamicButton";
-import MiniChip from "@/components/common/miniChip";
 import { useDialog } from "@/components/hooks/DialogProvider";
 import { Task, UpdateTasAction } from "@/lib/redux/apiTypes";
 import { useUpdateTaskActionMutation } from "@/lib/redux/slices/workflowApis";
-import { formatedDate } from "@/lib/utilMethods";
-import { Clock10Icon } from "lucide-react";
 import React from "react";
 import toast from "react-hot-toast";
 import ReviewDialogContent from "./reviewDialogContent";
+import ModalProvider from "@/components/dialog/Dialog";
+import RejectTaskDialog from "./rejectTaskDialog";
 
 type ApprovalDialogProps = {
   task: Task;
 };
 
 const ApprovalDialog: React.FC<ApprovalDialogProps> = ({ task }) => {
-  const { closeDialog } = useDialog();
+  const { closeDialog, openDialog } = useDialog();
   const [updateTaskAction, { isLoading }] = useUpdateTaskActionMutation();
   const handleSubmit = async () => {
     const payload: UpdateTasAction = {
       action: "APPROVE",
-      comment: "hellow new task",
     };
     try {
       const res = await updateTaskAction({
@@ -33,6 +31,20 @@ const ApprovalDialog: React.FC<ApprovalDialogProps> = ({ task }) => {
       closeDialog();
     }
   };
+
+  const handleRejectTask = (task: Task) => {
+    closeDialog();
+    openDialog({
+      children: (
+        <ModalProvider
+          size="md:w-200 w-11/12"
+          title={`Move this task in Edit`}
+          children={<RejectTaskDialog task={task} />}
+        />
+      ),
+    });
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <ReviewDialogContent task={task} />
@@ -41,7 +53,7 @@ const ApprovalDialog: React.FC<ApprovalDialogProps> = ({ task }) => {
         <DynamicButton
           text="Send Back to Editing"
           variant="card"
-          onClick={closeDialog}
+          onClick={() => handleRejectTask(task)}
         />
         <DynamicButton
           text=" Approve this task"
