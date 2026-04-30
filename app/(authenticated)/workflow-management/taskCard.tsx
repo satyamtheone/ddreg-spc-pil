@@ -44,7 +44,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         )));
   return (
     <div
-      className={`bg-white rounded-lg  shadow-lg p-2 flex flex-col gap-2 animate-dialog-slide-down ${(task.status === "UNDER_EDITING" || task.status === "UNDER_REVIEW" || task.status === "UNDER_APPROVAL") && task.rejectionCount > 0 && "border border-red-600"}`}
+      className={`bg-white rounded-lg  shadow-lg p-2 flex flex-col gap-2 animate-dialog-slide-down ${(task.status === "UNDER_EDITING" || task.status === "UNDER_REVIEW" || task.status === "UNDER_APPROVAL") && task.rejectionCount > 0 && "border border-red-400"}`}
     >
       <div className="flex justify-between items-center">
         <div>
@@ -153,7 +153,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                 size="slim"
                 variant="card"
                 onClick={() =>
-                  goTo(`/document-editor?documentId=${task.documentVersionId}`)
+                  goTo(`/document-editor?documentId=${task}`)
                 }
               />
             </div>

@@ -1,21 +1,35 @@
 "use client";
-
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { useSearchParams } from "next/navigation";
 import type { DocxEditorRef } from "@eigenpal/docx-js-editor";
 import "@eigenpal/docx-js-editor/styles.css";
+import JSZip from "jszip";
+import { useGetDocumentBufferMutation } from "@/lib/redux/slices/documentApi";
 
-// 🔥 dynamic import (VERY IMPORTANT for Next.js)
 const DocxEditor = dynamic(
   () => import("@eigenpal/docx-js-editor").then((mod) => mod.DocxEditor),
   { ssr: false },
 );
 
-export default function DocxEditorWrapper() {
+export default function DocumentEditor() {
   const editorRef = useRef<DocxEditorRef>(null);
-  const [fileBuffer, setFileBuffer] = useState<ArrayBuffer | null>(null);
 
-  // 📥 Upload handler
+  const [fileBuffer, setFileBuffer] = useState<ArrayBuffer | null>(null);
+  const [originalBuffer, setOriginalBuffer] = useState<ArrayBuffer | null>(
+    null,
+  );
+  const [fileName, setFileName] = useState("document.docx");
+
+  const [getDocumentBuffer, { isLoading }] = useGetDocumentBufferMutation();
+  const searchParams = useSearchParams();
+
+  const loadDocx = async (buffer: ArrayBuffer, name?: string) => {
+    setOriginalBuffer(buffer);
+    setFileBuffer(buffer);
+    if (name) setFileName(name);
+  };
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -26,44 +40,95 @@ export default function DocxEditorWrapper() {
     }
 
     const buffer = await file.arrayBuffer();
-
-    // 🔥 set buffer → loads into editor
-    setFileBuffer(buffer);
+    // const normal = await normalizeDocx(buffer);
+    await loadDocx(buffer, file.name);
   };
 
-  // 💾 Save handler
-  const handleSave = async () => {
-    const buffer = await editorRef.current?.save();
+  const loadFromUrl = async (url: string) => {
+    try {
+      const blob = await getDocumentBuffer({
+        document_url: url,
+      }).unwrap();
 
-    if (buffer) {
-      // example: download locally
-      const blob = new Blob([buffer], {
-        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      });
+      const buffer = await blob.arrayBuffer();
 
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "edited.docx";
-      a.click();
-      URL.revokeObjectURL(url);
-
-      // OR send to API
-      // await fetch("/api/save", { method: "POST", body: buffer });
+      await loadDocx(buffer, "converted.docx");
+    } catch (err) {
+      console.error("Failed to load document:", err);
     }
   };
 
-  return (
-    <div className="p-4 space-y-4 text">
-      {/* Upload */}
-      <input
-        type="file"
-        accept=".docx"
-        onChange={handleFileUpload}
-        className="border p-2"
-      />
+  useEffect(() => {
+    const url = searchParams.get("documentBufferUrl");
 
-      {/* Save */}
+    if (url) {
+      loadFromUrl(url);
+    }
+  }, [searchParams]);
+
+  const handleSave = async () => {
+    const savedBuffer = await editorRef.current?.save();
+
+    if (!savedBuffer || !originalBuffer) return;
+
+    const originalZip = await JSZip.loadAsync(originalBuffer);
+    const newZip = await JSZip.loadAsync(savedBuffer);
+
+    // copy footers
+    const footerFiles = Object.keys(originalZip.files).filter((f) =>
+      f.startsWith("word/footer"),
+    );
+
+    for (const fileName of footerFiles) {
+      const content = await originalZip.file(fileName)?.async("uint8array");
+      if (content) newZip.file(fileName, content);
+    }
+
+    // copy relationships
+    const rels = await originalZip
+      .file("word/_rels/document.xml.rels")
+      ?.async("text");
+
+    if (rels) {
+      newZip.file("word/_rels/document.xml.rels", rels);
+    }
+
+    // ensure footer reference
+    const docFile = newZip.file("word/document.xml");
+
+    if (docFile) {
+      let docXml = await docFile.async("text");
+
+      if (!docXml.includes("footerReference")) {
+        docXml = docXml.replace(
+          /<w:sectPr[^>]*>/,
+          `$&<w:footerReference r:id="rId1" w:type="default"/>`,
+        );
+      }
+
+      newZip.file("word/document.xml", docXml);
+    }
+
+    const finalBuffer = await newZip.generateAsync({
+      type: "arraybuffer",
+    });
+
+    const blob = new Blob([finalBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="p-4 space-y-4">
+      <input type="file" accept=".docx" onChange={handleFileUpload} />
       <button
         onClick={handleSave}
         className="bg-blue-500 text-white px-4 py-2 rounded"
@@ -71,10 +136,14 @@ export default function DocxEditorWrapper() {
         Save DOCX
       </button>
 
-      {/* Editor */}
-      {fileBuffer && (
-        <div className="border rounded h-[80vh]">
-          <DocxEditor ref={editorRef} documentBuffer={fileBuffer} />
+      {fileBuffer && !isLoading && (
+        <div className="h-[80vh] border border-gray-300 rounded">
+          <DocxEditor
+            key={fileBuffer.byteLength}
+            ref={editorRef}
+            documentBuffer={fileBuffer}
+            
+          />
         </div>
       )}
     </div>

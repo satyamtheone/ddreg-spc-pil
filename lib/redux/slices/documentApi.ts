@@ -72,6 +72,15 @@ export const documentApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    getDocumentBuffer: builder.mutation<Blob, { document_url: string }>({
+      query: (body) => ({
+        url: "/convert/pdf2docx",
+        method: "POST",
+        body,
+        responseHandler: (response) => response.blob(), // ✅ correct
+      }),
+    }),
   }),
 });
 
@@ -81,4 +90,5 @@ export const {
   useGetDocumentQuery,
   useGetDocumentVersionsQuery,
   useGetSingleDocumentVersionsQuery,
+  useGetDocumentBufferMutation,
 } = documentApi;

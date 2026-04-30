@@ -98,7 +98,7 @@ const WorkFlowTaskColumns: React.FC<WorkFlowTaskColumnsProps> = ({
               )}
             </div>
 
-            <div className="flex flex-col gap-4 overflow-auto px-3">
+            <div className="flex flex-col gap-4 overflow-auto px-3 pb-6">
               {list.map((task) => (
                 <TaskCard key={task.id} task={task} />
               ))}

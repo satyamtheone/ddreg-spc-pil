@@ -5,6 +5,7 @@ import { GrUpdate } from "react-icons/gr";
 import { GrUserAdmin } from "react-icons/gr";
 import { Assignments, CountryType, Option, Task } from "./redux/apiTypes";
 import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";
+import JSZip from "jszip";
 
 export const crudOperationChipColors = ({
   variant,
@@ -207,4 +208,158 @@ export const isBG = (user: Assignments, task: Task) =>
     user.user.businessRoleId.permissions.some(
       (p) => p.type === "EDITOR" || p.type === "REVIEWER",
     ));
-    
+
+export async function modifyDocxStyles(buffer: ArrayBuffer) {
+  const zip = await JSZip.loadAsync(buffer);
+
+  const stylesFile = zip.file("word/styles.xml");
+
+  if (stylesFile) {
+    let stylesXml = await stylesFile.async("text");
+
+    // Underline Heading2
+    stylesXml = stylesXml.replace(
+      /(<w:style[^>]*w:styleId="Heading2"[\s\S]*?<w:rPr>)([\s\S]*?)(<\/w:rPr>)/,
+      `$1<w:u w:val="single"/>$3`,
+    );
+
+    stylesXml = stylesXml.replace(
+      /<w:style[^>]*w:styleId="Heading1Char"[\s\S]*?<\/w:style>/,
+      (styleBlock) => {
+        if (styleBlock.includes("<w:caps")) return styleBlock;
+
+        if (styleBlock.includes("<w:rPr>")) {
+          return styleBlock.replace(/<w:rPr>/, `<w:rPr><w:caps w:val="true"/>`);
+        }
+
+        return styleBlock.replace(
+          /<\/w:style>/,
+          `<w:rPr><w:caps w:val="true"/></w:rPr></w:style>`,
+        );
+      },
+    );
+
+    stylesXml = stylesXml.replace(
+      /(<w:style[^>]*w:styleId="Heading2"[\s\S]*?<w:pPr>)([\s\S]*?)(<\/w:pPr>)/,
+      `$1<w:spacing w:before="100" w:after="100"/>$3`,
+    );
+
+    zip.file("word/styles.xml", stylesXml);
+  }
+
+  const docFile = zip.file("word/document.xml");
+
+  if (docFile) {
+    let docXml = await docFile.async("text");
+
+    docXml = docXml.replace(/IBRANCE/g, "LOL");
+
+    // Replace or insert page margins
+    if (docXml.includes("<w:pgMar")) {
+      // replace existing margins
+      docXml = docXml.replace(
+        /<w:pgMar[^>]*\/>/,
+        `<w:pgMar w:top="144" w:right="144" w:bottom="144" w:left="144"/>`,
+      );
+    } else {
+      // insert inside sectPr
+      docXml = docXml.replace(
+        /(<w:sectPr[^>]*>)/,
+        `$1<w:pgMar w:top="144" w:right="144" w:bottom="144" w:left="144"/>`,
+      );
+    }
+
+    zip.file("word/document.xml", docXml);
+  }
+  return await zip.generateAsync({ type: "arraybuffer" });
+}
+
+export async function mergeFooter(
+  originalBuffer: ArrayBuffer,
+  savedBuffer: ArrayBuffer,
+) {
+  const originalZip = await JSZip.loadAsync(originalBuffer);
+  const newZip = await JSZip.loadAsync(savedBuffer);
+
+  // Copy all footer files
+  const footerFiles = Object.keys(originalZip.files).filter((f) =>
+    f.startsWith("word/footer"),
+  );
+
+  for (const fileName of footerFiles) {
+    const content = await originalZip.file(fileName)?.async("uint8array");
+    if (content) {
+      newZip.file(fileName, content);
+    }
+  }
+
+  // Copy relationships
+  const rels = await originalZip
+    .file("word/_rels/document.xml.rels")
+    ?.async("text");
+
+  if (rels) {
+    newZip.file("word/_rels/document.xml.rels", rels);
+  }
+
+  // Ensure footerReference exists
+  const docFile = newZip.file("word/document.xml");
+
+  if (docFile) {
+    let docXml = await docFile.async("text");
+
+    if (!docXml.includes("footerReference")) {
+      docXml = docXml.replace(
+        /<w:sectPr[^>]*>/,
+        `$&<w:footerReference r:id="rId1" w:type="default"/>`,
+      );
+    }
+
+    newZip.file("word/document.xml", docXml);
+  }
+
+  return await newZip.generateAsync({ type: "arraybuffer" });
+}
+
+export async function normalizeDocx(buffer: ArrayBuffer) {
+  const zip = await JSZip.loadAsync(buffer);
+
+  const docFile = zip.file("word/document.xml");
+  if (!docFile) return buffer;
+
+  let docXml = await docFile.async("text");
+
+  // =========================
+  // 1. FIX SPLIT TEXT (SAFE JOIN)
+  // =========================
+  // Only join text nodes, KEEP structure intact
+  docXml = docXml.replace(
+    /(<w:t[^>]*>[^<]*)<\/w:t>\s*<\/w:r>\s*<w:r[^>]*>\s*<w:t[^>]*>([^<]*)<\/w:t>/g,
+    (_, part1, part2) => {
+      return `<w:t>${part1.replace(/<w:t[^>]*>/, "")}${part2}</w:t></w:r><w:r><w:t>`;
+    },
+  );
+
+  // =========================
+  // 2. ENSURE xml:space PRESERVE
+  // =========================
+  docXml = docXml.replace(/<w:t>(.*?)<\/w:t>/g, (match, text) => {
+    if (/^\s|\s$/.test(text)) {
+      return `<w:t xml:space="preserve">${text}</w:t>`;
+    }
+    return match;
+  });
+
+  // =========================
+  // 3. REMOVE PROOF ERRORS
+  // =========================
+  docXml = docXml.replace(/<w:proofErr[^>]*\/>/g, "");
+
+  // =========================
+  // 4. DO NOT TOUCH w:r / w:p STRUCTURE
+  // =========================
+
+  zip.file("word/document.xml", docXml);
+
+  return await zip.generateAsync({ type: "arraybuffer" });
+}
