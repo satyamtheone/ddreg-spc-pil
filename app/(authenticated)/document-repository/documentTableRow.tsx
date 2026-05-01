@@ -38,6 +38,11 @@ type DocumentTableRowProps = {
   };
   index: number;
   isParent?: boolean;
+  reference?: {
+    referenceFile: {
+      key: string;
+    };
+  };
 };
 
 const DocumentTableRow: React.FC<DocumentTableRowProps> = ({

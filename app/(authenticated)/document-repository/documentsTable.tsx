@@ -13,7 +13,7 @@ const DocumentsTable: React.FC<DocumentsTableProps> = ({ documents }) => {
     <div className="flex flex-col gap-4 pt-4">
       {documents.map((document, index) => (
         <DocumentTableRow
-          document={document}
+          document={document as any}
           index={index}
           key={index}
           isParent

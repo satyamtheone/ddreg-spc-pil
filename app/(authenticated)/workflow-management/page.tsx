@@ -56,9 +56,8 @@ export default function WorkflowManagement() {
         />
 
         {!isUser && (
-          <div className="max-w-max">
+          <div className="min-w-max">
             <DynamicButton
-              size="slim"
               text="Create Task"
               variant="submit"
               className="px-2"

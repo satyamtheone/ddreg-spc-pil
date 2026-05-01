@@ -363,3 +363,159 @@ export async function normalizeDocx(buffer: ArrayBuffer) {
 
   return await zip.generateAsync({ type: "arraybuffer" });
 }
+
+const W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+
+function parseXml(xml: string) {
+  return new DOMParser().parseFromString(xml, "application/xml");
+}
+
+function serializeXml(doc: Document) {
+  return new XMLSerializer().serializeToString(doc);
+}
+
+function getOrCreate(parent: Element, tag: string) {
+  let el = parent.getElementsByTagNameNS(W_NS, tag)[0];
+  if (!el) {
+    el = parent.ownerDocument.createElementNS(W_NS, `w:${tag}`);
+    parent.appendChild(el);
+  }
+  return el;
+}
+
+export async function applyGlobalDocxFormatting(buffer: ArrayBuffer) {
+  const zip = await JSZip.loadAsync(buffer);
+
+  // =========================
+  // 1. document.xml
+  // =========================
+  const docFile = zip.file("word/document.xml");
+
+  if (docFile) {
+    const xml = await docFile.async("text");
+    const doc = parseXml(xml);
+
+    const sectPr = doc.getElementsByTagNameNS(W_NS, "sectPr")[0];
+
+    if (sectPr) {
+      // ✅ PAGE SIZE
+      let pgSz = sectPr.getElementsByTagNameNS(W_NS, "pgSz")[0];
+      if (!pgSz) {
+        pgSz = doc.createElementNS(W_NS, "w:pgSz");
+        sectPr.appendChild(pgSz);
+      }
+      pgSz.setAttribute("w:w", "12240");
+      pgSz.setAttribute("w:h", "15840");
+
+      // ✅ MARGINS (1 inch)
+      let pgMar = sectPr.getElementsByTagNameNS(W_NS, "pgMar")[0];
+      if (!pgMar) {
+        pgMar = doc.createElementNS(W_NS, "w:pgMar");
+        sectPr.appendChild(pgMar);
+      }
+
+      pgMar.setAttribute("w:top", "1440");
+      pgMar.setAttribute("w:right", "1440");
+      pgMar.setAttribute("w:bottom", "1440");
+      pgMar.setAttribute("w:left", "1440");
+    }
+
+    // ✅ PARAGRAPH FORMATTING (SAFE)
+    const paragraphs = doc.getElementsByTagNameNS(W_NS, "p");
+
+    for (let i = 0; i < paragraphs.length; i++) {
+      const p = paragraphs[i];
+
+      let pPr = p.getElementsByTagNameNS(W_NS, "pPr")[0];
+      if (!pPr) {
+        pPr = doc.createElementNS(W_NS, "w:pPr");
+        p.insertBefore(pPr, p.firstChild);
+      }
+
+      // Alignment (only if missing)
+      let jc = pPr.getElementsByTagNameNS(W_NS, "jc")[0];
+      if (!jc) {
+        jc = doc.createElementNS(W_NS, "w:jc");
+        jc.setAttribute("w:val", "left");
+        pPr.appendChild(jc);
+      }
+
+      // First line indent (only if missing)
+      let ind = pPr.getElementsByTagNameNS(W_NS, "ind")[0];
+      if (!ind) {
+        ind = doc.createElementNS(W_NS, "w:ind");
+        ind.setAttribute("w:firstLine", "567"); // ~1cm
+        pPr.appendChild(ind);
+      }
+    }
+
+    zip.file("word/document.xml", serializeXml(doc));
+  }
+
+  // =========================
+  // 2. styles.xml
+  // =========================
+  const stylesFile = zip.file("word/styles.xml");
+
+  if (stylesFile) {
+    const xml = await stylesFile.async("text");
+    const doc = parseXml(xml);
+
+    const docDefaults = doc.getElementsByTagNameNS(W_NS, "docDefaults")[0];
+
+    if (docDefaults) {
+      let rPrDefault = doc.getElementsByTagNameNS(W_NS, "rPrDefault")[0];
+
+      if (!rPrDefault) {
+        rPrDefault = doc.createElementNS(W_NS, "w:rPrDefault");
+        docDefaults.appendChild(rPrDefault);
+      }
+
+      let rPr = rPrDefault.getElementsByTagNameNS(W_NS, "rPr")[0];
+
+      if (!rPr) {
+        rPr = doc.createElementNS(W_NS, "w:rPr");
+        rPrDefault.appendChild(rPr);
+      }
+
+      // Font
+      let fonts = rPr.getElementsByTagNameNS(W_NS, "rFonts")[0];
+      if (!fonts) {
+        fonts = doc.createElementNS(W_NS, "w:rFonts");
+        rPr.appendChild(fonts);
+      }
+      fonts.setAttribute("w:ascii", "Calibri");
+      fonts.setAttribute("w:hAnsi", "Calibri");
+
+      // Size (11pt = 22 half-points)
+      let sz = rPr.getElementsByTagNameNS(W_NS, "sz")[0];
+      if (!sz) {
+        sz = doc.createElementNS(W_NS, "w:sz");
+        rPr.appendChild(sz);
+      }
+      sz.setAttribute("w:val", "22");
+    }
+
+    zip.file("word/styles.xml", serializeXml(doc));
+  }
+
+  // =========================
+  // 3. footer.xml (SAFE CREATE)
+  // =========================
+  if (!zip.file("word/footer1.xml")) {
+    const footerXml = `
+      <w:ftr xmlns:w="${W_NS}">
+        <w:p>
+          <w:pPr>
+            <w:jc w:val="right"/>
+          </w:pPr>
+          <w:r><w:t>Brand Name </w:t></w:r>
+          <w:fldSimple w:instr="PAGE"/>
+        </w:p>
+      </w:ftr>
+    `;
+    zip.file("word/footer1.xml", footerXml);
+  }
+
+  return await zip.generateAsync({ type: "arraybuffer" });
+}

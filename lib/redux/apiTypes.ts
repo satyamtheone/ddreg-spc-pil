@@ -493,6 +493,11 @@ export type RepoDocument = {
     status: string;
     updatedAt: string;
     contributors: [];
+    reference?: {
+      referenceFile: {
+        key: string;
+      };
+    };
   };
 };
 export type GetDocumentResponse = {

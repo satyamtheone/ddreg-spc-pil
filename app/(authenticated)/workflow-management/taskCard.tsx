@@ -16,12 +16,16 @@ import { useNavigation } from "@/components/hooks/useNavigation";
 import { BiSolidMessageSquareEdit } from "react-icons/bi";
 import { useAuth } from "@/lib/AuthProvider";
 import { IoIosWarning } from "react-icons/io";
+import { useGetSingleDocumentVersionsQuery } from "@/lib/redux/slices/documentApi";
 
 type TaskCardProps = {
   task: Task;
 };
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+  const { data: document } = useGetSingleDocumentVersionsQuery({
+    docId: task.documentVersionId,
+  });
   const { goTo } = useNavigation();
   const { openDialog } = useDialog();
   const { user } = useAuth();
@@ -36,7 +40,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
       )) ||
       (task.status === "UNDER_REVIEW" &&
         userAssignment.user.businessRoleId.permissions.some(
-          (p) => p.type === "REVIEWER",
+        (p) => p.type === "REVIEWER",
         )) ||
       (task.status === "UNDER_APPROVAL" &&
         userAssignment.user.businessRoleId.permissions.some(
@@ -122,7 +126,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           </p>
         </div>
       )}
-
       <div className="flex justify-between items-center mt-4">
         <div className=" -space-x-2 flex items-center ">
           {task.assignments.map((assignment) => (
@@ -153,7 +156,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                 size="slim"
                 variant="card"
                 onClick={() =>
-                  goTo(`/document-editor?documentId=${task}`)
+                  goTo(
+                    `/document-editor/fullpageEditor?documentBufferUrl=${document?.data.reference.referenceFile.key}`,
+                  )
                 }
               />
             </div>
