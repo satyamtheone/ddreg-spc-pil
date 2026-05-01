@@ -1,60 +1,111 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { variantStyles } from "./workFlowStatsCard";
 import TaskCard from "./taskCard";
 import { FaRegPlusSquare } from "react-icons/fa";
 import { useDrawer } from "@/components/hooks/DrawerProvider";
+import { Task } from "@/lib/redux/apiTypes";
+import TaskSkeleton from "@/components/common/skletons/taksSkeleton";
+import CreateTaskDrawer from "./tasks/createTaskDrawer";
+import { useAuth } from "@/lib/AuthProvider";
 
-type WorkFlowTaskColumnsProps = {};
+type WorkFlowTaskColumnsProps = {
+  tasks: Task[];
+  isLoading: boolean;
+};
 
-const WorkFlowTaskColumns: React.FC<WorkFlowTaskColumnsProps> = (props) => {
+const columns = [
+  {
+    title: "To Do",
+    status: "CREATED",
+    variant: "sky",
+    showAdd: true,
+  },
+  {
+    title: "In Edit",
+    status: "UNDER_EDITING",
+    variant: "indigo",
+  },
+  {
+    title: "In Review",
+    status: "UNDER_REVIEW",
+    variant: "amber",
+  },
+  {
+    title: "In Approve",
+    status: "UNDER_APPROVAL",
+    variant: "sky",
+  },
+  {
+    title: "Completed Tasks",
+    status: "APPROVED",
+    variant: "emerald",
+  },
+];
+
+const WorkFlowTaskColumns: React.FC<WorkFlowTaskColumnsProps> = ({
+  tasks,
+  isLoading,
+}) => {
+  const { isUser } = useAuth();
   const { openDrawer } = useDrawer();
+  const groupedTasks = useMemo(() => {
+    return tasks?.reduce(
+      (acc, task) => {
+        if (!acc[task.status]) acc[task.status] = [];
+        acc[task.status].push(task);
+        return acc;
+      },
+      {} as Record<string, Task[]>,
+    );
+  }, [tasks]);
+
+  if (isLoading) return <TaskSkeleton />;
+
   return (
-    <div className="grid grid-cols-4 gap-4">
-      <div
-        className={`${variantStyles["indigo"].bg} ${variantStyles["indigo"].border} border  p-4 rounded-md col-span-1`}
-      >
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center  gap-2">
-            <div className="text-xl font-semibold ">To Do</div>
-            <div className="border border-blue-500 bg-blue-500/15 text-sm flex items-center justify-center rounded-full h-7 w-7">
-              5
+    <div className="w-full h-full carousel space-x-4">
+      {columns.map((col) => {
+        const list = groupedTasks?.[col.status] || [];
+
+        return (
+          <div
+            key={col.status}
+            className={`${variantStyles[col.variant as keyof typeof variantStyles].bg} ${variantStyles[col.variant as keyof typeof variantStyles].border} border py-4 rounded-xl min-w-100 carousel-item scroll-smooth flex flex-col`}
+          >
+            <div className="flex items-center justify-between mb-3 px-3">
+              <div className="flex items-center gap-2">
+                <div className="text-xl font-semibold">{col.title}</div>
+                <div
+                  className={`border ${variantStyles[col.variant as keyof typeof variantStyles].bg} ${variantStyles[col.variant as keyof typeof variantStyles].border} text-sm flex items-center justify-center rounded-full h-7 w-7`}
+                >
+                  {list.length}
+                </div>
+              </div>
+
+              {!isUser && col.showAdd && (
+                <span
+                  onClick={() =>
+                    openDrawer({
+                      title: "Create Task",
+                      width: "w-2/3",
+                      children: <CreateTaskDrawer />,
+                    })
+                  }
+                  className="cursor-pointer custom-button-hover-classes"
+                >
+                  <FaRegPlusSquare size={20} />
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-4 overflow-auto px-3 pb-6">
+              {list.map((task) => (
+                <TaskCard key={task.id} task={task} />
+              ))}
             </div>
           </div>
-
-          <span
-            onClick={() =>
-              openDrawer({
-                title: "Add Task",
-                children: "add Task",
-              })
-            }
-            className="cursor-pointer"
-          >
-            <FaRegPlusSquare size={20} />
-          </span>
-        </div>
-        <div className="flex flex-col gap-4">
-          <TaskCard />
-          <TaskCard />
-          <TaskCard />
-        </div>
-      </div>
-      <div
-        className={`${variantStyles["emerald"].bg} ${variantStyles["emerald"].border} border p-4 rounded-md  col-span-1`}
-      >
-        <TaskCard />
-      </div>
-      <div
-        className={`${variantStyles["amber"].bg} ${variantStyles["amber"].border} border p-4 rounded-md  col-span-1`}
-      >
-        <TaskCard />
-      </div>
-      <div
-        className={`${variantStyles["sky"].bg} ${variantStyles["sky"].border} border p-4 rounded-md  col-span-1`}
-      >
-        <TaskCard />
-      </div>
+        );
+      })}
     </div>
   );
 };

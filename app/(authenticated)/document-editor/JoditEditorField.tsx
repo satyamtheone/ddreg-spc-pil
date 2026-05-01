@@ -1,14 +1,15 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useMemo, useRef } from "react";
+import { JSX, useMemo, useRef } from "react";
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 type Props = {
   value: string;
-  onChange: (content: string) => void;
+  onChange?: (content: string) => void;
+  title?: JSX.Element;
 };
 
-export default function JoditEditorField({ value, onChange }: Props) {
+export default function JoditEditorField({ value, onChange, title }: Props) {
   const toolbarRef = useRef<HTMLDivElement>(null);
 
   const config = useMemo(
@@ -54,6 +55,7 @@ export default function JoditEditorField({ value, onChange }: Props) {
         "hr",
         "image",
         "preview",
+        "pdf",
       ],
 
       controls: {
@@ -96,21 +98,20 @@ export default function JoditEditorField({ value, onChange }: Props) {
     [],
   );
   return (
-    <div className="space-y-4 spcBNS p-4 bg-white rounded-[10px]">
+    <div className=" relative space-y-4 bg-white rounded-[10px] h-full">
       <div
         ref={toolbarRef}
         className="sticky top-0 z-50 bg-white p-2 spcBNS rounded-[10px]"
       />
-      <div className="">
-        {/* <div className="col-span-2 spcBNS rounded-[10px]"></div> */}
-        <div className="overflow-hidden spcBNS rounded-[10px] col-span-8">
+      <div className="sticky  z-50 top-20">{title}</div>
+      <div className="space-y-4">
+        <div className="overflow-hidden spcBNS rounded-[10px] h-140">
           <JoditEditor
             value={value}
             config={config}
-            onBlur={(content: string) => onChange(content)}
+            onBlur={(content: string) => onChange && onChange(content)}
           />
         </div>
-        {/* <div className="col-span-2 spcBNS rounded-[10px]"></div> */}
       </div>
     </div>
   );

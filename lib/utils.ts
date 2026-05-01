@@ -1,19 +1,21 @@
 "use";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { AiOutlineFolderView, AiOutlineHome } from "react-icons/ai";
+import { AiOutlineHome } from "react-icons/ai";
 import { FiEdit } from "react-icons/fi";
-import { MdDashboard, MdOutlineDashboard, MdPreview } from "react-icons/md";
+import { MdDashboard, MdPreview } from "react-icons/md";
 import { BiGitCompare } from "react-icons/bi";
 import { TbTemplate } from "react-icons/tb";
-import { HiDocumentAdd, HiOutlineDocumentText } from "react-icons/hi";
+import { HiDocumentAdd } from "react-icons/hi";
 import { FiSettings } from "react-icons/fi";
 import { MdOutlineNotifications } from "react-icons/md";
 import { LuWorkflow } from "react-icons/lu";
-import { RiAiGenerateText, RiFolderOpenLine } from "react-icons/ri";
+import { RiAiGenerateText } from "react-icons/ri";
 import { FaFolderOpen, FaRegUser } from "react-icons/fa";
 import { MdHistory } from "react-icons/md";
 import { IconType } from "react-icons";
+import { IoCalendarOutline } from "react-icons/io5";
+import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";
 
 export type NavLinkItem = {
   icon: IconType;
@@ -319,6 +321,13 @@ export const NavData: NavLinkItem[] = [
     title: "Workflow Management",
     icon: LuWorkflow,
     link: "/workflow-management",
+    children: [
+      {
+        title: "Timesheet",
+        icon: IoCalendarOutline,
+        link: "/workflow-management/timesheet",
+      },
+    ],
   },
   {
     title: "Document Repository",
@@ -366,5 +375,20 @@ export const NavData: NavLinkItem[] = [
     title: "Account",
     icon: FaRegUser,
     link: "/account",
+  },
+];
+
+export const tasktypeOptions: FormikOptonType[] = [
+  {
+    label: "Major Task",
+    value: "MAJOR",
+  },
+  {
+    label: "Minor Task",
+    value: "MINOR",
+  },
+  {
+    label: "Hotfix Task",
+    value: "HOTFIX",
   },
 ];

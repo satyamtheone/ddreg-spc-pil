@@ -82,4 +82,21 @@ export const UploadTemplateFromSchema = () =>
       referenceFile: Yup.mixed().nullable().required(),
     });
 
-
+    export const CreatetaskFormSchema = () =>
+      Yup.object({
+        taskTitle: Yup.string().trim().required("Task Title is required"),
+        taskType: Yup.string().trim().required("Task Type is required"),
+        country: Yup.string().trim().required("Country is required"),
+        type: Yup.string().trim(),
+        selectedDocument: Yup.string()
+          .trim()
+          .required("Selected Document is required"),
+        selectedVersion: Yup.string()
+          .trim()
+          .required("Selected Version is required"),
+        description: Yup.string().trim().required("Description is required"),
+        dueDate: Yup.string().trim().required("Due Date is required"),
+        editorID: Yup.string().trim().required("Editor is required"),
+        reviewerID: Yup.string().trim().required("Reviewer is required"),
+        approverID: Yup.string().trim().required("Approver is required"),
+      });

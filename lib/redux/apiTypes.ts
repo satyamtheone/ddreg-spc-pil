@@ -470,7 +470,7 @@ export type RepoDocument = {
   country: string;
   regulatoryBody: string;
   createdAt: string;
-  createdById: {
+  createdBy: {
     id: string;
     fName: string;
     lName: string;
@@ -493,6 +493,11 @@ export type RepoDocument = {
     status: string;
     updatedAt: string;
     contributors: [];
+    reference?: {
+      referenceFile: {
+        key: string;
+      };
+    };
   };
 };
 export type GetDocumentResponse = {
@@ -507,4 +512,248 @@ export type GetDocumentResponse = {
       totalPages: number;
     };
   };
+};
+
+export type VersionDocument = {
+  id: string;
+  title: string;
+  strength: string;
+  dosageForm: string;
+  manufacturer: string;
+  shelfLife: string;
+  storagePrecautions: string;
+  mahAddress: string;
+  packagingDetails: string;
+  country: string;
+  regulatoryBody: string;
+  createdById: string;
+  createdAt: string;
+  __v: number;
+  currentVersionId: string;
+};
+
+export type VersionReference = {
+  id: string;
+  name: string;
+  version: string;
+  title: string;
+  description: string;
+  activeIngredient: string;
+  typeId: string;
+  sourceType: string;
+  referenceFile: {
+    fileName: string;
+    mimeType: string | null;
+    size: string | null;
+    key: string;
+  };
+  schemaMeta: {
+    type: string;
+    version: string;
+    productName: string | null;
+  };
+  createdAt: string;
+  updatedAt: string;
+  __v: 0;
+  type: VersionType;
+};
+
+export type VersionType = {
+  id: string;
+  countryId: string;
+  name: string;
+  __v: number;
+  createdAt: string;
+  country: {
+    id: string;
+    code: string;
+    __v: 0;
+    createdAt: string;
+    name: string;
+    regulatoryBody: string;
+  };
+};
+
+export type documentVersion = {
+  id: string;
+  documentId: string;
+  templateId: string;
+  referenceId: string;
+  versionNumber: string;
+  changeType: string;
+  description: string;
+  createdById: string;
+  isLocked: boolean;
+  parentVersionId: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  reference: VersionReference;
+  createdBy: {
+    id: string;
+    fName: string;
+    lName: string;
+    email: string;
+  };
+  task: string | null;
+  contributors: [];
+};
+
+export type DocumentVersions = {
+  document: VersionDocument;
+  versions: documentVersion[];
+  pagination: {
+    page: number;
+    pageSize: number;
+    total: number;
+    totalPages: number;
+  };
+};
+export type GetDocumentVersionsResponse = {
+  success: boolean;
+  message: string;
+  data: DocumentVersions;
+};
+
+export type SingleDocumentVersion = {
+  id: string;
+  documentId: string;
+  templateId: string;
+  referenceId: string;
+  versionNumber: string;
+  changeType: string;
+  description: string;
+  createdById: string;
+  isLocked: boolean;
+  parentVersionId: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  document: VersionDocument;
+  reference: VersionReference;
+  task: null;
+  contributors: [];
+  sections: Section[];
+};
+export type GetSingleDocumentVersionResponse = {
+  success: boolean;
+  message: string;
+  data: SingleDocumentVersion;
+};
+
+// ================================================================================= Workflow Types
+
+export type DocumentVersion = {
+  id: string;
+  documentId: string;
+  templateId: string;
+  referenceId: string;
+  versionNumber: string;
+  changeType: string;
+  description: string;
+  createdById: string;
+  isLocked: boolean;
+  parentVersionId: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  document: {
+    id: string;
+    title: string;
+    strength: string;
+    dosageForm: string;
+    manufacturer: string;
+    shelfLife: string;
+    storagePrecautions: string;
+    mahAddress: string;
+    packagingDetails: string;
+    country: string;
+    regulatoryBody: string;
+    createdById: string;
+    createdAt: string;
+    __v: number;
+    currentVersionId: string;
+  };
+};
+
+export type Assignments = {
+  id: string;
+  taskId: string;
+  userId: string;
+  permissionType: string;
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED";
+  totalDurationSec: number;
+  __v: 0;
+  createdAt: string;
+  updatedAt: string;
+  user: {
+    id: string;
+    fName: string;
+    lName: string;
+    email: string;
+    role: string;
+    businessRoleId: {
+      id: string;
+      name: string;
+      description: string;
+      permissions: [
+        {
+          id: string;
+          type: "EDITOR" | "REVIEWER" | "APPROVER";
+        },
+      ];
+    };
+  };
+  stageLogs: [];
+};
+
+export type Task = {
+  id: string;
+  documentVersionId: string;
+  title: string;
+  taskType: "MAJOR" | "MINOR" | "HOTFIX";
+  description: string;
+  dueDate: string;
+  status:
+    | "CREATED"
+    | "UNDER_EDITING"
+    | "UNDER_REVIEW"
+    | "UNDER_APPROVAL"
+    | "APPROVED";
+  rejectionCount: number;
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  documentVersion: DocumentVersion;
+  assignments: Assignments[];
+};
+export type GetTaskResponse = {
+  success: boolean;
+  message: string;
+  data: Task[];
+};
+
+export type CreateTaskRequest = {
+  title: string;
+  taskType: string;
+  description: string;
+  dueDate: string;
+  assignedUsers: {
+    editorIds: [string];
+    reviewerIds: [string];
+    approverIds: [string];
+  };
+};
+
+export type UpdateTasAction = {
+  action: "START" | "COMPLETE" | "APPROVE" | "REJECT";
+  comment?: string;
+};
+export type UpdateTasActionRequest = {
+  id: string;
+  body: UpdateTasAction;
 };

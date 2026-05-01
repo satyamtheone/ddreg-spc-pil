@@ -2,7 +2,8 @@ import {
   CreateDocumentRequest,
   CreateDocumentResponse,
   GetDocumentResponse,
-  GetTemplatesResponse,
+  GetDocumentVersionsResponse,
+  GetSingleDocumentVersionResponse,
   PreviewDocumentRequest,
   PreviewDocumentResponse,
 } from "../apiTypes";
@@ -12,12 +13,18 @@ export const documentApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDocument: builder.query<
       GetDocumentResponse,
-      { search?: string; country?: string; type?: string; page?: number }
+      {
+        search?: string;
+        country?: string;
+        type?: string;
+        page?: number;
+        pageSize?: number;
+      }
     >({
-      query: ({ search, country, type, page }) => ({
+      query: ({ search, country, type, page, pageSize }) => ({
         url: "/documents",
         method: "GET",
-        params: { search, country, type, page },
+        params: { search, country, type, page, pageSize },
       }),
       providesTags: ["getDocuments"],
     }),
@@ -44,6 +51,36 @@ export const documentApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["getDocuments"],
     }),
+
+    getDocumentVersions: builder.query<
+      GetDocumentVersionsResponse,
+      { docId: string; page?: number; pageSize?: number }
+    >({
+      query: ({ docId, page, pageSize = 10 }) => ({
+        url: `/documents/${docId}/versions?page=${page}&pageSize=${pageSize}`,
+        method: "GET",
+        params: { page, pageSize },
+      }),
+    }),
+
+    getSingleDocumentVersions: builder.query<
+      GetSingleDocumentVersionResponse,
+      { docId: string }
+    >({
+      query: ({ docId }) => ({
+        url: `/documents/${docId}/version`,
+        method: "GET",
+      }),
+    }),
+
+    getDocumentBuffer: builder.mutation<Blob, { document_url: string }>({
+      query: (body) => ({
+        url: "/convert/pdf2docx",
+        method: "POST",
+        body,
+        responseHandler: (response) => response.blob(), // ✅ correct
+      }),
+    }),
   }),
 });
 
@@ -51,4 +88,7 @@ export const {
   usePreviewDocumentMutation,
   useCreateDocumentMutation,
   useGetDocumentQuery,
+  useGetDocumentVersionsQuery,
+  useGetSingleDocumentVersionsQuery,
+  useGetDocumentBufferMutation,
 } = documentApi;

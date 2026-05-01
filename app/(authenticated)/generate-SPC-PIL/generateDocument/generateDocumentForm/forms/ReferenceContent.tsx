@@ -28,13 +28,13 @@ const ReferenceContent: React.FC<ReferenceContentProps> = ({
                 />
                 <ContentBoxes
                   title="Country / Authority"
-                  subTitle={data?.data?.type.country.name}
+                  subTitle={data?.data?.type?.country?.name}
                 />
-                {/* <ContentBoxes title="Authority" subTitle="MHRA" />
-            <ContentBoxes
-              title="Active Ingredient"
-              subTitle="Acetylsalicylic Acid"
-            /> */}
+                <ContentBoxes title="Authority" subTitle="MHRA" />
+                <ContentBoxes
+                  title="Active Ingredient"
+                  subTitle={data?.data?.activeIngredient}
+                />
                 <ContentBoxes
                   title="Document Type"
                   chipText={data?.data?.schemaMeta?.type}

@@ -120,7 +120,10 @@ body {
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
-
+.pdf-safe * {
+  color: #000 !important;
+  background-color: #fff !important;
+}
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -437,4 +440,29 @@ body {
 
 .jodit-toolbar-button {
   border-radius: 6px !important;
+}
+
+/* scroll bar styles============================================================================= */
+
+/* Slim scrollbar */
+.scrollbar-thin {
+  scrollbar-width: thin; /* Firefox */
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 2px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 116, 139, 0.5); /* gray-500 */
+  border-radius: 9999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 116, 139, 0.8);
 }
