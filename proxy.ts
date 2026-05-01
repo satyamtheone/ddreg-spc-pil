@@ -9,7 +9,7 @@ export function proxy(request: NextRequest) {
 
   /* ================= API PROXY ================= */
   if (pathname.startsWith("/api")) {
-    const baseUrl = process.env.NEXT_PUBLIC_PROD_URL;
+    const baseUrl = "https://labelling.ddregpharma.com/api";
     if (!baseUrl) {
       throw new Error("PROD_URL is not defined");
     }

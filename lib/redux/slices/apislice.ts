@@ -41,7 +41,7 @@ const deleteCookie = (name: string) => {
 /* ================= BASE QUERY ================= */
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: process.env.NEXT_PUBLIC_PROD_URL,
+  baseUrl: "https://labelling.ddregpharma.com/api",
   prepareHeaders: (headers) => {
     const token = getCookie("accessToken");
 
