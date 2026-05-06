@@ -23,6 +23,7 @@ export const crudOperationChipColors = ({
   switch (variant) {
     case "EDITOR":
     case "Archived":
+    case "CREATED":
       return {
         border: "border-cyan-500",
         hover: "hover:bg-cyan-500  hover:text-white",
@@ -40,6 +41,7 @@ export const crudOperationChipColors = ({
       };
     case "REVIEWER":
     case "In Process":
+    case "UNDER_REVIEW":
       return {
         border: "border-amber-400",
         hover: "hover:bg-amber-400 hover:text-white",
@@ -52,6 +54,7 @@ export const crudOperationChipColors = ({
     case "Latest":
     case "Approved":
     case "Authorised":
+    case "APPROVED":
       return {
         border: "border-green-500",
         hover: "hover:bg-green-500 hover:text-white",

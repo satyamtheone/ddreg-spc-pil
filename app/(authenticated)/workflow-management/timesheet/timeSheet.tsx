@@ -6,6 +6,7 @@ import { useGetTaskQuery } from "@/lib/redux/slices/workflowApis";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import { TimeSheetSearchParams } from "./page";
 import { formatedDate } from "@/lib/utilMethods";
+import MiniChip from "@/components/common/miniChip";
 
 type TimeSheetProps = {
   params: TimeSheetSearchParams;
@@ -50,7 +51,7 @@ const TimeSheet: React.FC<TimeSheetProps> = ({ params }) => {
               >
                 <div className="text-sm text-gray-400">Product & Task Name</div>
                 <div className="text-base capitalize">{task.title}</div>
-                <div className="text-black">{task.description}</div>
+                <MiniChip status={task.status} size="small" />
               </div>
             ))}
           </div>
