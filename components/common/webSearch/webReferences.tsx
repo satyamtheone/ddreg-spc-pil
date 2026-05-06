@@ -21,7 +21,7 @@ const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
               className="spcBNS px-4 py-2 w-full  capitalize text-zinc-800 bg-white rounded-[6px]  my-2"
               key={index}
             >
-              <div className="grid grid-cols-6 gap-x-2 items-center">
+              <div className="grid grid-cols-7 gap-x-2 items-start">
                 <div className="flex flex-col gap-1 ">
                   <div className="font-semibold text-gradient">Name</div>
                   <div className="text-sm">{reference.name}</div>
@@ -29,6 +29,18 @@ const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
                 <div className="flex flex-col gap-1 ">
                   <div className="font-semibold text-gradient">Region</div>
                   <div className="text-sm">{reference.region}</div>
+                </div>
+                <div className="flex flex-col gap-1 ">
+                  <div className="font-semibold text-gradient">Type</div>
+                  {reference.documents.length > 0 ? (
+                    <div className="text-sm flex flex-col gap-2">
+                      {reference.documents.map((t) => (
+                        <p>{t.type}</p>
+                      ))}
+                    </div>
+                  ) : (
+                    "N/A"
+                  )}
                 </div>
                 <div className="flex flex-col gap-1 ">
                   <div className="font-semibold text-gradient">

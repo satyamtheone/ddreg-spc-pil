@@ -1,6 +1,5 @@
 import { RepoDocument } from "@/lib/redux/apiTypes";
 import React from "react";
-import { useDownloadPdf } from "@/components/hooks/useDownloadPdf";
 import DocumentTableRow from "./documentTableRow";
 
 type DocumentsTableProps = {
@@ -8,7 +7,6 @@ type DocumentsTableProps = {
 };
 
 const DocumentsTable: React.FC<DocumentsTableProps> = ({ documents }) => {
-  const { download } = useDownloadPdf();
   return (
     <div className="flex flex-col gap-4 pt-4">
       {documents.map((document, index) => (

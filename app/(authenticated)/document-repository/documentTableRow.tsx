@@ -123,26 +123,26 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
             <div className="text-sm text-gray-400">Actions</div>
             <div className="flex gap-2 text-teal-900  flex-wrap">
               {!isParent && (
-                <div
-                  className="custom-button-hover-classes p-2 bg-white border"
-                  onClick={() => goTo(document?.referenceFile || "")}
-                >
-                  <IoMdCloudDownload size={20} />
+                <div>
+                  {/* <div
+                    className="custom-button-hover-classes p-2 bg-white border"
+                    onClick={() => goTo(document?.referenceFile || "")}
+                  >
+                    <IoMdCloudDownload size={20} />
+                  </div> */}
+                  <div
+                    className="custom-button-hover-classes p-2 bg-white border"
+                    onClick={() =>
+                      goTo(
+                        `/document-editor/fullpageEditor?documentBufferUrl=${document?.referenceFile}`,
+                      )
+                    }
+                  >
+                    <FaEdit size={20} />
+                  </div>
                 </div>
               )}
-              {/* <div className="custom-button-hover-classes p-2 bg-white border">
-                <FaEye size={20} />
-              </div> */}
-              <div
-                className="custom-button-hover-classes p-2 bg-white border"
-                onClick={() =>
-                  goTo(
-                    `/document-editor?documentId=${document?.currentVersionId || document?.id}`,
-                  )
-                }
-              >
-                <FaEdit size={20} />
-              </div>
+
               {isParent && (
                 <div
                   className="custom-button-hover-classes p-2 bg-gradient  border"
