@@ -60,9 +60,9 @@ export default function FullPageEditor({
 
       const buffer = await blob.arrayBuffer();
 
-      const formatted = await applyGlobalDocxFormatting(buffer);
+      // const formatted = await applyGlobalDocxFormatting(buffer);
 
-      await loadDocx(formatted, "converted.docx");
+      await loadDocx(buffer, "converted.docx");
       setLoading(false);
     } catch (err) {
       console.error("Failed to load document:", err);
