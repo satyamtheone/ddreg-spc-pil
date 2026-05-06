@@ -3,7 +3,13 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiRead } from "react-icons/ci";
 import { GrUpdate } from "react-icons/gr";
 import { GrUserAdmin } from "react-icons/gr";
-import { Assignments, CountryType, Option, Task } from "./redux/apiTypes";
+import {
+  Assignments,
+  CountryType,
+  GetTaskResponse,
+  Option,
+  Task,
+} from "./redux/apiTypes";
 import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";
 import JSZip from "jszip";
 
@@ -199,6 +205,27 @@ export const updateParam = (
       page: 1,
     };
   });
+};
+
+export const mapTasksToUserOptions = (
+  response?: GetTaskResponse,
+): FormikOptonType[] => {
+  if (!response?.data) return [];
+
+  const seen = new Set<string>();
+
+  return response.data.flatMap((task) =>
+    task.assignments.reduce<FormikOptonType[]>((acc, a) => {
+      if (!seen.has(a.user.id)) {
+        seen.add(a.user.id);
+        acc.push({
+          label: `${a.user.fName} ${a.user.lName}`,
+          value: a.user.id,
+        });
+      }
+      return acc;
+    }, []),
+  );
 };
 
 export const isBG = (user: Assignments, task: Task) =>

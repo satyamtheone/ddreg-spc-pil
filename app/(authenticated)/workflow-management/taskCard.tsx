@@ -23,9 +23,6 @@ type TaskCardProps = {
 };
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
-  const { data: document } = useGetSingleDocumentVersionsQuery({
-    docId: task.documentVersionId,
-  });
   const { goTo } = useNavigation();
   const { openDialog } = useDialog();
   const { user } = useAuth();
@@ -40,12 +37,21 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
       )) ||
       (task.status === "UNDER_REVIEW" &&
         userAssignment.user.businessRoleId.permissions.some(
-        (p) => p.type === "REVIEWER",
+          (p) => p.type === "REVIEWER",
         )) ||
       (task.status === "UNDER_APPROVAL" &&
         userAssignment.user.businessRoleId.permissions.some(
           (p) => p.type === "APPROVER",
         )));
+  const { data: document } = useGetSingleDocumentVersionsQuery(
+    {
+      docId: task.documentVersionId,
+    },
+    {
+      skip: !canDoAction,
+    },
+  );
+
   return (
     <div
       className={`bg-white rounded-lg  shadow-lg p-2 flex flex-col gap-2 animate-dialog-slide-down ${(task.status === "UNDER_EDITING" || task.status === "UNDER_REVIEW" || task.status === "UNDER_APPROVAL") && task.rejectionCount > 0 && "border border-red-400"}`}
@@ -129,8 +135,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
       <div className="flex justify-between items-center mt-4">
         <div className=" -space-x-2 flex items-center ">
           {task.assignments.map((assignment) => (
-            <div key={assignment.id} className="avatar ">
-              <div className="w-8 bg-gradient rounded-full flex justify-center text-sm font-semibold items-center">
+            <div
+              key={assignment.id}
+              className="avatar "
+              onClick={() =>
+                goTo(
+                  `workflow-management/timesheet?userId=${assignment?.user?.id}`,
+                )
+              }
+            >
+              <div className="w-8 hover:scale-3d hover:scale-105 transition-all cursor-pointer bg-gradient rounded-full flex justify-center text-sm font-semibold items-center">
                 <span>
                   {assignment?.user?.fName?.charAt(0)}
                   {assignment?.user?.lName?.charAt(0)}
