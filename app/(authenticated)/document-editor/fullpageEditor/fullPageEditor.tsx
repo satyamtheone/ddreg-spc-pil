@@ -1,179 +1,172 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-import type { DocxEditorRef } from "@eigenpal/docx-js-editor";
-import "@eigenpal/docx-js-editor/styles.css";
-import JSZip from "jszip";
+
+import { useEffect, useRef, useState } from "react";
+import Script from "next/script";
 import { useGetDocumentBufferMutation } from "@/lib/redux/slices/documentApi";
-import DynamicButton from "@/components/common/DynamicButton";
-import { applyGlobalDocxFormatting } from "@/lib/utilMethods";
 import { SpcSearchParamss } from "./page";
 
-const DocxEditor = dynamic(
-  () => import("@eigenpal/docx-js-editor").then((mod) => mod.DocxEditor),
-  { ssr: false },
-);
+declare global {
+  interface Window {
+    DocsAPI: any;
+  }
+}
 
-export default function FullPageEditor({
-  params,
-}: {
-  params: SpcSearchParamss;
-}) {
-  const editorRef = useRef<DocxEditorRef>(null);
+export default function EditorPage({ params }: { params: SpcSearchParamss }) {
+  const editorRef = useRef<any>(null);
 
-  const [loading, setLoading] = useState(false);
+  const [filePath, setFilePath] = useState("");
+  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
-  const [fileBuffer, setFileBuffer] = useState<ArrayBuffer | null>(null);
-  const [originalBuffer, setOriginalBuffer] = useState<ArrayBuffer | null>(
-    null,
-  );
-  const [fileName, setFileName] = useState("document.docx");
-
+  const [isEditorReady, setIsEditorReady] = useState(false);
   const [getDocumentBuffer, { isLoading }] = useGetDocumentBufferMutation();
 
-  const loadDocx = async (buffer: ArrayBuffer, name?: string) => {
-    setOriginalBuffer(buffer);
-    setFileBuffer(buffer);
-    if (name) setFileName(name);
-  };
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.name.endsWith(".docx")) {
-      alert("Please upload a .docx file");
-      return;
-    }
-
-    const buffer = await file.arrayBuffer();
-
-    await loadDocx(buffer, file.name);
-  };
-
-  const loadFromUrl = async (url: string) => {
-    setLoading(true);
-    try {
-      const blob = await getDocumentBuffer({
-        document_url: url,
-      }).unwrap();
-
-      const buffer = await blob.arrayBuffer();
-
-      const formatted = await applyGlobalDocxFormatting(buffer);
-
-      await loadDocx(formatted, "converted.docx");
-      setLoading(false);
-    } catch (err) {
-      console.error("Failed to load document:", err);
-      setLoading(false);
-    }
-  };
-
+  // Load converted document URL
   useEffect(() => {
-    const url = params.documentBufferUrl;
-    if (url) {
-      loadFromUrl(url);
-    }
-  }, [params]);
+    const loadDocument = async () => {
+      try {
+        const url = params.documentBufferUrl;
 
-  const handleSave = async () => {
-    const savedBuffer = await editorRef.current?.save();
+        if (!url) return;
 
-    if (!savedBuffer || !originalBuffer) return;
+        const res = await getDocumentBuffer({
+          document_url: url,
+          response_type: "url",
+        }).unwrap();
 
-    const originalZip = await JSZip.loadAsync(originalBuffer);
-    const newZip = await JSZip.loadAsync(savedBuffer);
+        setFilePath(res.url);
+      } catch (err) {
+        console.error("Failed to load document:", err);
+      }
+    };
 
-    // copy footers
-    const footerFiles = Object.keys(originalZip.files).filter((f) =>
-      f.startsWith("word/footer"),
-    );
+    loadDocument();
+  }, [params.documentBufferUrl, getDocumentBuffer]);
 
-    for (const fileName of footerFiles) {
-      const content = await originalZip.file(fileName)?.async("uint8array");
-      if (content) newZip.file(fileName, content);
-    }
+  // Initialize ONLYOFFICE editor
+  useEffect(() => {
+    const initEditor = async () => {
+      try {
+        if (!filePath || !isScriptLoaded || !window.DocsAPI) {
+          return;
+        }
 
-    // copy relationships
-    const rels = await originalZip
-      .file("word/_rels/document.xml.rels")
-      ?.async("text");
+        // destroy existing editor
+        if (editorRef.current?.destroyEditor) {
+          editorRef.current.destroyEditor();
 
-    if (rels) {
-      newZip.file("word/_rels/document.xml.rels", rels);
-    }
+          editorRef.current = null;
+        }
 
-    // ensure footer reference
-    const docFile = newZip.file("word/document.xml");
-
-    if (docFile) {
-      let docXml = await docFile.async("text");
-
-      if (!docXml.includes("footerReference")) {
-        docXml = docXml.replace(
-          /<w:sectPr[^>]*>/,
-          `$&<w:footerReference r:id="rId1" w:type="default"/>`,
+        const tokenRes = await fetch(
+          `https://labelling.ddregpharma.com/api/convert/token?file=${encodeURIComponent(
+            filePath,
+          )}`,
         );
+
+        const data = await tokenRes.json();
+
+        // stable key
+        const documentKey = filePath.replace(/[^a-zA-Z0-9]/g, "_");
+
+        editorRef.current = new window.DocsAPI.DocEditor("placeholder", {
+          document: {
+            fileType: "docx",
+            key: documentKey,
+            title: "document.docx",
+            url: `https://labelling.ddregpharma.com/api/cache/${encodeURIComponent(
+              filePath,
+            )}`,
+          },
+          documentType: "word",
+          editorConfig: {
+            mode: "edit",
+          },
+
+          events: {
+            onAppReady: () => {
+              console.log("ONLYOFFICE Ready");
+              setIsEditorReady(true);
+            },
+            onDownloadAs: function (event: any) {
+              try {
+                console.log("Download Event:", event);
+                const fileUrl = event?.data;
+                console.log("Download Event:----->", event?.data.url);
+                if (!fileUrl) {
+                  console.error("No file URL received");
+                  return;
+                }
+                window.open(fileUrl, "_blank");
+              } catch (err) {
+                console.error("Download failed:", err);
+              }
+            },
+          },
+
+          token: data.token,
+        });
+      } catch (err) {
+        console.error("ONLYOFFICE init error:", err);
+      }
+    };
+
+    initEditor();
+
+    return () => {
+      if (editorRef.current?.destroyEditor) {
+        editorRef.current.destroyEditor();
+
+        editorRef.current = null;
+      }
+    };
+  }, [filePath, isScriptLoaded]);
+
+  // Download edited document
+  const handleSave = () => {
+    try {
+      if (!editorRef.current) {
+        console.error("Editor not initialized");
+        return;
       }
 
-      newZip.file("word/document.xml", docXml);
+      editorRef.current.downloadAs("docx");
+    } catch (err) {
+      console.error("Save operation failed:", err);
     }
-
-    const finalBuffer = await newZip.generateAsync({
-      type: "arraybuffer",
-    });
-
-    const blob = new Blob([finalBuffer], {
-      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    });
-
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = fileName;
-    a.click();
-    URL.revokeObjectURL(url);
   };
 
   return (
-    <div className="space-y-4 h-full">
-      {isLoading || loading ? (
-        <div className="h-[78vh] spcBNS skeleton flex justify-center items-center">
-          Loading.....
-        </div>
-      ) : (
-        <>
-          <div className="flex items-center justify-end">
-            {/* <input
-              type="file"
-              accept=".docx"
-              className="file-input  file-input-lg file-input-ghost  bg-white spcBNS rounded-xl min-w-max"
-              onChange={handleFileUpload}
-            /> */}
-            <div>
-              <DynamicButton
-                text="Save DOCX"
-                variant="submit"
-                onClick={handleSave}
-              />
-            </div>
-          </div>
+    <div
+      style={{
+        height: "85vh",
+        width: "100%",
+      }}
+    >
+      <Script
+        src="https://spl.ddregpharma.com/web-apps/apps/api/documents/api.js"
+        strategy="afterInteractive"
+        onLoad={() => setIsScriptLoaded(true)}
+      />
 
-          {fileBuffer && (
-            <div className="h-[78vh] spcBNS rounded-4xl overflow-hidden">
-              <DocxEditor
-                key={fileBuffer.byteLength}
-                ref={editorRef}
-                documentBuffer={fileBuffer}
-                className="rounded-4xl"
-                style={{ borderRadius: "10px" }}
-              />
-            </div>
-          )}
-        </>
-      )}
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={handleSave}
+          disabled={!isEditorReady || isLoading}
+          className="px-4 py-2 rounded bg-black text-white disabled:opacity-50"
+        >
+          Save DOCX
+        </button>
+      </div>
+
+      <div
+        id="placeholder"
+        style={{
+          height: "90vh",
+          width: "100%",
+          borderRadius: "12px",
+          overflow: "hidden",
+        }}
+      />
     </div>
   );
 }

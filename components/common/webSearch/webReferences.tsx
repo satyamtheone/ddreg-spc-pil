@@ -34,8 +34,8 @@ const WebReferences: React.FC<WebReferencesProps> = ({ references }) => {
                   <div className="font-semibold text-gradient">Type</div>
                   {reference.documents.length > 0 ? (
                     <div className="text-sm flex flex-col gap-2">
-                      {reference.documents.map((t) => (
-                        <p>{t.type}</p>
+                      {reference.documents.map((t, index) => (
+                        <p key={index}>{t.type}</p>
                       ))}
                     </div>
                   ) : (
