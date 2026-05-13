@@ -1,9 +1,10 @@
 "use client";
-
 import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
 import { useGetDocumentBufferMutation } from "@/lib/redux/slices/documentApi";
 import { SpcSearchParamss } from "./page";
+import DynamicButton from "@/components/common/DynamicButton";
+import { FaFileWord } from "react-icons/fa6";
 
 declare global {
   interface Window {
@@ -42,11 +43,10 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
     loadDocument();
   }, [params.documentBufferUrl, getDocumentBuffer]);
 
-  // Initialize ONLYOFFICE editor
   useEffect(() => {
     const initEditor = async () => {
       try {
-        if (!filePath || !isScriptLoaded || !window.DocsAPI) {
+        if (!filePath || !window.DocsAPI) {
           return;
         }
 
@@ -84,19 +84,16 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
 
           events: {
             onAppReady: () => {
-              console.log("ONLYOFFICE Ready");
               setIsEditorReady(true);
             },
             onDownloadAs: function (event: any) {
               try {
-                console.log("Download Event:", event);
                 const fileUrl = event?.data;
-                console.log("Download Event:----->", event?.data.url);
                 if (!fileUrl) {
                   console.error("No file URL received");
                   return;
                 }
-                window.open(fileUrl, "_blank");
+                window.open(fileUrl.url, "_blank");
               } catch (err) {
                 console.error("Download failed:", err);
               }
@@ -119,10 +116,11 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
         editorRef.current = null;
       }
     };
-  }, [filePath, isScriptLoaded]);
+  }, [filePath, isScriptLoaded, params]);
 
   // Download edited document
   const handleSave = () => {
+    console.log("trigg");
     try {
       if (!editorRef.current) {
         console.error("Editor not initialized");
@@ -149,13 +147,17 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
       />
 
       <div className="flex justify-end mb-4">
-        <button
-          onClick={handleSave}
-          disabled={!isEditorReady || isLoading}
-          className="px-4 py-2 rounded bg-black text-white disabled:opacity-50"
-        >
-          Save DOCX
-        </button>
+        <div className="min-w-max">
+          <DynamicButton
+            variant="submit"
+            size="slim"
+            icon={<FaFileWord />}
+            text="dowbload Docx"
+            className="px-4 capitalize"
+            onClick={handleSave}
+            isSubmitting={!isEditorReady || isLoading}
+          />
+        </div>
       </div>
 
       <div
