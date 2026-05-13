@@ -5,6 +5,7 @@ import { useGetDocumentBufferMutation } from "@/lib/redux/slices/documentApi";
 import { SpcSearchParamss } from "./page";
 import DynamicButton from "@/components/common/DynamicButton";
 import { FaFileWord } from "react-icons/fa6";
+import { FaExpand, FaCompress } from "react-icons/fa";
 
 declare global {
   interface Window {
@@ -20,6 +21,20 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
 
   const [isEditorReady, setIsEditorReady] = useState(false);
   const [getDocumentBuffer, { isLoading }] = useGetDocumentBufferMutation();
+
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const toggleFullscreen = () => {
+    const elem = document.getElementById("editor-container");
+
+    if (!document.fullscreenElement) {
+      elem?.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
 
   // Load converted document URL
   useEffect(() => {
@@ -93,6 +108,7 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
                   console.error("No file URL received");
                   return;
                 }
+                console.log(fileUrl.url);
                 window.open(fileUrl.url, "_blank");
               } catch (err) {
                 console.error("Download failed:", err);
@@ -135,8 +151,9 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
 
   return (
     <div
+      id="editor-container"
       style={{
-        height: "85vh",
+        height: isFullscreen ? "100vh" : "85vh",
         width: "100%",
       }}
     >
@@ -146,16 +163,27 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
         onLoad={() => setIsScriptLoaded(true)}
       />
 
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end gap-3 mb-4">
         <div className="min-w-max">
           <DynamicButton
             variant="submit"
             size="slim"
             icon={<FaFileWord />}
-            text="download Docx"
+            text="Download Docx"
             className="px-4 capitalize"
             onClick={handleSave}
             isSubmitting={!isEditorReady || isLoading}
+          />
+        </div>
+
+        <div className="min-w-max">
+          <DynamicButton
+            variant="submit"
+            size="slim"
+            icon={isFullscreen ? <FaCompress /> : <FaExpand />}
+            text={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+            className="px-4 capitalize"
+            onClick={toggleFullscreen}
           />
         </div>
       </div>
@@ -163,7 +191,7 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
       <div
         id="placeholder"
         style={{
-          height: "90vh",
+          height: isFullscreen ? "calc(100vh - 80px)" : "90vh",
           width: "100%",
           borderRadius: "12px",
           overflow: "hidden",
