@@ -152,7 +152,7 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
             variant="submit"
             size="slim"
             icon={<FaFileWord />}
-            text="dowbload Docx"
+            text="download Docx"
             className="px-4 capitalize"
             onClick={handleSave}
             isSubmitting={!isEditorReady || isLoading}
