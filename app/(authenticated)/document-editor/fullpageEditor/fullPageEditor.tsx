@@ -93,6 +93,7 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
                   console.error("No file URL received");
                   return;
                 }
+                console.log(fileUrl.url);
                 window.open(fileUrl.url, "_blank");
               } catch (err) {
                 console.error("Download failed:", err);
@@ -152,7 +153,7 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
             variant="submit"
             size="slim"
             icon={<FaFileWord />}
-            text="dowbload Docx"
+            text="download Docx"
             className="px-4 capitalize"
             onClick={handleSave}
             isSubmitting={!isEditorReady || isLoading}
