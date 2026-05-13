@@ -109,7 +109,7 @@ export const SearchDocument: React.FC = () => {
               onSearchChange={(val) => update("search", val)}
               isLoading={referencesQuery.isLoading}
               isColorBackground
-              placeholder="Write the medicine name then Select the Country"
+              placeholder="Write the medicine name then Select the Region"
             />
           </div>
 
@@ -118,17 +118,14 @@ export const SearchDocument: React.FC = () => {
             <div className="flex gap-4 items-center">
               <div className="min-w-70">
                 <InputSkeleton />
-              </div>
-              <div className="min-w-70">
-                <InputSkeleton />
-              </div>
+              </div>{" "}
             </div>
           ) : (
             <div className="flex gap-4 items-center">
               <SelectForm
                 isGhost
                 name="country"
-                labelText="Country"
+                labelText="Region"
                 options={countryOptions}
                 value={params.region}
                 onChange={(val) => update("region", val as string)}

@@ -80,7 +80,7 @@ const SpcTableHeader: React.FC<SpcTableHeaderProps> = ({
           <div className="flex gap-4 items-center">
             <SelectForm
               name="mySelect"
-              labelText="Country"
+              labelText="Region"
               options={options}
               value={params.country}
               onChange={(val) => onCountryChange(val as string)}

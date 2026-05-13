@@ -3,7 +3,13 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiRead } from "react-icons/ci";
 import { GrUpdate } from "react-icons/gr";
 import { GrUserAdmin } from "react-icons/gr";
-import { Assignments, CountryType, Option, Task } from "./redux/apiTypes";
+import {
+  Assignments,
+  CountryType,
+  GetTaskResponse,
+  Option,
+  Task,
+} from "./redux/apiTypes";
 import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";
 import JSZip from "jszip";
 
@@ -17,6 +23,7 @@ export const crudOperationChipColors = ({
   switch (variant) {
     case "EDITOR":
     case "Archived":
+    case "CREATED":
       return {
         border: "border-cyan-500",
         hover: "hover:bg-cyan-500  hover:text-white",
@@ -34,6 +41,7 @@ export const crudOperationChipColors = ({
       };
     case "REVIEWER":
     case "In Process":
+    case "UNDER_REVIEW":
       return {
         border: "border-amber-400",
         hover: "hover:bg-amber-400 hover:text-white",
@@ -46,6 +54,7 @@ export const crudOperationChipColors = ({
     case "Latest":
     case "Approved":
     case "Authorised":
+    case "APPROVED":
       return {
         border: "border-green-500",
         hover: "hover:bg-green-500 hover:text-white",
@@ -199,6 +208,27 @@ export const updateParam = (
       page: 1,
     };
   });
+};
+
+export const mapTasksToUserOptions = (
+  response?: GetTaskResponse,
+): FormikOptonType[] => {
+  if (!response?.data) return [];
+
+  const seen = new Set<string>();
+
+  return response.data.flatMap((task) =>
+    task.assignments.reduce<FormikOptonType[]>((acc, a) => {
+      if (!seen.has(a.user.id)) {
+        seen.add(a.user.id);
+        acc.push({
+          label: `${a.user.fName} ${a.user.lName}`,
+          value: a.user.id,
+        });
+      }
+      return acc;
+    }, []),
+  );
 };
 
 export const isBG = (user: Assignments, task: Task) =>

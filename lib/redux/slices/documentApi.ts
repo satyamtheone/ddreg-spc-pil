@@ -73,12 +73,17 @@ export const documentApi = apiSlice.injectEndpoints({
       }),
     }),
 
-    getDocumentBuffer: builder.mutation<Blob, { document_url: string }>({
+    getDocumentBuffer: builder.mutation<
+      {
+        success: boolean;
+        url: string;
+      },
+      { document_url: string; response_type: "url" }
+    >({
       query: (body) => ({
         url: "/convert/pdf2docx",
         method: "POST",
         body,
-        responseHandler: (response) => response.blob(), // ✅ correct
       }),
     }),
   }),
