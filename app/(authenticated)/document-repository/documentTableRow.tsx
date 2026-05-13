@@ -2,14 +2,17 @@ import MiniChip from "@/components/common/miniChip";
 import { useGetDocumentVersionsQuery } from "@/lib/redux/slices/documentApi";
 import { formatedDate } from "@/lib/utilMethods";
 import React from "react";
-import { FaEdit, FaEye } from "react-icons/fa";
-import { IoMdCloudDownload } from "react-icons/io";
 import { MdKeyboardDoubleArrowDown } from "react-icons/md";
 import { MdKeyboardDoubleArrowUp } from "react-icons/md";
 
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { useNavigation } from "@/components/hooks/useNavigation";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
+import DynamicButton from "@/components/common/DynamicButton";
+import { PlusSquare } from "lucide-react";
+import CreateTaskDrawer from "../workflow-management/tasks/createTaskDrawer";
+import { useAuth } from "@/lib/AuthProvider";
+import { useDrawer } from "@/components/hooks/DrawerProvider";
 
 type DocumentTableRowProps = {
   document: {
@@ -17,11 +20,18 @@ type DocumentTableRowProps = {
     country: string;
     type?: string;
     currentVersion: {
+      versionId: string;
+      id: string;
       versionNumber: string;
       status: string;
       reference?: {
         schemaMeta?: {
           type?: string;
+        };
+        type?: {
+          country?: {
+            code?: string;
+          };
         };
       };
     };
@@ -51,6 +61,8 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
   isParent,
 }) => {
   const { goTo } = useNavigation();
+  const { isUser } = useAuth();
+  const { openDrawer } = useDrawer();
   const [showVersions, setShowVersions] = React.useState(false);
   const query = useGetDocumentVersionsQuery(
     { docId: document.id },
@@ -123,23 +135,39 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
             <div className="text-sm text-gray-400">Actions</div>
             <div className="flex gap-2 text-teal-900  flex-wrap">
               {!isParent && (
-                <div>
-                  {/* <div
-                    className="custom-button-hover-classes p-2 bg-white border"
-                    onClick={() => goTo(document?.referenceFile || "")}
-                  >
-                    <IoMdCloudDownload size={20} />
-                  </div> */}
-                  <div
-                    className="custom-button-hover-classes p-2 bg-white border"
-                    onClick={() =>
-                      goTo(
-                        `/document-editor/fullpageEditor?documentBufferUrl=${document?.referenceFile}`,
-                      )
-                    }
-                  >
-                    <FaEdit size={20} />
-                  </div>
+                <div className="flex gap-2 items-center">
+                  {!isUser && (
+                    <div className="min-w-max">
+                      <DynamicButton
+                        text="Create Task"
+                        variant="submit"
+                        className="px-2"
+                        size="slim"
+                        icon={<PlusSquare />}
+                        onClick={() =>
+                          openDrawer({
+                            title: "Create Task",
+                            width: "w-2/3",
+                            children: (
+                              <CreateTaskDrawer
+                                fromRepo
+                                countryCode={
+                                  document?.currentVersion.reference?.type
+                                    ?.country?.code
+                                }
+                                documentType={
+                                  document?.currentVersion?.reference
+                                    ?.schemaMeta?.type
+                                }
+                                documentId={document?.currentVersion?.id}
+                                versionId={document?.currentVersion?.versionId}
+                              />
+                            ),
+                          })
+                        }
+                      />
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -180,11 +208,18 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                         lName: version?.createdBy?.lName,
                       },
                       currentVersion: {
+                        id: document.id,
+                        versionId: version.id,
                         versionNumber: version?.versionNumber,
                         status: version?.status,
                         reference: {
                           schemaMeta: {
                             type: version?.reference?.schemaMeta?.type,
+                          },
+                          type: {
+                            country: {
+                              code: version.reference.type.country.code,
+                            },
                           },
                         },
                       },

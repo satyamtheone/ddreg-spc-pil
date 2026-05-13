@@ -25,7 +25,7 @@ type TaskCardProps = {
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   const { goTo } = useNavigation();
   const { openDialog } = useDialog();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   const userAssignment = task.assignments.find((a) => a.user.id === user?.id);
 
@@ -121,7 +121,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         </div>
         <div className="flex gap-2 items-center">
           <MiniChip status="SPC" />
-          <MiniChip status="Germany" />
+          <MiniChip status={task.documentVersion.document.country} />
         </div>
       </div>
       {task.rejectionCount > 0 && (
@@ -139,12 +139,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
               key={assignment.id}
               className="avatar "
               onClick={() =>
-                goTo(
-                  `workflow-management/timesheet?userId=${assignment?.user?.id}`,
-                )
+                isAdmin
+                  ? goTo(
+                      `workflow-management/timesheet?userId=${assignment?.user?.id}`,
+                    )
+                  : null
               }
             >
-              <div className="w-8 hover:scale-3d hover:scale-105 transition-all cursor-pointer bg-gradient rounded-full flex justify-center text-sm font-semibold items-center">
+              <div
+                className={`w-8 ${isAdmin && "hover:scale-3d hover:scale-130 transition-all hover:border-2  hover:border-teal-600 cursor-pointer"}   bg-gradient rounded-full flex justify-center text-sm font-semibold items-center`}
+              >
                 <span>
                   {assignment?.user?.fName?.charAt(0)}
                   {assignment?.user?.lName?.charAt(0)}

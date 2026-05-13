@@ -23,7 +23,6 @@ export const crudOperationChipColors = ({
   switch (variant) {
     case "EDITOR":
     case "Archived":
-    case "CREATED":
       return {
         border: "border-cyan-500",
         hover: "hover:bg-cyan-500  hover:text-white",
@@ -41,7 +40,6 @@ export const crudOperationChipColors = ({
       };
     case "REVIEWER":
     case "In Process":
-    case "UNDER_REVIEW":
       return {
         border: "border-amber-400",
         hover: "hover:bg-amber-400 hover:text-white",
@@ -54,7 +52,6 @@ export const crudOperationChipColors = ({
     case "Latest":
     case "Approved":
     case "Authorised":
-    case "APPROVED":
       return {
         border: "border-green-500",
         hover: "hover:bg-green-500 hover:text-white",
@@ -63,19 +60,39 @@ export const crudOperationChipColors = ({
         icon: <IoCreateOutline size={size} />,
       };
     case "MAJOR":
+    case "ASSIGNED":
       return {
         border: "bg-sky-600 text-white border-sky-600",
         hover: "hover:bg-sky-600 hover:text-white",
       };
     case "HOTFIX":
+    case "CREATED":
       return {
         border: "bg-teal-400 text-white border-teal-400",
         hover: "hover:bg-teal-400 hover:text-white",
       };
+    case "UNDER_APPROVAL":
+      return {
+        border: "bg-teal-600 text-white border-teal-600",
+        hover: "hover:bg-teal-600 hover:text-white",
+      };
     case "MINOR":
+    case "APPROVED":
       return {
         border: "bg-cyan-500 text-white border-cyan-500",
         hover: "hover:bg-cyan-500 hover:text-white",
+      };
+    case "UNDER_EDITING":
+      return {
+        border: "bg-cyan-700 text-white border-cyan-700",
+        hover: "hover:bg-cyan-700 hover:text-white",
+      };
+
+    case "IN_PROCESS":
+    case "UNDER_REVIEW":
+      return {
+        border: "bg-amber-600 text-white border-amber-600",
+        hover: "hover:bg-amber-600 hover:text-white",
       };
     default:
       return {
