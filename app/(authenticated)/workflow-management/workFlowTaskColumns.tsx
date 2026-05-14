@@ -8,10 +8,12 @@ import { Task } from "@/lib/redux/apiTypes";
 import TaskSkeleton from "@/components/common/skletons/taksSkeleton";
 import CreateTaskDrawer from "./tasks/createTaskDrawer";
 import { useAuth } from "@/lib/AuthProvider";
+import { WorkFlowSearchParams } from "./page";
 
 type WorkFlowTaskColumnsProps = {
   tasks: Task[];
   isLoading: boolean;
+  params:WorkFlowSearchParams
 };
 
 const columns = [
@@ -45,6 +47,7 @@ const columns = [
 
 const WorkFlowTaskColumns: React.FC<WorkFlowTaskColumnsProps> = ({
   tasks,
+  params,
   isLoading,
 }) => {
   const { isUser } = useAuth();
@@ -62,6 +65,7 @@ const WorkFlowTaskColumns: React.FC<WorkFlowTaskColumnsProps> = ({
 
   if (isLoading) return <TaskSkeleton />;
 
+                console.log("🚀 ~ WorkFlowTaskColumns ~ TaskCard:", TaskCard)
   return (
     <div className="w-full h-full carousel space-x-4">
       {columns.map((col) => {
@@ -100,7 +104,7 @@ const WorkFlowTaskColumns: React.FC<WorkFlowTaskColumnsProps> = ({
 
             <div className="flex flex-col gap-4 overflow-auto px-3 pb-6">
               {list.map((task) => (
-                <TaskCard key={task.id} task={task} />
+                <TaskCard key={task.id} task={task} params={params} />
               ))}
             </div>
           </div>

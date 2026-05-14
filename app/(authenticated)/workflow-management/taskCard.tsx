@@ -17,12 +17,14 @@ import { BiSolidMessageSquareEdit } from "react-icons/bi";
 import { useAuth } from "@/lib/AuthProvider";
 import { IoIosWarning } from "react-icons/io";
 import { useGetSingleDocumentVersionsQuery } from "@/lib/redux/slices/documentApi";
+import { WorkFlowSearchParams } from "./page";
 
 type TaskCardProps = {
   task: Task;
+  params: WorkFlowSearchParams;
 };
 
-const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
   const { goTo } = useNavigation();
   const { openDialog } = useDialog();
   const { user, isAdmin } = useAuth();
@@ -54,7 +56,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 
   return (
     <div
-      className={`bg-white rounded-lg  shadow-lg p-2 flex flex-col gap-2 animate-dialog-slide-down ${(task.status === "UNDER_EDITING" || task.status === "UNDER_REVIEW" || task.status === "UNDER_APPROVAL") && task.rejectionCount > 0 && "border border-red-400"}`}
+      className={`bg-white rounded-lg  shadow-lg p-2 flex flex-col gap-2 animate-dialog-slide-down ${(task.status === "UNDER_EDITING" || task.status === "UNDER_REVIEW" || task.status === "UNDER_APPROVAL") && task.rejectionCount > 0 && "border border-red-400"} ${task.documentVersionId === params.documentVersionId && "border-4 border-sky-400 shadow-sky-200 delay-200"}`}
     >
       <div className="flex justify-between items-center">
         <div>

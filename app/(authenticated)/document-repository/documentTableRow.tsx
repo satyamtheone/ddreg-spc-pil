@@ -13,6 +13,7 @@ import { PlusSquare } from "lucide-react";
 import CreateTaskDrawer from "../workflow-management/tasks/createTaskDrawer";
 import { useAuth } from "@/lib/AuthProvider";
 import { useDrawer } from "@/components/hooks/DrawerProvider";
+import { FaRegEye } from "react-icons/fa";
 
 type DocumentTableRowProps = {
   document: {
@@ -136,38 +137,56 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
             <div className="flex gap-2 text-teal-900  flex-wrap">
               {!isParent && (
                 <div className="flex gap-2 items-center">
-                  {!isUser && (
-                    <div className="min-w-max">
-                      <DynamicButton
-                        text="Create Task"
-                        variant="submit"
-                        className="px-2"
-                        size="slim"
-                        icon={<PlusSquare />}
-                        onClick={() =>
-                          openDrawer({
-                            title: "Create Task",
-                            width: "w-2/3",
-                            children: (
-                              <CreateTaskDrawer
-                                fromRepo
-                                countryCode={
-                                  document?.currentVersion.reference?.type
-                                    ?.country?.code
-                                }
-                                documentType={
-                                  document?.currentVersion?.reference
-                                    ?.schemaMeta?.type
-                                }
-                                documentId={document?.currentVersion?.id}
-                                versionId={document?.currentVersion?.versionId}
-                              />
-                            ),
-                          })
-                        }
-                      />
-                    </div>
-                  )}
+                  {!isUser &&
+                    (document?.currentVersion?.status === "CREATED" ? (
+                      <div className="min-w-max">
+                        <DynamicButton
+                          text="Create Task"
+                          variant="submit"
+                          className="px-2"
+                          size="slim"
+                          icon={<PlusSquare />}
+                          onClick={() =>
+                            openDrawer({
+                              title: "Create Task",
+                              width: "w-2/3",
+                              children: (
+                                <CreateTaskDrawer
+                                  fromRepo
+                                  countryCode={
+                                    document?.currentVersion.reference?.type
+                                      ?.country?.code
+                                  }
+                                  documentType={
+                                    document?.currentVersion?.reference
+                                      ?.schemaMeta?.type
+                                  }
+                                  documentId={document?.currentVersion?.id}
+                                  versionId={
+                                    document?.currentVersion?.versionId
+                                  }
+                                />
+                              ),
+                            })
+                          }
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <DynamicButton
+                          text="view Task"
+                          size="slim"
+                          variant="outline"
+                          className="px-2"
+                          icon={<FaRegEye />}
+                          onClick={() =>
+                            goTo(
+                              `/workflow-management?documentVersionId=${document.currentVersionId}`,
+                            )
+                          }
+                        />
+                      </div>
+                    ))}
                 </div>
               )}
 
@@ -223,6 +242,7 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                           },
                         },
                       },
+                      currentVersionId: version.id,
                       id: version?.id,
                       title: version?.reference?.title,
                       referenceFile: version?.reference?.referenceFile?.key,
