@@ -6,6 +6,7 @@ import { SpcSearchParamss } from "./page";
 import DynamicButton from "@/components/common/DynamicButton";
 import { FaFileWord } from "react-icons/fa6";
 import { FaExpand, FaCompress } from "react-icons/fa";
+import { useAuth } from "@/lib/AuthProvider";
 
 declare global {
   interface Window {
@@ -15,6 +16,8 @@ declare global {
 
 export default function EditorPage({ params }: { params: SpcSearchParamss }) {
   const editorRef = useRef<any>(null);
+  const { user } = useAuth();
+  console.log(user);
 
   const [filePath, setFilePath] = useState("");
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
@@ -95,6 +98,16 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
           documentType: "word",
           editorConfig: {
             mode: "edit",
+            user: {
+              id: user?.id,
+              name: `${user?.fName} ${user?.lName}`,
+            },
+            // customization: {
+            //   autosave: false,
+            //   forcesave: true,
+            //   comments: true,
+            //   trackChanges: true,
+            // },
           },
 
           events: {
@@ -132,7 +145,7 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
         editorRef.current = null;
       }
     };
-  }, [filePath, isScriptLoaded, params]);
+  }, [filePath, isScriptLoaded, params, user]);
 
   // Download edited document
   const handleSave = () => {
@@ -175,7 +188,6 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
             isSubmitting={!isEditorReady || isLoading}
           />
         </div>
-
         <div className="min-w-max">
           <DynamicButton
             variant="submit"

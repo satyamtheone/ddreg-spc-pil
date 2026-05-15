@@ -60,7 +60,7 @@ export default function calenderComponent({ renderCell }: Props) {
     <div className="w-full ">
       {/* Header */}
 
-      <div className="grid grid-cols-3 mb-4">
+      <div className="grid grid-cols-3 mb-4 animate-dialog-slide-down ">
         <div className="flex items-center gap-2 ">
           <FaRegCalendarAlt />
           <h2 className="text-lg font-semibold">{monthYear}</h2>
@@ -97,7 +97,7 @@ export default function calenderComponent({ renderCell }: Props) {
         </div>
       </div>
 
-      <div className="grid grid-cols-7 text-center font-semibold rounded-[10px]  rounded-b-none bg-gradient ">
+      <div className="grid grid-cols-7 text-center font-semibold rounded-[10px]  animate-dialog-slide-down  rounded-b-none bg-gradient ">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
           <div key={d} className="border-l  py-4 border-gray-300">
             {d}
@@ -106,7 +106,7 @@ export default function calenderComponent({ renderCell }: Props) {
       </div>
 
       {/* Calendar Grid */}
-      <div className={`grid grid-cols-7  shadow-md `}>
+      <div className={`grid grid-cols-7  shadow-md  `}>
         {days.map((date) => {
           const weekend = isWeekend(date);
           const todayCell = isToday(date);
@@ -114,7 +114,7 @@ export default function calenderComponent({ renderCell }: Props) {
           return (
             <div
               key={date.toISOString()}
-              className={`border min-h-28 p-1 flex flex-col 
+              className={`border min-h-28 p-1 flex flex-col  animate-dialog-slide-down
                 ${weekend ? "bg-white" : ""}
                 ${todayCell ? "border-blue-500 bg-blue-500/10 border-2" : ""}
               `}

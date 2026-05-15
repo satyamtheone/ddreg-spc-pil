@@ -54,6 +54,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
     },
   );
 
+  const canViewTimesheet = isAdmin && task.createdById === user?.id;
   return (
     <div
       className={`bg-white rounded-lg  shadow-lg p-2 flex flex-col gap-2 animate-dialog-slide-down ${(task.status === "UNDER_EDITING" || task.status === "UNDER_REVIEW" || task.status === "UNDER_APPROVAL") && task.rejectionCount > 0 && "border border-red-400"} ${task.documentVersionId === params.documentVersionId && "border-4 border-sky-400 shadow-sky-200 delay-200"}`}
@@ -141,7 +142,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
               key={assignment.id}
               className="avatar "
               onClick={() =>
-                isAdmin
+                canViewTimesheet
                   ? goTo(
                       `workflow-management/timesheet?userId=${assignment?.user?.id}`,
                     )
@@ -149,7 +150,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
               }
             >
               <div
-                className={`w-8 ${isAdmin && "hover:scale-3d hover:scale-130 transition-all hover:border-2  hover:border-teal-600 cursor-pointer"}   bg-gradient rounded-full flex justify-center text-sm font-semibold items-center`}
+                className={`w-8 ${canViewTimesheet && "hover:scale-3d hover:scale-130 transition-all hover:border-2  hover:border-teal-600 cursor-pointer"}   bg-gradient rounded-full flex justify-center text-sm font-semibold items-center`}
               >
                 <span>
                   {assignment?.user?.fName?.charAt(0)}

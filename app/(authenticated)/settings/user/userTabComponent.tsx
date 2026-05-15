@@ -11,6 +11,7 @@ import RoleTableSkeleton from "@/components/common/skletons/tableSkeleton";
 type UserTabComponentProps = {};
 
 const UserTabComponent: React.FC<UserTabComponentProps> = () => {
+
   const query = useGetUsersQuery();
   const data = useQueryErrorHandler(query, "Get Users");
 
