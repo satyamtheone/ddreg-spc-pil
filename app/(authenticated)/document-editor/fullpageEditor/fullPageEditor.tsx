@@ -1,12 +1,15 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
-import { useGetDocumentBufferMutation } from "@/lib/redux/slices/documentApi";
-import { SpcSearchParamss } from "./page";
+import {
+  useGetDocumentBufferMutation,
+  useSaveDocxToS3Mutation,
+} from "@/lib/redux/slices/documentApi";
 import DynamicButton from "@/components/common/DynamicButton";
-import { FaFileWord } from "react-icons/fa6";
-import { FaExpand, FaCompress } from "react-icons/fa";
+import { FaExpand, FaCompress, FaSave } from "react-icons/fa";
 import { useAuth } from "@/lib/AuthProvider";
+import { FullPageEditorSearchParams } from "./page";
+import toast from "react-hot-toast";
 
 declare global {
   interface Window {
@@ -14,10 +17,16 @@ declare global {
   }
 }
 
-export default function EditorPage({ params }: { params: SpcSearchParamss }) {
+export default function EditorPage({
+  params,
+}: {
+  params: FullPageEditorSearchParams;
+}) {
+  const [saveDocxToS3, { isLoading: isSaveLoading }] =
+    useSaveDocxToS3Mutation();
   const editorRef = useRef<any>(null);
   const { user } = useAuth();
-  console.log(user);
+  const amazonBucketname = process.env.NEXT_PUBLIC_AWS_URL;
 
   const [filePath, setFilePath] = useState("");
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
@@ -44,14 +53,15 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
     const loadDocument = async () => {
       try {
         const url = params.documentBufferUrl;
-
         if (!url) return;
-
+        if (url.endsWith(".docx")) {
+          setFilePath(`${amazonBucketname}/${url}`);
+          return;
+        }
         const res = await getDocumentBuffer({
           document_url: url,
           response_type: "url",
         }).unwrap();
-
         setFilePath(res.url);
       } catch (err) {
         console.error("Failed to load document:", err);
@@ -62,6 +72,9 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
   }, [params.documentBufferUrl, getDocumentBuffer]);
 
   useEffect(() => {
+    const isEditor = params.role === "EDITOR";
+    const isReviewer = params.role === "REVIEWER";
+    const isApprover = params.role === "APPROVER";
     const initEditor = async () => {
       try {
         if (!filePath || !window.DocsAPI) {
@@ -95,36 +108,50 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
               filePath,
             )}`,
           },
-          documentType: "word",
+
           editorConfig: {
-            mode: "edit",
+            mode: isApprover ? "view" : "edit",
+
             user: {
               id: user?.id,
               name: `${user?.fName} ${user?.lName}`,
             },
-            // customization: {
-            //   autosave: false,
-            //   forcesave: true,
-            //   comments: true,
-            //   trackChanges: true,
-            // },
+
+            customization: {
+              autosave: !isReviewer,
+              forcesave: true,
+              comments: true,
+              trackChanges: isReviewer,
+            },
+            
           },
 
           events: {
             onAppReady: () => {
               setIsEditorReady(true);
             },
-            onDownloadAs: function (event: any) {
+            onDownloadAs: async function (event: any) {
+              const versionId = params.versionId;
               try {
                 const fileUrl = event?.data;
-                if (!fileUrl) {
+
+                if (!fileUrl?.url) {
                   console.error("No file URL received");
                   return;
                 }
-                console.log(fileUrl.url);
-                window.open(fileUrl.url, "_blank");
+                saveDocxToS3({
+                  versionId: versionId || "",
+                  body: {
+                    description: "",
+                    document_url: fileUrl?.url,
+                    region: params?.region || "",
+                    type: params?.type || "",
+                  },
+                });
+                // toast.success("File is saved Successfully");
               } catch (err) {
                 console.error("Download failed:", err);
+                toast.error("Failed to save file");
               }
             },
           },
@@ -149,7 +176,6 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
 
   // Download edited document
   const handleSave = () => {
-    console.log("trigg");
     try {
       if (!editorRef.current) {
         console.error("Editor not initialized");
@@ -181,11 +207,11 @@ export default function EditorPage({ params }: { params: SpcSearchParamss }) {
           <DynamicButton
             variant="submit"
             size="slim"
-            icon={<FaFileWord />}
-            text="Download Docx"
+            icon={<FaSave />}
+            text="Save this File"
             className="px-4 capitalize"
             onClick={handleSave}
-            isSubmitting={!isEditorReady || isLoading}
+            isSubmitting={!isEditorReady || isLoading || isSaveLoading}
           />
         </div>
         <div className="min-w-max">

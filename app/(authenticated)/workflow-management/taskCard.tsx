@@ -28,7 +28,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
   const { goTo } = useNavigation();
   const { openDialog } = useDialog();
   const { user, isAdmin } = useAuth();
-
   const userAssignment = task.assignments.find((a) => a.user.id === user?.id);
 
   const canDoAction =
@@ -178,7 +177,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
                 variant="card"
                 onClick={() =>
                   goTo(
-                    `/document-editor/fullpageEditor?documentBufferUrl=${document?.data.reference.referenceFile.key}`,
+                    `/document-editor/fullpageEditor?documentBufferUrl=${task?.documentVersion?.documentVersionFile?.key || document?.data.reference.referenceFile.key}&type=${`SPC`}&region=${`Uk`}&versionId=${task.documentVersion.id}&role=${user?.businessRole?.permissions?.[0]?.type || ""}`,
                   )
                 }
               />

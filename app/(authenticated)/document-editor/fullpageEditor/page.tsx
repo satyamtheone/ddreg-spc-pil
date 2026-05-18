@@ -1,15 +1,17 @@
 import FullPageEditor from "./fullPageEditor";
 
-export type SpcSearchParamss = {
-  referenceId?: string;
-  documentId?: string;
+export type FullPageEditorSearchParams = {
   documentBufferUrl?: string;
+  versionId?: string;
+  type?: string;
+  region?: string;
+  role?: string;
 };
 
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<SpcSearchParamss>;
+  searchParams: Promise<FullPageEditorSearchParams>;
 }) {
   const params = await searchParams;
 

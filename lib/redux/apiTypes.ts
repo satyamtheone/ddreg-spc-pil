@@ -653,6 +653,9 @@ export type DocumentVersion = {
   versionNumber: string;
   changeType: string;
   description: string;
+  documentVersionFile: {
+    key: string;
+  };
   createdById: string;
   isLocked: boolean;
   parentVersionId: string;
@@ -756,4 +759,11 @@ export type UpdateTasAction = {
 export type UpdateTasActionRequest = {
   id: string;
   body: UpdateTasAction;
+};
+
+export type SaveDocxToS3Request = {
+  description: string;
+  type: string;
+  region: string;
+  document_url: string;
 };
