@@ -122,8 +122,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
           <div className="text-sm text-gray-400">{task?.description}</div>
         </div>
         <div className="flex gap-2 items-center">
-          <MiniChip status="SPC" />
-          <MiniChip status={task.documentVersion.document.country} />
+          <MiniChip
+            status={task?.documentVersion?.reference?.schemaMeta?.type}
+          />
+          <MiniChip status={task?.documentVersion?.document?.country} />
         </div>
       </div>
       {task.rejectionCount > 0 && (
@@ -177,7 +179,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
                 variant="card"
                 onClick={() =>
                   goTo(
-                    `/document-editor/fullpageEditor?documentBufferUrl=${task?.documentVersion?.documentVersionFile?.key || document?.data.reference.referenceFile.key}&type=${`SPC`}&region=${`Uk`}&versionId=${task.documentVersion.id}&role=${user?.businessRole?.permissions?.[0]?.type || ""}`,
+                    `/document-editor/fullpageEditor?documentBufferUrl=${task?.documentVersion?.documentVersionFile?.key || document?.data.reference.referenceFile.key}&type=${task?.documentVersion?.reference?.schemaMeta?.type}&region=${task?.documentVersion?.reference?.type?.country?.code}&versionId=${task.documentVersion.id}&role=${user?.businessRole?.permissions?.[0]?.type || ""}`,
                   )
                 }
               />

@@ -325,7 +325,15 @@ export type Reference = {
 export type GetReferencesResponse = {
   success: boolean;
   message: string;
-  data: Reference[];
+  data: {
+    data: Reference[];
+    pagination: {
+      page: number;
+      pageSize: number;
+      total: number;
+      totalPages: number;
+    };
+  };
 };
 
 export type ReferencesFromWeb = {
@@ -663,6 +671,19 @@ export type DocumentVersion = {
   createdAt: string;
   updatedAt: string;
   __v: number;
+  reference: {
+    schemaMeta: {
+      type: string;
+      version: string;
+      productName: string | null;
+    };
+    type: {
+      country: {
+        code: string;
+      };
+    };
+  };
+
   document: {
     id: string;
     title: string;

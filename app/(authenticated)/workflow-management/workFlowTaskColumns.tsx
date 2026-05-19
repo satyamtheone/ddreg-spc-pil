@@ -36,11 +36,6 @@ const columns = [
   {
     title: "In Approve",
     status: "UNDER_APPROVAL",
-    variant: "sky",
-  },
-  {
-    title: "Completed Tasks",
-    status: "APPROVED",
     variant: "emerald",
   },
 ];
@@ -65,7 +60,6 @@ const WorkFlowTaskColumns: React.FC<WorkFlowTaskColumnsProps> = ({
 
   if (isLoading) return <TaskSkeleton />;
 
-                console.log("🚀 ~ WorkFlowTaskColumns ~ TaskCard:", TaskCard)
   return (
     <div className="w-full h-full carousel space-x-4">
       {columns.map((col) => {
@@ -74,7 +68,7 @@ const WorkFlowTaskColumns: React.FC<WorkFlowTaskColumnsProps> = ({
         return (
           <div
             key={col.status}
-            className={`${variantStyles[col.variant as keyof typeof variantStyles].bg} ${variantStyles[col.variant as keyof typeof variantStyles].border} border py-4 rounded-xl min-w-100 carousel-item scroll-smooth flex flex-col`}
+            className={`${variantStyles[col.variant as keyof typeof variantStyles].bg} ${variantStyles[col.variant as keyof typeof variantStyles].border} border py-4 rounded-xl carousel-item scroll-smooth min-w-105 flex flex-col`}
           >
             <div className="flex items-center justify-between mb-3 px-3">
               <div className="flex items-center gap-2">

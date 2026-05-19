@@ -4,11 +4,11 @@ import { GetTaskResponse, Task } from "@/lib/redux/apiTypes";
 
 type WorkfloStatsProps = {
   tasks: Task[];
-};
+}; 
 
 const WorkfloStats: React.FC<WorkfloStatsProps> = ({ tasks }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
       <WorkFlowStatsCard
         variant="sky"
         title="Total Task"

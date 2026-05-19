@@ -53,12 +53,12 @@ export const templateApi = apiSlice.injectEndpoints({
 
     getReferences: builder.query<
       GetReferencesResponse,
-      { title?: string; country?: string; type?: string }
+      { title?: string; country?: string; type?: string; page?: number }
     >({
-      query: ({ title, country, type }) => ({
+      query: ({ title, country, type, page }) => ({
         url: `/references`,
         method: "GET",
-        params: { title, country, type },
+        params: { title, country, type, page },
       }),
       providesTags: ["getReferences"],
     }),

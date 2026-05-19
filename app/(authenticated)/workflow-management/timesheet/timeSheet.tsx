@@ -64,7 +64,7 @@ const TimeSheet: React.FC<TimeSheetProps> = ({ params }) => {
                 </span>
               </div>
               <div>
-                <div className="text-neutral-400 text-sm">name</div>
+                <div className="text-neutral-600 text-sm">name</div>
                 <div>
                   {user?.fName} {user?.lName}
                 </div>
@@ -72,15 +72,15 @@ const TimeSheet: React.FC<TimeSheetProps> = ({ params }) => {
             </div>
 
             <div className="border-r border-gray-300 pr-4">
-              <div className="text-neutral-400 text-sm">Role</div>
+              <div className="text-neutral-600 text-sm">Role</div>
               <MiniChip status={user?.businessRole?.name || ""} />
             </div>
             <div className="border-r border-gray-300 pr-4">
-              <div className="text-neutral-400 text-sm">Total Task</div>
+              <div className="text-neutral-600 text-sm">Total Task</div>
               <div>{userTaskList.length}</div>
             </div>
             <div className="">
-              <div className="text-neutral-400 text-sm">
+              <div className="text-neutral-600 text-sm">
                 Today Assigned Task as {new Date().toDateString()}
               </div>
               <div>{Todaytasks.length}</div>

@@ -13,6 +13,7 @@ import { useDebounce } from "@/components/hooks/useDebounce";
 import { Option } from "@/lib/redux/apiTypes";
 import { SpcSearchParams } from "../page";
 import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";
+import Pagination from "@/components/common/pagination";
 
 export type ViewType = "table" | "grid";
 export type ReferencesProps = {
@@ -35,6 +36,7 @@ const GenerateSpc: React.FC<ReferencesProps> = ({
     country: countryCode,
     type: templateType,
     title: "",
+    page: 1,
   });
   const { openDrawer } = useDrawer();
   const debouncedParams = useDebounce(params, 500);
@@ -62,7 +64,6 @@ const GenerateSpc: React.FC<ReferencesProps> = ({
 
   const handleViewChange = (viewType: ViewType) => {
     setView(viewType);
-    console.log("View:", viewType);
   };
 
   const handleAddReference = () => {
@@ -76,7 +77,7 @@ const GenerateSpc: React.FC<ReferencesProps> = ({
     <div className="flex flex-col gap-4 p-4 bg-white spcBNS rounded-[10px] min-h-120">
       <SpcTableHeader
         view={view}
-        totalDocuments={data?.data.length}
+        totalDocuments={data?.data?.data?.length}
         onFilterChange={handleFilterChange}
         onCountryChange={handleCountryChange}
         onViewChange={handleViewChange}
@@ -95,9 +96,17 @@ const GenerateSpc: React.FC<ReferencesProps> = ({
           <GridSkeleton />
         )
       ) : view === "table" ? (
-        <SPCTable references={data?.data || []} />
+        <SPCTable references={data?.data?.data || []} />
       ) : (
-        <SpcGrid references={data?.data || []} />
+        <SpcGrid references={data?.data?.data || []} />
+      )}
+      {data?.data && data?.data?.pagination?.pageSize > 1 && (
+        <Pagination
+          currentPage={Number(params.page)}
+          lengthPerPage={10}
+          totalDataLength={data?.data?.pagination?.total || 0}
+          updateCurrenPage={(val) => handleSetParams("page", String(val))}
+        />
       )}
     </div>
   );
