@@ -4,7 +4,6 @@ import { formatedDate } from "@/lib/utilMethods";
 import React from "react";
 import { MdKeyboardDoubleArrowDown } from "react-icons/md";
 import { MdKeyboardDoubleArrowUp } from "react-icons/md";
-
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { useNavigation } from "@/components/hooks/useNavigation";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
@@ -25,6 +24,9 @@ type DocumentTableRowProps = {
       id: string;
       versionNumber: string;
       status: string;
+      documentVersionFile: {
+        key: string;
+      };
       reference?: {
         schemaMeta?: {
           type?: string;
@@ -136,7 +138,7 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
             <div className="text-sm text-gray-400">Actions</div>
             <div className="flex gap-2 text-teal-900  flex-wrap">
               {!isParent && (
-                <div className="flex gap-2 items-center">
+                <div className="flex flex-col items-start gap-2 ">
                   {!isUser &&
                     (document?.currentVersion?.status === "CREATED" ? (
                       <div className="min-w-max">
@@ -176,7 +178,7 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                         <DynamicButton
                           text="view Task"
                           size="slim"
-                          variant="outline"
+                          variant="submit"
                           className="px-2"
                           icon={<FaRegEye />}
                           onClick={() =>
@@ -187,6 +189,22 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                         />
                       </div>
                     ))}
+                  {document?.currentVersion?.status !== "CREATED" && (
+                    <div>
+                      <DynamicButton
+                        text="view in Docx Editor"
+                        size="slim"
+                        variant="outline"
+                        className="px-2"
+                        icon={<FaRegEye />}
+                        onClick={() =>
+                          goTo(
+                            `document-editor/fullpageEditor?documentBufferUrl=${document?.currentVersion.documentVersionFile?.key}&versionId=${document.currentVersionId}&role=REVIEWER&type=${document?.currentVersion?.reference?.schemaMeta?.type || ""}&region=${document?.currentVersion?.reference?.type?.country?.code || ""}`,
+                          )
+                        }
+                      />
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -227,6 +245,9 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                         lName: version?.createdBy?.lName,
                       },
                       currentVersion: {
+                        documentVersionFile: {
+                          key: version?.documentVersionFile?.key,
+                        },
                         id: document.id,
                         versionId: version.id,
                         versionNumber: version?.versionNumber,

@@ -7,16 +7,15 @@ import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import { TimeSheetSearchParams } from "./page";
 import { formatedDate } from "@/lib/utilMethods";
 import MiniChip from "@/components/common/miniChip";
-import {
-  useGetUserByIdQuery,
-  useGetUsersQuery,
-} from "@/lib/redux/slices/userApi";
+import { useGetUsersQuery } from "@/lib/redux/slices/userApi";
+import { useNavigation } from "@/components/hooks/useNavigation";
 
 type TimeSheetProps = {
   params: TimeSheetSearchParams;
 };
 
 const TimeSheet: React.FC<TimeSheetProps> = ({ params }) => {
+  const { goTo } = useNavigation();
   const usersQuery = useGetUsersQuery();
   const users = useQueryErrorHandler(usersQuery, "Get All Users");
   const query = useGetTaskQuery();
@@ -98,13 +97,37 @@ const TimeSheet: React.FC<TimeSheetProps> = ({ params }) => {
               {tasks.map((task) => (
                 <div
                   key={task.id}
-                  className="text-xs rounded spcBNS bg-white p-4 animate-fadeIn"
+                  className="text-xs rounded-[10px] cursor-pointer hover:scale-3d hover:scale-110 hover:shadow-xl transition-all flex flex-col gap-1 border border-sky-500 bg-white p-1 animate-fadeIn"
+                  onClick={() =>
+                    goTo(
+                      `/workflow-management?documentVersionId=${task.task.documentVersionId}`,
+                    )
+                  }
                 >
-                  <div className="text-sm text-gray-400">
-                    Product & Task Name
+                  <div className="flex justify-between items-center">
+                    <div className="text-xs text-gray-400">Task Name</div>
+                    <MiniChip status={task.taskType} size="small" />
                   </div>
-                  <div className="text-base capitalize">{task.title}</div>
-                  <MiniChip status={task.status} size="small" />
+                  <div className="text-sm capitalize text-gradient">
+                    {task.title}
+                  </div>
+                  <div className="text-xs capitalize flex justify-between items-center gap-1">
+                    <span>Due Date</span>
+                    <span className="font-bold text-teal-500">
+                      {formatedDate(task.task.dueDate)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <MiniChip status={task.status} size="small" />
+                    <div className="text-xs capitalize flex items-center gap-1">
+                      <span>Rejected:</span>
+                      <span
+                        className={` ${task.task.rejectionCount > 0 ? "text-red-600 font-bold" : ""}`}
+                      >
+                        {task.task.rejectionCount}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>

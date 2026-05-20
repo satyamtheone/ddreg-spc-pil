@@ -590,6 +590,12 @@ export type documentVersion = {
   versionNumber: string;
   changeType: string;
   description: string;
+  documentVersionFile: {
+    fileName: string;
+    mimeType: string;
+    size: string;
+    key: string;
+  };
   createdById: string;
   isLocked: boolean;
   parentVersionId: string;

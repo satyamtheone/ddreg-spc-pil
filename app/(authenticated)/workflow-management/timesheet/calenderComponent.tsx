@@ -56,6 +56,14 @@ export default function calenderComponent({ renderCell }: Props) {
     })}`;
   };
 
+  const isDateInCurrentMonth = (date: Date) => {
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+    return (
+      date.getMonth() === currentMonth && date.getFullYear() === currentYear
+    );
+  };
+
   return (
     <div className="w-full ">
       {/* Header */}
@@ -69,17 +77,23 @@ export default function calenderComponent({ renderCell }: Props) {
           )}
         </div>
         <div className="flex gap-4 items-center justify-center">
-          <button onClick={prev} className="px-3 py-1 bg-gray-200 rounded">
+          <button
+            onClick={prev}
+            className="px-3 py-1 custom-button-hover-classes bg-gray-200 rounded"
+          >
             ◀
           </button>
-          <button onClick={next} className="px-3 py-1 bg-gray-200 rounded">
+          <button
+            onClick={next}
+            className="px-3 py-1 custom-button-hover-classes bg-gray-200 rounded"
+          >
             ▶
           </button>
         </div>
         <div className="flex justify-end items-center gap-2 ">
           <button
             onClick={() => setView("month")}
-            className={`px-3 py-1 rounded cursor-pointer ${
+            className={`px-3 py-1 rounded cursor-pointer custom-button-hover-classes ${
               view === "month" ? "bg-gradient text-white" : "bg-gray-200"
             }`}
           >
@@ -88,7 +102,7 @@ export default function calenderComponent({ renderCell }: Props) {
 
           <button
             onClick={() => setView("week")}
-            className={`px-3 py-1 rounded cursor-pointer ${
+            className={`px-3 py-1 rounded cursor-pointer custom-button-hover-classes ${
               view === "week" ? "bg-gradient text-white" : "bg-gray-200"
             }`}
           >
@@ -106,7 +120,7 @@ export default function calenderComponent({ renderCell }: Props) {
       </div>
 
       {/* Calendar Grid */}
-      <div className={`grid grid-cols-7  shadow-md  `}>
+      <div className={`grid grid-cols-7 gap-2 p-2 bg-white  shadow-md  `}>
         {days.map((date) => {
           const weekend = isWeekend(date);
           const todayCell = isToday(date);
@@ -114,24 +128,24 @@ export default function calenderComponent({ renderCell }: Props) {
           return (
             <div
               key={date.toISOString()}
-              className={`border min-h-28 p-1 flex flex-col  animate-dialog-slide-down
-                ${weekend ? "bg-white" : ""}
+              className={` spcBNS rounded-[10px] ${isDateInCurrentMonth(date) ? "bg-sky-600/20" : "bg-teal-500/20"} min-h-28 flex flex-col  animate-dialog-slide-down
+               
                 ${todayCell ? "border-blue-500 bg-blue-500/10 border-2" : ""}
               `}
             >
               <span
-                className={`text-xs
-                  ${todayCell ? "text-blue-600 font-bold" : "text-gray-500"}
+                className={`text-xs font-bold  m-2 flex justify-between items-center
+                  ${todayCell ? "text-blue-600 font-bold" : "text-gray-600"}
                 `}
               >
-                {date.getDate()}
+                <span>{date.getDate()}</span> {todayCell && <span>Today</span>}
               </span>
               {weekend && (
-                <div className="h-full w-full flex justify-center items-center text-gray-500 capitalize">
+                <div className=" flex justify-center h-full items-center">
                   week off
                 </div>
               )}
-              <div className="overflow-auto">{renderCell?.(date)}</div>
+              <div className="overflow-x-visible">{renderCell?.(date)}</div>
             </div>
           );
         })}

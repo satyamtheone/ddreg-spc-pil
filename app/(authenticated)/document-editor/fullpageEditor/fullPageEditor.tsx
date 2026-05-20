@@ -22,7 +22,8 @@ export default function EditorPage({
 }: {
   params: FullPageEditorSearchParams;
 }) {
-  const [saveDocxToS3, { isLoading: isSaveLoading }] =
+  console.log("Editor params:", params);
+  const [saveDocxToS3, { isLoading: isSaveLoading, error, status }] =
     useSaveDocxToS3Mutation();
   const editorRef = useRef<any>(null);
   const { user } = useAuth();
@@ -123,7 +124,6 @@ export default function EditorPage({
               comments: true,
               trackChanges: isReviewer,
             },
-            
           },
 
           events: {
@@ -134,12 +134,13 @@ export default function EditorPage({
               const versionId = params.versionId;
               try {
                 const fileUrl = event?.data;
+                console.log("File URL received from editor:", fileUrl);
 
                 if (!fileUrl?.url) {
                   console.error("No file URL received");
                   return;
                 }
-                saveDocxToS3({
+                await saveDocxToS3({
                   versionId: versionId || "",
                   body: {
                     description: "",
@@ -148,7 +149,7 @@ export default function EditorPage({
                     type: params?.type || "",
                   },
                 });
-                // toast.success("File is saved Successfully");
+                toast.success("File is saved Successfully");
               } catch (err) {
                 console.error("Download failed:", err);
                 toast.error("Failed to save file");
@@ -168,7 +169,6 @@ export default function EditorPage({
     return () => {
       if (editorRef.current?.destroyEditor) {
         editorRef.current.destroyEditor();
-
         editorRef.current = null;
       }
     };
@@ -191,10 +191,9 @@ export default function EditorPage({
   return (
     <div
       id="editor-container"
-      style={{
-        height: isFullscreen ? "100vh" : "85vh",
-        width: "100%",
-      }}
+      className={`w-full flex flex-col ${
+        isFullscreen ? "h-screen" : "h-[85vh]"
+      }`}
     >
       <Script
         src="https://spl.ddregpharma.com/web-apps/apps/api/documents/api.js"
@@ -202,18 +201,20 @@ export default function EditorPage({
         onLoad={() => setIsScriptLoaded(true)}
       />
 
-      <div className="flex justify-end gap-3 mb-4">
+      {/* Toolbar */}
+      <div className="flex justify-end gap-3 mb-3 shrink-0">
         <div className="min-w-max">
           <DynamicButton
             variant="submit"
             size="slim"
             icon={<FaSave />}
-            text="Save this File"
+            text={`${isSaveLoading ? "Saving..." : "Save this File"}`}
             className="px-4 capitalize"
             onClick={handleSave}
             isSubmitting={!isEditorReady || isLoading || isSaveLoading}
           />
         </div>
+
         <div className="min-w-max">
           <DynamicButton
             variant="submit"
@@ -226,14 +227,10 @@ export default function EditorPage({
         </div>
       </div>
 
+      {/* Editor */}
       <div
         id="placeholder"
-        style={{
-          height: isFullscreen ? "calc(100vh - 80px)" : "90vh",
-          width: "100%",
-          borderRadius: "12px",
-          overflow: "hidden",
-        }}
+        className="flex-1 w-full rounded-xl overflow-hidden"
       />
     </div>
   );

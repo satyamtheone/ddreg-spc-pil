@@ -38,7 +38,13 @@ const columns = [
     status: "UNDER_APPROVAL",
     variant: "emerald",
   },
+  {
+    title: "Completed",
+    status: "APPROVED",
+    variant: "sky",
+  },
 ];
+
 
 const WorkFlowTaskColumns: React.FC<WorkFlowTaskColumnsProps> = ({
   tasks,
