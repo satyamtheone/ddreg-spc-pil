@@ -794,3 +794,30 @@ export type SaveDocxToS3Request = {
   region: string;
   document_url: string;
 };
+export type SaveDocxToS3Response = {
+  success: boolean;
+  message: string;
+  data: {
+    id: string;
+    documentId: string;
+    templateId: string;
+    referenceId: string;
+    versionNumber: string;
+    changeType: string;
+    description: string;
+    documentVersionFile: {
+      fileName: string;
+      mimeType: string;
+      size: number;
+      key: string;
+    };
+    createdById: string;
+    isLocked: boolean;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: 0;
+    approvedAt: string | null;
+    sections: Section[];
+  };
+};

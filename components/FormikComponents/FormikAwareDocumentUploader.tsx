@@ -28,7 +28,7 @@ const FormikAwareDocumentUploader: React.FC<Props> = ({ name }) => {
     }
 
     if (field.value instanceof File) {
-      setFileName(field.value.name);
+      setFileName(field.value.name.replace(/\s/g, "_"));
 
       if (field.value.type.includes("pdf")) {
         setFileType("pdf");
@@ -44,6 +44,8 @@ const FormikAwareDocumentUploader: React.FC<Props> = ({ name }) => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [field.value]);
+
+  
 
   // simulate progress for large files
   const simulateProgress = () => {

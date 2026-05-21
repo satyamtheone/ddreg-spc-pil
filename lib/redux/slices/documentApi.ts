@@ -7,6 +7,7 @@ import {
   PreviewDocumentRequest,
   PreviewDocumentResponse,
   SaveDocxToS3Request,
+  SaveDocxToS3Response,
 } from "../apiTypes";
 import { apiSlice } from "./apislice";
 
@@ -72,6 +73,7 @@ export const documentApi = apiSlice.injectEndpoints({
         url: `/documents/${docId}/version`,
         method: "GET",
       }),
+      providesTags: ["getSingleDocumentVersion"],
     }),
 
     getDocumentBuffer: builder.mutation<
@@ -89,7 +91,7 @@ export const documentApi = apiSlice.injectEndpoints({
     }),
 
     saveDocxToS3: builder.mutation<
-      any,
+      SaveDocxToS3Response,
       { versionId: string; body: SaveDocxToS3Request }
     >({
       query: ({ versionId, body }) => ({

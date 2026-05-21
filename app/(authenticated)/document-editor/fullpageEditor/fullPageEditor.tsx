@@ -10,6 +10,7 @@ import { FaExpand, FaCompress, FaSave } from "react-icons/fa";
 import { useAuth } from "@/lib/AuthProvider";
 import { FullPageEditorSearchParams } from "./page";
 import toast from "react-hot-toast";
+import { useNavigation } from "@/components/hooks/useNavigation";
 
 declare global {
   interface Window {
@@ -22,19 +23,16 @@ export default function EditorPage({
 }: {
   params: FullPageEditorSearchParams;
 }) {
-  console.log("Editor params:", params);
   const [saveDocxToS3, { isLoading: isSaveLoading, error, status }] =
     useSaveDocxToS3Mutation();
   const editorRef = useRef<any>(null);
   const { user } = useAuth();
   const amazonBucketname = process.env.NEXT_PUBLIC_AWS_URL;
-
+  const { updateQueryParams } = useNavigation();
   const [filePath, setFilePath] = useState("");
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
-
   const [isEditorReady, setIsEditorReady] = useState(false);
   const [getDocumentBuffer, { isLoading }] = useGetDocumentBufferMutation();
-
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const toggleFullscreen = () => {
@@ -49,18 +47,21 @@ export default function EditorPage({
     }
   };
 
-  // Load converted document URL
   useEffect(() => {
     const loadDocument = async () => {
       try {
         const url = params.documentBufferUrl;
         if (!url) return;
-        if (url.endsWith(".docx")) {
+        const newUrl =
+          url.endsWith(".pdf") && !url.includes(`https:`)
+            ? `${amazonBucketname}/${url}`
+            : url;
+        if (newUrl.endsWith(".docx")) {
           setFilePath(`${amazonBucketname}/${url}`);
           return;
         }
         const res = await getDocumentBuffer({
-          document_url: url,
+          document_url: newUrl,
           response_type: "url",
         }).unwrap();
         setFilePath(res.url);
@@ -98,8 +99,7 @@ export default function EditorPage({
         const data = await tokenRes.json();
 
         // stable key
-        const documentKey = filePath.replace(/[^a-zA-Z0-9]/g, "_");
-
+        const documentKey = data?.payload?.document?.key;
         editorRef.current = new window.DocsAPI.DocEditor("placeholder", {
           document: {
             fileType: "docx",
@@ -112,17 +112,15 @@ export default function EditorPage({
 
           editorConfig: {
             mode: isApprover ? "view" : "edit",
-
             user: {
               id: user?.id,
               name: `${user?.fName} ${user?.lName}`,
             },
-
             customization: {
               autosave: !isReviewer,
               forcesave: true,
               comments: true,
-              trackChanges: isReviewer,
+              trackChanges: true,
             },
           },
 
@@ -134,13 +132,11 @@ export default function EditorPage({
               const versionId = params.versionId;
               try {
                 const fileUrl = event?.data;
-                console.log("File URL received from editor:", fileUrl);
-
                 if (!fileUrl?.url) {
                   console.error("No file URL received");
                   return;
                 }
-                await saveDocxToS3({
+                const res = await saveDocxToS3({
                   versionId: versionId || "",
                   body: {
                     description: "",
@@ -149,6 +145,11 @@ export default function EditorPage({
                     type: params?.type || "",
                   },
                 });
+                updateQueryParams({
+                  documentBufferUrl:
+                    res.data?.data?.documentVersionFile?.key || "",
+                });
+                window.location.reload();
                 toast.success("File is saved Successfully");
               } catch (err) {
                 console.error("Download failed:", err);
@@ -156,7 +157,6 @@ export default function EditorPage({
               }
             },
           },
-
           token: data.token,
         });
       } catch (err) {
@@ -181,7 +181,6 @@ export default function EditorPage({
         console.error("Editor not initialized");
         return;
       }
-
       editorRef.current.downloadAs("docx");
     } catch (err) {
       console.error("Save operation failed:", err);

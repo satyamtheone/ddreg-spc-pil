@@ -139,41 +139,43 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
             <div className="flex gap-2 text-teal-900  flex-wrap">
               {!isParent && (
                 <div className="flex flex-col items-start gap-2 ">
-                  {!isUser &&
-                    (document?.currentVersion?.status === "CREATED" ? (
-                      <div className="min-w-max">
-                        <DynamicButton
-                          text="Create Task"
-                          variant="submit"
-                          className="px-2"
-                          size="slim"
-                          icon={<PlusSquare />}
-                          onClick={() =>
-                            openDrawer({
-                              title: "Create Task",
-                              width: "w-2/3",
-                              children: (
-                                <CreateTaskDrawer
-                                  fromRepo
-                                  countryCode={
-                                    document?.currentVersion.reference?.type
-                                      ?.country?.code
-                                  }
-                                  documentType={
-                                    document?.currentVersion?.reference
-                                      ?.schemaMeta?.type
-                                  }
-                                  documentId={document?.currentVersion?.id}
-                                  versionId={
-                                    document?.currentVersion?.versionId
-                                  }
-                                />
-                              ),
-                            })
-                          }
-                        />
-                      </div>
-                    ) : (
+                  {!isUser && document?.currentVersion?.status === "CREATED" ? (
+                    <div className="min-w-max">
+                      <DynamicButton
+                        text="Create Task"
+                        variant="submit"
+                        className="px-2"
+                        size="slim"
+                        icon={<PlusSquare />}
+                        onClick={() =>
+                          openDrawer({
+                            title: "Create Task",
+                            width: "w-2/3",
+                            children: (
+                              <CreateTaskDrawer
+                                fromRepo
+                                countryCode={
+                                  document?.currentVersion.reference?.type
+                                    ?.country?.code
+                                }
+                                documentType={
+                                  document?.currentVersion?.reference
+                                    ?.schemaMeta?.type
+                                }
+                                documentId={document?.currentVersion?.id}
+                                versionId={document?.currentVersion?.versionId}
+                              />
+                            ),
+                          })
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <>No Action</>
+                  )}
+
+                  {document?.currentVersion?.status !== "CREATED" && (
+                    <div className="flex flex-col gap-1">
                       <div>
                         <DynamicButton
                           text="view Task"
@@ -188,21 +190,21 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                           }
                         />
                       </div>
-                    ))}
-                  {document?.currentVersion?.status !== "CREATED" && (
-                    <div>
-                      <DynamicButton
-                        text="view in Docx Editor"
-                        size="slim"
-                        variant="outline"
-                        className="px-2"
-                        icon={<FaRegEye />}
-                        onClick={() =>
-                          goTo(
-                            `document-editor/fullpageEditor?documentBufferUrl=${document?.currentVersion.documentVersionFile?.key}&versionId=${document.currentVersionId}&role=REVIEWER&type=${document?.currentVersion?.reference?.schemaMeta?.type || ""}&region=${document?.currentVersion?.reference?.type?.country?.code || ""}`,
-                          )
-                        }
-                      />
+
+                      <div>
+                        <DynamicButton
+                          text="view in Docx Editor"
+                          size="slim"
+                          variant="outline"
+                          className="px-2"
+                          icon={<FaRegEye />}
+                          onClick={() =>
+                            goTo(
+                              `document-editor/fullpageEditor?documentBufferUrl=${document?.currentVersion.documentVersionFile?.key}&versionId=${document.currentVersionId}&role=REVIEWER&type=${document?.currentVersion?.reference?.schemaMeta?.type || ""}&region=${document?.currentVersion?.reference?.type?.country?.code || ""}`,
+                            )
+                          }
+                        />
+                      </div>
                     </div>
                   )}
                 </div>
@@ -258,7 +260,7 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                           },
                           type: {
                             country: {
-                              code: version.reference.type.country.code,
+                              code: version?.reference?.type?.country?.code,
                             },
                           },
                         },

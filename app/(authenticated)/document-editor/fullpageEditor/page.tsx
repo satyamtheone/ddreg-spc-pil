@@ -14,6 +14,6 @@ export default async function Page({
   searchParams: Promise<FullPageEditorSearchParams>;
 }) {
   const params = await searchParams;
-
+  
   return <FullPageEditor params={params} />;
 }

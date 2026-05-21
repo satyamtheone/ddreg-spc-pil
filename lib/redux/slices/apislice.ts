@@ -142,6 +142,7 @@ export const apiSlice = createApi({
     "getReferences",
     "getDocuments",
     "getTasks",
+    "getSingleDocumentVersion",
   ],
   endpoints: () => ({}),
 });
