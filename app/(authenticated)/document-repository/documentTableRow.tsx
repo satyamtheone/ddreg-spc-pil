@@ -154,6 +154,7 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                             children: (
                               <CreateTaskDrawer
                                 fromRepo
+                                title={document?.title}
                                 countryCode={
                                   document?.currentVersion.reference?.type
                                     ?.country?.code
@@ -200,7 +201,7 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                           icon={<FaRegEye />}
                           onClick={() =>
                             goTo(
-                              `document-editor/fullpageEditor?documentBufferUrl=${document?.currentVersion.documentVersionFile?.key}&versionId=${document.currentVersionId}&role=REVIEWER&type=${document?.currentVersion?.reference?.schemaMeta?.type || ""}&region=${document?.currentVersion?.reference?.type?.country?.code || ""}`,
+                              `document-editor/fullpageEditor?documentBufferUrl=${document?.currentVersion.documentVersionFile?.key}&versionId=${document.currentVersionId}&role=VIEWER&type=${document?.currentVersion?.reference?.schemaMeta?.type || ""}&region=${document?.currentVersion?.reference?.type?.country?.code || ""}`,
                             )
                           }
                         />

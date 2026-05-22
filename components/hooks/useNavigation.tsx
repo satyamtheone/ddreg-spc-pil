@@ -1,25 +1,29 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export const useNavigation = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   return {
     goTo: (path: string) => router.push(path),
+
     replace: (path: string) => router.replace(path),
+
     back: () => router.back(),
+
     refresh: () => router.refresh(),
-    
+
     updateQueryParams: (paramsToUpdate: Record<string, string>) => {
-      const params = new URLSearchParams(searchParams.toString());
+      if (typeof window === "undefined") return;
+
+      const url = new URL(window.location.href);
 
       Object.entries(paramsToUpdate).forEach(([key, value]) => {
-        params.set(key, value);
+        url.searchParams.set(key, value);
       });
 
-      router.push(`?${params.toString()}`);
+      window.history.pushState({}, "", url.toString());
     },
   };
 };

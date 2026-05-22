@@ -67,7 +67,7 @@ const ViewReferenceDrawer: React.FC<ViewReferenceDrawerProps> = ({
         </>
       )}
       <div className="absolute left-0 right-0 flex gap-4 bg-white border-t border-gray-300  bottom-0">
-        <div className="w-full px-4 py-2">
+        {/* <div className="w-full px-4 py-2">
           <DynamicButton
             isSubmitting={query.isLoading || query.isFetching}
             icon={<FaEdit size={24} />}
@@ -79,7 +79,7 @@ const ViewReferenceDrawer: React.FC<ViewReferenceDrawerProps> = ({
               closeDrawer();
             }}
           />
-        </div>
+        </div> */}
         <div className="w-full px-4 py-2">
           <DynamicButton
             isSubmitting={query.isLoading || query.isFetching}

@@ -45,12 +45,14 @@ const CreateTaskDrawer = ({
   documentType,
   documentId,
   versionId,
+  title,
 }: {
   fromRepo?: boolean;
   countryCode?: string;
   documentType?: string;
   documentId?: string;
   versionId?: string;
+  title?: string;
 }) => {
   const countryQuery = useGetCountriesQuery();
   const countryQueryData = useQueryErrorHandler(countryQuery, "Get Countries");
@@ -129,7 +131,7 @@ const CreateTaskDrawer = ({
       ) : (
         <Formik<FormValues>
           initialValues={{
-            taskTitle: "",
+            taskTitle: title || "",
             taskType: "",
             country: countryCode || "",
             type: documentType || "",

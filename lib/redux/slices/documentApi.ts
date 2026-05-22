@@ -63,6 +63,7 @@ export const documentApi = apiSlice.injectEndpoints({
         method: "GET",
         params: { page, pageSize },
       }),
+      providesTags: ["getSingleDocumentVersion"],
     }),
 
     getSingleDocumentVersions: builder.query<
@@ -73,7 +74,6 @@ export const documentApi = apiSlice.injectEndpoints({
         url: `/documents/${docId}/version`,
         method: "GET",
       }),
-      providesTags: ["getSingleDocumentVersion"],
     }),
 
     getDocumentBuffer: builder.mutation<

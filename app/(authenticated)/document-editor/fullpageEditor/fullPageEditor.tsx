@@ -77,6 +77,7 @@ export default function EditorPage({
     const isEditor = params.role === "EDITOR";
     const isReviewer = params.role === "REVIEWER";
     const isApprover = params.role === "APPROVER";
+    const isOnlyView = params.role === "VIEWER";
     const initEditor = async () => {
       try {
         if (!filePath || !window.DocsAPI) {
@@ -111,7 +112,7 @@ export default function EditorPage({
           },
 
           editorConfig: {
-            mode: isApprover ? "view" : "edit",
+            mode: isApprover || isOnlyView ? "view" : "edit",
             user: {
               id: user?.id,
               name: `${user?.fName} ${user?.lName}`,
@@ -149,7 +150,6 @@ export default function EditorPage({
                   documentBufferUrl:
                     res.data?.data?.documentVersionFile?.key || "",
                 });
-                window.location.reload();
                 toast.success("File is saved Successfully");
               } catch (err) {
                 console.error("Download failed:", err);
@@ -202,17 +202,21 @@ export default function EditorPage({
 
       {/* Toolbar */}
       <div className="flex justify-end gap-3 mb-3 shrink-0">
-        <div className="min-w-max">
-          <DynamicButton
-            variant="submit"
-            size="slim"
-            icon={<FaSave />}
-            text={`${isSaveLoading ? "Saving..." : "Save this File"}`}
-            className="px-4 capitalize"
-            onClick={handleSave}
-            isSubmitting={!isEditorReady || isLoading || isSaveLoading}
-          />
-        </div>
+        {params.role === "VIEWER" ? (
+          ""
+        ) : (
+          <div className="min-w-max">
+            <DynamicButton
+              variant="submit"
+              size="slim"
+              icon={<FaSave />}
+              text={`${isSaveLoading ? "Saving..." : "Save this File"}`}
+              className="px-4 capitalize"
+              onClick={handleSave}
+              isSubmitting={!isEditorReady || isLoading || isSaveLoading}
+            />
+          </div>
+        )}
 
         <div className="min-w-max">
           <DynamicButton

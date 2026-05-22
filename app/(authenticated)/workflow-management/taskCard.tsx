@@ -143,7 +143,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
               key={assignment.id}
               className="avatar "
               onClick={() =>
-                canViewTimesheet
+                canViewTimesheet || assignment?.user.id === user?.id
                   ? goTo(
                       `workflow-management/timesheet?userId=${assignment?.user?.id}`,
                     )
@@ -151,7 +151,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
               }
             >
               <div
-                className={`w-8 ${canViewTimesheet && "hover:scale-3d hover:scale-130 transition-all hover:border-2  hover:border-teal-600 cursor-pointer"}   bg-gradient rounded-full flex justify-center text-sm font-semibold items-center`}
+                className={`w-8 ${(canViewTimesheet || assignment?.user.id === user?.id) && "hover:scale-3d hover:scale-130 transition-all hover:border-2  hover:border-teal-600 cursor-pointer scale-110 "}  bg-gradient  rounded-full flex justify-center text-sm font-semibold items-center`}
               >
                 <span>
                   {assignment?.user?.fName?.charAt(0)}

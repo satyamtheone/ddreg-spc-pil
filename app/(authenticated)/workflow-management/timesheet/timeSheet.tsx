@@ -9,14 +9,18 @@ import { formatedDate } from "@/lib/utilMethods";
 import MiniChip from "@/components/common/miniChip";
 import { useGetUsersQuery } from "@/lib/redux/slices/userApi";
 import { useNavigation } from "@/components/hooks/useNavigation";
+import { useAuth } from "@/lib/AuthProvider";
 
 type TimeSheetProps = {
   params: TimeSheetSearchParams;
 };
 
 const TimeSheet: React.FC<TimeSheetProps> = ({ params }) => {
+  const { user: me, isUser } = useAuth();
   const { goTo } = useNavigation();
-  const usersQuery = useGetUsersQuery();
+  const usersQuery = useGetUsersQuery(undefined, {
+    skip: isUser,
+  });
   const users = useQueryErrorHandler(usersQuery, "Get All Users");
   const query = useGetTaskQuery();
   const tasks = useQueryErrorHandler(query, "Get Tasks");
@@ -58,21 +62,25 @@ const TimeSheet: React.FC<TimeSheetProps> = ({ params }) => {
                 className={`w-10 h-10 bg-gradient rounded-full flex justify-center text-sm font-semibold items-center`}
               >
                 <span>
-                  {user?.fName?.charAt(0)}
-                  {user?.lName?.charAt(0)}
+                  {user?.fName?.charAt(0) || me?.fName?.charAt(0)}
+                  {user?.lName?.charAt(0) || me?.lName?.charAt(0)}
                 </span>
               </div>
               <div>
                 <div className="text-neutral-600 text-sm">name</div>
                 <div>
-                  {user?.fName} {user?.lName}
+                  {user?.fName || me?.fName} {user?.lName || me?.lName}
                 </div>
               </div>
             </div>
 
             <div className="border-r border-gray-300 pr-4">
               <div className="text-neutral-600 text-sm">Role</div>
-              <MiniChip status={user?.businessRole?.name || ""} />
+              <MiniChip
+                status={
+                  user?.businessRole?.name || me?.businessRole?.name || ""
+                }
+              />
             </div>
             <div className="border-r border-gray-300 pr-4">
               <div className="text-neutral-600 text-sm">Total Task</div>
