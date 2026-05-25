@@ -190,7 +190,7 @@ export default function EditorPage({
   return (
     <div
       id="editor-container"
-      className={`w-full flex flex-col ${
+      className={`w-full flex flex-col ${isFullscreen && "bg-white pt-2"} ${
         isFullscreen ? "h-screen" : "h-[85vh]"
       }`}
     >
@@ -201,7 +201,7 @@ export default function EditorPage({
       />
 
       {/* Toolbar */}
-      <div className="flex justify-end gap-3 mb-3 shrink-0">
+      <div className={`flex justify-end gap-3 mb-3 shrink-0  `}>
         {params.role === "VIEWER" ? (
           ""
         ) : (

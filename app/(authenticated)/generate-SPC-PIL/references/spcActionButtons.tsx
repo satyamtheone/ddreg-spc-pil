@@ -31,6 +31,7 @@ const { goTo } = useNavigation();
         variant="card"
         text="Preview"
         size="slim"
+        className="px-1"
         icon={<FaEye size={20} />}
         onClick={() =>
           openDrawer({
@@ -45,6 +46,7 @@ const { goTo } = useNavigation();
         variant="card"
         text="Select"
         size="slim"
+        className="px-1"
         icon={<IoMdCheckmarkCircleOutline size={20} />}
         iconPosition="right"
         onClick={() => handleNavigate()}

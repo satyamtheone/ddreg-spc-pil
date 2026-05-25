@@ -38,7 +38,7 @@ type SpcTableHeaderProps = {
 };
 
 const SpcTableHeader: React.FC<SpcTableHeaderProps> = ({
-  totalDocuments = 24,
+  totalDocuments = 0,
   onFilterChange,
   onCountryChange,
   onViewChange,

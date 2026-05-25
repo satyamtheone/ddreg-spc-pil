@@ -3,10 +3,8 @@ import React, { useState } from "react";
 import Templatecard from "./templateCard";
 import { useGetTemplatesQuery } from "@/lib/redux/slices/templateApi";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
-import { Option } from "@/lib/redux/apiTypes";
 import TemplateCardSkeleton from "@/components/common/skletons/templateCardSkeleton";
 import { useDebounce } from "@/components/hooks/useDebounce";
-
 import { FaBoxOpen } from "react-icons/fa";
 import FilterHead from "./filterHead";
 import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";

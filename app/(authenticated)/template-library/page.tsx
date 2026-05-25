@@ -3,13 +3,8 @@ import PageHeader from "@/components/common/pageHeader";
 import TemplateStatsCard from "./templateStatsCard";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { IoEarthSharp } from "react-icons/io5";
-import { IoIosTrendingUp } from "react-icons/io";
-import { FaRegStar } from "react-icons/fa";
 import Templates from "./templates";
-import DynamicButton from "@/components/common/DynamicButton";
-import { RiUploadCloud2Line } from "react-icons/ri";
 import { useDrawer } from "@/components/hooks/DrawerProvider";
-import UploadTemplateFrom from "./uploadTemplateFrom";
 import { useGetCountriesQuery } from "@/lib/redux/slices/templateApi";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import { getAllDocumentOptions, getCountryOptions } from "@/lib/utilMethods";
@@ -28,7 +23,7 @@ export default function TemplateLibrary() {
           title="Template Library"
           subTitle="Regulatory-compliant document templates"
         />
-        <div>
+        {/* <div>
           <DynamicButton
             variant="submit"
             text="Upload Template"
@@ -40,32 +35,20 @@ export default function TemplateLibrary() {
               })
             }
           />
-        </div>
+        </div> */}
       </div>
       <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-5 ">
         <TemplateStatsCard
-          bg="bg-sky-600"
+          bg="bg-sky-700"
           icon={<IoDocumentTextOutline size={34} />}
-          stats={8}
+          stats={data?.data?.length || 0}
           title="Total Templates"
         />
         <TemplateStatsCard
           bg="bg-cyan-600"
           icon={<IoEarthSharp size={34} />}
-          stats={4}
+          stats={options.length || 0}
           title="Countries"
-        />
-        <TemplateStatsCard
-          bg="bg-teal-500"
-          icon={<IoIosTrendingUp size={34} />}
-          stats={6}
-          title="Documents Created"
-        />
-        <TemplateStatsCard
-          bg="bg-sky-900"
-          icon={<FaRegStar size={34} />}
-          stats={4.5}
-          title="Avg Rating"
         />
       </div>
       <Templates

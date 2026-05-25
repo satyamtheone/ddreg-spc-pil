@@ -10,7 +10,6 @@ import GridSkeleton from "@/components/common/skletons/gridSkeleton";
 import { useDrawer } from "@/components/hooks/DrawerProvider";
 import AddRefenceForm from "./addRefenceForm";
 import { useDebounce } from "@/components/hooks/useDebounce";
-import { Option } from "@/lib/redux/apiTypes";
 import { SpcSearchParams } from "../page";
 import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";
 import Pagination from "@/components/common/pagination";
@@ -77,7 +76,7 @@ const GenerateSpc: React.FC<ReferencesProps> = ({
     <div className="flex flex-col gap-4 p-4 bg-white spcBNS rounded-[10px] min-h-120">
       <SpcTableHeader
         view={view}
-        totalDocuments={data?.data?.data?.length}
+        totalDocuments={data?.data?.pagination?.total}
         onFilterChange={handleFilterChange}
         onCountryChange={handleCountryChange}
         onViewChange={handleViewChange}
