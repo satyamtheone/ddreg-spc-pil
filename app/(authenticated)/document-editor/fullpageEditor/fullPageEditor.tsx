@@ -78,6 +78,7 @@ export default function EditorPage({
     const isReviewer = params.role === "REVIEWER";
     const isApprover = params.role === "APPROVER";
     const isOnlyView = params.role === "VIEWER";
+    
     const initEditor = async () => {
       try {
         if (!filePath || !window.DocsAPI) {

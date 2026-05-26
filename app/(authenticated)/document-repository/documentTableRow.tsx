@@ -64,7 +64,7 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
   isParent,
 }) => {
   const { goTo } = useNavigation();
-  const { isUser } = useAuth();
+  const { isUser, isAdmin } = useAuth();
   const { openDrawer } = useDrawer();
   const [showVersions, setShowVersions] = React.useState(false);
   const query = useGetDocumentVersionsQuery(
@@ -139,41 +139,42 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
             <div className="flex gap-2 text-teal-900  flex-wrap">
               {!isParent && (
                 <div className="flex flex-col items-start gap-2 ">
-                  {!isUser && document?.currentVersion?.status === "CREATED" ? (
-                    <div className="min-w-max">
-                      <DynamicButton
-                        text="Create Task"
-                        variant="submit"
-                        className="px-2"
-                        size="slim"
-                        icon={<PlusSquare />}
-                        onClick={() =>
-                          openDrawer({
-                            title: "Create Task",
-                            width: "w-2/3",
-                            children: (
-                              <CreateTaskDrawer
-                                fromRepo
-                                title={document?.title}
-                                countryCode={
-                                  document?.currentVersion.reference?.type
-                                    ?.country?.code
-                                }
-                                documentType={
-                                  document?.currentVersion?.reference
-                                    ?.schemaMeta?.type
-                                }
-                                documentId={document?.currentVersion?.id}
-                                versionId={document?.currentVersion?.versionId}
-                              />
-                            ),
-                          })
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <>No Action</>
-                  )}
+                  {isAdmin &&
+                    document?.currentVersion?.status === "CREATED" && (
+                      <div className="min-w-max">
+                        <DynamicButton
+                          text="Create Task"
+                          variant="submit"
+                          className="px-2"
+                          size="slim"
+                          icon={<PlusSquare />}
+                          onClick={() =>
+                            openDrawer({
+                              title: "Create Task",
+                              width: "w-2/3",
+                              children: (
+                                <CreateTaskDrawer
+                                  fromRepo
+                                  title={document?.title}
+                                  countryCode={
+                                    document?.currentVersion.reference?.type
+                                      ?.country?.code
+                                  }
+                                  documentType={
+                                    document?.currentVersion?.reference
+                                      ?.schemaMeta?.type
+                                  }
+                                  documentId={document?.currentVersion?.id}
+                                  versionId={
+                                    document?.currentVersion?.versionId
+                                  }
+                                />
+                              ),
+                            })
+                          }
+                        />
+                      </div>
+                    )}
 
                   {document?.currentVersion?.status !== "CREATED" && (
                     <div className="flex flex-col gap-1">
@@ -207,6 +208,10 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                         />
                       </div>
                     </div>
+                  )}
+
+                  {isUser && document?.currentVersion?.status === "CREATED" && (
+                    <>No Action</>
                   )}
                 </div>
               )}

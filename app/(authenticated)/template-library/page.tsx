@@ -4,7 +4,6 @@ import TemplateStatsCard from "./templateStatsCard";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { IoEarthSharp } from "react-icons/io5";
 import Templates from "./templates";
-import { useDrawer } from "@/components/hooks/DrawerProvider";
 import { useGetCountriesQuery } from "@/lib/redux/slices/templateApi";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
 import { getAllDocumentOptions, getCountryOptions } from "@/lib/utilMethods";
@@ -15,7 +14,6 @@ export default function TemplateLibrary() {
   const options = getCountryOptions(data?.data || []);
   const allTypesOptions = getAllDocumentOptions(data?.data || []);
 
-  const { openDrawer } = useDrawer();
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
@@ -41,7 +39,7 @@ export default function TemplateLibrary() {
         <TemplateStatsCard
           bg="bg-sky-700"
           icon={<IoDocumentTextOutline size={34} />}
-          stats={data?.data?.length || 0}
+          stats={16}
           title="Total Templates"
         />
         <TemplateStatsCard

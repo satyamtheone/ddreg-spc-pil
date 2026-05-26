@@ -90,7 +90,7 @@ const AddEditUserForm = ({
         lastName: user?.lName || "",
         email: user?.email || "",
         password: "",
-        businessRole: user?.businessRoleId || "",
+        businessRole: user?.businessRole?.id || "",
       }}
       validationSchema={createUserValidationSchema(actionType || "")}
       onSubmit={handleSubmit}
