@@ -34,6 +34,7 @@ export default function EditorPage({
   const [isEditorReady, setIsEditorReady] = useState(false);
   const [getDocumentBuffer, { isLoading }] = useGetDocumentBufferMutation();
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const prodUrl= process.env.NEXT_PUBLIC_PROD_URL;
 
   const toggleFullscreen = () => {
     const elem = document.getElementById("editor-container");
@@ -93,7 +94,7 @@ export default function EditorPage({
         }
 
         const tokenRes = await fetch(
-          `https://labelling.ddregpharma.com/api/convert/token?file=${encodeURIComponent(
+          `${prodUrl}/convert/token?file=${encodeURIComponent(
             filePath,
           )}`,
         );
@@ -107,7 +108,7 @@ export default function EditorPage({
             fileType: "docx",
             key: documentKey,
             title: "document.docx",
-            url: `https://labelling.ddregpharma.com/api/cache/${encodeURIComponent(
+            url: `${prodUrl}/cache/${encodeURIComponent(
               filePath,
             )}`,
           },
