@@ -60,7 +60,7 @@ const AddRefenceForm = ({
         formData.append("description", values.description);
       }
       if (formType === "web") {
-        formData.append("documentURL", url || "");
+        formData.append("documentURL", encodeURI(url || ""));
       } else {
         if (values.referenceFile) {
           formData.append("referenceFile", values.referenceFile);

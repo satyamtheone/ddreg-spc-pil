@@ -6,6 +6,8 @@ import {
   GetSingleDocumentVersionResponse,
   PreviewDocumentRequest,
   PreviewDocumentResponse,
+  SaveDocxToS3Request,
+  SaveDocxToS3Response,
 } from "../apiTypes";
 import { apiSlice } from "./apislice";
 
@@ -61,6 +63,7 @@ export const documentApi = apiSlice.injectEndpoints({
         method: "GET",
         params: { page, pageSize },
       }),
+      providesTags: ["getSingleDocumentVersion"],
     }),
 
     getSingleDocumentVersions: builder.query<
@@ -86,6 +89,17 @@ export const documentApi = apiSlice.injectEndpoints({
         body,
       }),
     }),
+
+    saveDocxToS3: builder.mutation<
+      SaveDocxToS3Response,
+      { versionId: string; body: SaveDocxToS3Request }
+    >({
+      query: ({ versionId, body }) => ({
+        url: `/documents/versions/${versionId}`,
+        method: "PATCH",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -96,4 +110,5 @@ export const {
   useGetDocumentVersionsQuery,
   useGetSingleDocumentVersionsQuery,
   useGetDocumentBufferMutation,
+  useSaveDocxToS3Mutation,
 } = documentApi;

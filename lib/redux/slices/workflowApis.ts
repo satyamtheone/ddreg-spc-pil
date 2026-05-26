@@ -27,7 +27,7 @@ export const workflowApis = apiSlice.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["getTasks"],
+      invalidatesTags: ["getTasks", "getDocuments", "getSingleDocumentVersion"],
     }),
     updateTaskAction: builder.mutation<
       CreateDocumentResponse,

@@ -41,7 +41,7 @@ const deleteCookie = (name: string) => {
 /* ================= BASE QUERY ================= */
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://labelling.ddregpharma.com/api",
+  baseUrl: process.env.NEXT_PUBLIC_PROD_URL,
   prepareHeaders: (headers) => {
     const token = getCookie("accessToken");
 
@@ -142,6 +142,7 @@ export const apiSlice = createApi({
     "getReferences",
     "getDocuments",
     "getTasks",
+    "getSingleDocumentVersion",
   ],
   endpoints: () => ({}),
 });

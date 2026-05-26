@@ -2,14 +2,17 @@ import MiniChip from "@/components/common/miniChip";
 import { useGetDocumentVersionsQuery } from "@/lib/redux/slices/documentApi";
 import { formatedDate } from "@/lib/utilMethods";
 import React from "react";
-import { FaEdit, FaEye } from "react-icons/fa";
-import { IoMdCloudDownload } from "react-icons/io";
 import { MdKeyboardDoubleArrowDown } from "react-icons/md";
 import { MdKeyboardDoubleArrowUp } from "react-icons/md";
-
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { useNavigation } from "@/components/hooks/useNavigation";
 import { useQueryErrorHandler } from "@/components/hooks/useQueryErrorHandler";
+import DynamicButton from "@/components/common/DynamicButton";
+import { PlusSquare } from "lucide-react";
+import CreateTaskDrawer from "../workflow-management/tasks/createTaskDrawer";
+import { useAuth } from "@/lib/AuthProvider";
+import { useDrawer } from "@/components/hooks/DrawerProvider";
+import { FaRegEye } from "react-icons/fa";
 
 type DocumentTableRowProps = {
   document: {
@@ -17,11 +20,21 @@ type DocumentTableRowProps = {
     country: string;
     type?: string;
     currentVersion: {
+      versionId: string;
+      id: string;
       versionNumber: string;
       status: string;
+      documentVersionFile: {
+        key: string;
+      };
       reference?: {
         schemaMeta?: {
           type?: string;
+        };
+        type?: {
+          country?: {
+            code?: string;
+          };
         };
       };
     };
@@ -51,6 +64,8 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
   isParent,
 }) => {
   const { goTo } = useNavigation();
+  const { isUser, isAdmin } = useAuth();
+  const { openDrawer } = useDrawer();
   const [showVersions, setShowVersions] = React.useState(false);
   const query = useGetDocumentVersionsQuery(
     { docId: document.id },
@@ -123,23 +138,81 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
             <div className="text-sm text-gray-400">Actions</div>
             <div className="flex gap-2 text-teal-900  flex-wrap">
               {!isParent && (
-                <div>
-                  {/* <div
-                    className="custom-button-hover-classes p-2 bg-white border"
-                    onClick={() => goTo(document?.referenceFile || "")}
-                  >
-                    <IoMdCloudDownload size={20} />
-                  </div> */}
-                  <div
-                    className="custom-button-hover-classes p-2 bg-white border"
-                    onClick={() =>
-                      goTo(
-                        `/document-editor/fullpageEditor?documentBufferUrl=${document?.referenceFile}`,
-                      )
-                    }
-                  >
-                    <FaEdit size={20} />
-                  </div>
+                <div className="flex flex-col items-start gap-2 ">
+                  {isAdmin &&
+                    document?.currentVersion?.status === "CREATED" && (
+                      <div className="min-w-max">
+                        <DynamicButton
+                          text="Create Task"
+                          variant="submit"
+                          className="px-2"
+                          size="slim"
+                          icon={<PlusSquare />}
+                          onClick={() =>
+                            openDrawer({
+                              title: "Create Task",
+                              width: "w-2/3",
+                              children: (
+                                <CreateTaskDrawer
+                                  fromRepo
+                                  title={document?.title}
+                                  countryCode={
+                                    document?.currentVersion.reference?.type
+                                      ?.country?.code
+                                  }
+                                  documentType={
+                                    document?.currentVersion?.reference
+                                      ?.schemaMeta?.type
+                                  }
+                                  documentId={document?.currentVersion?.id}
+                                  versionId={
+                                    document?.currentVersion?.versionId
+                                  }
+                                />
+                              ),
+                            })
+                          }
+                        />
+                      </div>
+                    )}
+
+                  {document?.currentVersion?.status !== "CREATED" && (
+                    <div className="flex flex-col gap-1">
+                      <div>
+                        <DynamicButton
+                          text="view Task"
+                          size="slim"
+                          variant="submit"
+                          className="px-2"
+                          icon={<FaRegEye />}
+                          onClick={() =>
+                            goTo(
+                              `/workflow-management?documentVersionId=${document.currentVersionId}`,
+                            )
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <DynamicButton
+                          text="view in Docx Editor"
+                          size="slim"
+                          variant="outline"
+                          className="px-2"
+                          icon={<FaRegEye />}
+                          onClick={() =>
+                            goTo(
+                              `document-editor/fullpageEditor?documentBufferUrl=${document?.currentVersion.documentVersionFile?.key}&versionId=${document.currentVersionId}&role=VIEWER&type=${document?.currentVersion?.reference?.schemaMeta?.type || ""}&region=${document?.currentVersion?.reference?.type?.country?.code || ""}`,
+                            )
+                          }
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {isUser && document?.currentVersion?.status === "CREATED" && (
+                    <>No Action</>
+                  )}
                 </div>
               )}
 
@@ -180,14 +253,25 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
                         lName: version?.createdBy?.lName,
                       },
                       currentVersion: {
+                        documentVersionFile: {
+                          key: version?.documentVersionFile?.key,
+                        },
+                        id: document.id,
+                        versionId: version.id,
                         versionNumber: version?.versionNumber,
                         status: version?.status,
                         reference: {
                           schemaMeta: {
                             type: version?.reference?.schemaMeta?.type,
                           },
+                          type: {
+                            country: {
+                              code: version?.reference?.type?.country?.code,
+                            },
+                          },
                         },
                       },
+                      currentVersionId: version.id,
                       id: version?.id,
                       title: version?.reference?.title,
                       referenceFile: version?.reference?.referenceFile?.key,

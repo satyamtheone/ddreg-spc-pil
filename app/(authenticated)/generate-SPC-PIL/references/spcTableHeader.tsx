@@ -32,12 +32,13 @@ type SpcTableHeaderProps = {
       country: string;
       type: string;
       title: string;
+      page: number;
     }>,
   ) => void;
 };
 
 const SpcTableHeader: React.FC<SpcTableHeaderProps> = ({
-  totalDocuments = 24,
+  totalDocuments = 0,
   onFilterChange,
   onCountryChange,
   onViewChange,
@@ -100,7 +101,9 @@ const SpcTableHeader: React.FC<SpcTableHeaderProps> = ({
               text="Clear Filter"
               variant="submit"
               icon={<X />}
-              onClick={() => setParams({ country: "", type: "", title: "" })}
+              onClick={() =>
+                setParams({ country: "", type: "", title: "", page: 1 })
+              }
             />
           </div>
         )}

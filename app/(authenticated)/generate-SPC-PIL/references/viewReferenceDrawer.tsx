@@ -13,6 +13,7 @@ import { useNavigation } from "@/components/hooks/useNavigation";
 import { useDrawer } from "@/components/hooks/DrawerProvider";
 import { MdVisibility } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
+import { FaCloudDownloadAlt } from "react-icons/fa";
 
 type ViewReferenceDrawerProps = {
   references: Reference;
@@ -70,13 +71,12 @@ const ViewReferenceDrawer: React.FC<ViewReferenceDrawerProps> = ({
         <div className="w-full px-4 py-2">
           <DynamicButton
             isSubmitting={query.isLoading || query.isFetching}
-            icon={<FaEdit size={24} />}
+            icon={<FaCloudDownloadAlt size={24} />}
             size="slim"
             variant="submit"
-            text={"View in Editor"}
+            text={"Download document"}
             onClick={() => {
-              goTo(`/document-editor?referenceId=${references.id}`);
-              closeDrawer();
+              window.open(data?.data?.referenceFile?.key, "_blank");
             }}
           />
         </div>

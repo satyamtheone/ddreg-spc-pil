@@ -16,7 +16,7 @@ export type Role = "USER" | "ADMIN" | "SUPERADMIN";
 
 export interface RolePermission {
   id: string;
-  name?: string;
+  type?: string;
 }
 
 export type BusinessRole = {
@@ -186,7 +186,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (isSuperAdmin) return true;
 
     const permissions =
-      user.businessRole?.permissions?.map((p) => p.name) || [];
+      user.businessRole?.permissions?.map((p) => p.type) || [];
 
     return permissions.includes(perm);
   };

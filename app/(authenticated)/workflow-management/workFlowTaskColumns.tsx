@@ -8,10 +8,12 @@ import { Task } from "@/lib/redux/apiTypes";
 import TaskSkeleton from "@/components/common/skletons/taksSkeleton";
 import CreateTaskDrawer from "./tasks/createTaskDrawer";
 import { useAuth } from "@/lib/AuthProvider";
+import { WorkFlowSearchParams } from "./page";
 
 type WorkFlowTaskColumnsProps = {
   tasks: Task[];
   isLoading: boolean;
+  params:WorkFlowSearchParams
 };
 
 const columns = [
@@ -34,17 +36,19 @@ const columns = [
   {
     title: "In Approve",
     status: "UNDER_APPROVAL",
-    variant: "sky",
+    variant: "emerald",
   },
   {
-    title: "Completed Tasks",
+    title: "Completed",
     status: "APPROVED",
-    variant: "emerald",
+    variant: "sky",
   },
 ];
 
+
 const WorkFlowTaskColumns: React.FC<WorkFlowTaskColumnsProps> = ({
   tasks,
+  params,
   isLoading,
 }) => {
   const { isUser } = useAuth();
@@ -70,7 +74,7 @@ const WorkFlowTaskColumns: React.FC<WorkFlowTaskColumnsProps> = ({
         return (
           <div
             key={col.status}
-            className={`${variantStyles[col.variant as keyof typeof variantStyles].bg} ${variantStyles[col.variant as keyof typeof variantStyles].border} border py-4 rounded-xl min-w-100 carousel-item scroll-smooth flex flex-col`}
+            className={`${variantStyles[col.variant as keyof typeof variantStyles].bg} ${variantStyles[col.variant as keyof typeof variantStyles].border} border py-4 rounded-xl carousel-item scroll-smooth min-w-105 flex flex-col`}
           >
             <div className="flex items-center justify-between mb-3 px-3">
               <div className="flex items-center gap-2">
@@ -100,7 +104,7 @@ const WorkFlowTaskColumns: React.FC<WorkFlowTaskColumnsProps> = ({
 
             <div className="flex flex-col gap-4 overflow-auto px-3 pb-6">
               {list.map((task) => (
-                <TaskCard key={task.id} task={task} />
+                <TaskCard key={task.id} task={task} params={params} />
               ))}
             </div>
           </div>

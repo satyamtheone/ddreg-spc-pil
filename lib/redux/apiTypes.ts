@@ -325,7 +325,15 @@ export type Reference = {
 export type GetReferencesResponse = {
   success: boolean;
   message: string;
-  data: Reference[];
+  data: {
+    data: Reference[];
+    pagination: {
+      page: number;
+      pageSize: number;
+      total: number;
+      totalPages: number;
+    };
+  };
 };
 
 export type ReferencesFromWeb = {
@@ -582,6 +590,12 @@ export type documentVersion = {
   versionNumber: string;
   changeType: string;
   description: string;
+  documentVersionFile: {
+    fileName: string;
+    mimeType: string;
+    size: string;
+    key: string;
+  };
   createdById: string;
   isLocked: boolean;
   parentVersionId: string;
@@ -653,6 +667,9 @@ export type DocumentVersion = {
   versionNumber: string;
   changeType: string;
   description: string;
+  documentVersionFile: {
+    key: string;
+  };
   createdById: string;
   isLocked: boolean;
   parentVersionId: string;
@@ -660,6 +677,19 @@ export type DocumentVersion = {
   createdAt: string;
   updatedAt: string;
   __v: number;
+  reference: {
+    schemaMeta: {
+      type: string;
+      version: string;
+      productName: string | null;
+    };
+    type: {
+      country: {
+        code: string;
+      };
+    };
+  };
+
   document: {
     id: string;
     title: string;
@@ -756,4 +786,38 @@ export type UpdateTasAction = {
 export type UpdateTasActionRequest = {
   id: string;
   body: UpdateTasAction;
+};
+
+export type SaveDocxToS3Request = {
+  description: string;
+  type: string;
+  region: string;
+  document_url: string;
+};
+export type SaveDocxToS3Response = {
+  success: boolean;
+  message: string;
+  data: {
+    id: string;
+    documentId: string;
+    templateId: string;
+    referenceId: string;
+    versionNumber: string;
+    changeType: string;
+    description: string;
+    documentVersionFile: {
+      fileName: string;
+      mimeType: string;
+      size: number;
+      key: string;
+    };
+    createdById: string;
+    isLocked: boolean;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: 0;
+    approvedAt: string | null;
+    sections: Section[];
+  };
 };

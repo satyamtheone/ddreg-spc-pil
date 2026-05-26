@@ -37,14 +37,18 @@ const SPCTable: React.FC<SPCTableProps> = ({ references }) => {
                   } transition-colors duration-150 group grid  animate-dialog-slide-down
                   } grid-cols-9 text-sm border-l-4 border-b-[0.5px] ${crudOperationChipColors({ variant: "Approved" }).border} `}
                 >
-                  <div className="table-body-cell">{item?.name}</div>
+                  <div className="table-body-cell">
+                    <p className="line-clamp-2">{item?.name}</p>
+                  </div>
                   <div
-                    className={`table-body-cell  ${item?.activeIngredient && item?.activeIngredient?.length > 50 ? "tooltip tooltip-info tooltip-top" : ""} `}
+                    className={`table-body-cell  ${item?.activeIngredient && item?.activeIngredient?.length > 24 ? "tooltip tooltip-info tooltip-top" : ""} `}
                     data-tip={item?.activeIngredient}
                   >
-                    <p className="line-clamp-4">
-                      {item?.activeIngredient || "-"}
-                    </p>
+                    <div className="line-clamp-2">
+                      <p className="line-clamp-2">
+                        {item?.activeIngredient || "-"}
+                      </p>
+                    </div>
                   </div>
                   <div className="table-body-cell">
                     {item?.type?.country?.name}

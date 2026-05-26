@@ -366,7 +366,7 @@ body {
 }
 
 .table-header-cell {
-  @apply border-r px-4  py-2 capitalize  border-slate-300 break-all;
+  @apply border-r px-4  py-2 capitalize  border-slate-300 break-before-all;
 }
 .table-header-lastCell {
   @apply px-4  py-2 capitalize border-slate-300;
@@ -376,7 +376,7 @@ body {
   @apply flex flex-col;
 }
 .table-body-cell {
-  @apply font-normal capitalize flex-wrap  border-r border-slate-300 p-4 flex break-all;
+  @apply font-normal capitalize flex-wrap  border-r border-slate-300 p-4 flex break-before-all;
 }
 .table-body-lastCell {
   @apply font-normal capitalize  border-slate-300 p-4;

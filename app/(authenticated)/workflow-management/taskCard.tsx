@@ -17,16 +17,17 @@ import { BiSolidMessageSquareEdit } from "react-icons/bi";
 import { useAuth } from "@/lib/AuthProvider";
 import { IoIosWarning } from "react-icons/io";
 import { useGetSingleDocumentVersionsQuery } from "@/lib/redux/slices/documentApi";
+import { WorkFlowSearchParams } from "./page";
 
 type TaskCardProps = {
   task: Task;
+  params: WorkFlowSearchParams;
 };
 
-const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
   const { goTo } = useNavigation();
   const { openDialog } = useDialog();
-  const { user } = useAuth();
-
+  const { user, isAdmin } = useAuth();
   const userAssignment = task.assignments.find((a) => a.user.id === user?.id);
 
   const canDoAction =
@@ -52,9 +53,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
     },
   );
 
+  const canViewTimesheet = isAdmin && task.createdById === user?.id;
   return (
     <div
-      className={`bg-white rounded-lg  shadow-lg p-2 flex flex-col gap-2 animate-dialog-slide-down ${(task.status === "UNDER_EDITING" || task.status === "UNDER_REVIEW" || task.status === "UNDER_APPROVAL") && task.rejectionCount > 0 && "border border-red-400"}`}
+      className={`bg-white rounded-lg  shadow-lg p-2 flex flex-col gap-2 animate-dialog-slide-down ${(task.status === "UNDER_EDITING" || task.status === "UNDER_REVIEW" || task.status === "UNDER_APPROVAL") && task.rejectionCount > 0 && "border border-red-400"} ${task.documentVersionId === params.documentVersionId && "border-4 border-sky-400 shadow-sky-200 delay-200"}`}
     >
       <div className="flex justify-between items-center">
         <div>
@@ -120,8 +122,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           <div className="text-sm text-gray-400">{task?.description}</div>
         </div>
         <div className="flex gap-2 items-center">
-          <MiniChip status="SPC" />
-          <MiniChip status="Germany" />
+          <MiniChip
+            status={task?.documentVersion?.reference?.schemaMeta?.type}
+          />
+          <MiniChip status={task?.documentVersion?.document?.country} />
         </div>
       </div>
       {task.rejectionCount > 0 && (
@@ -139,12 +143,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
               key={assignment.id}
               className="avatar "
               onClick={() =>
-                goTo(
-                  `workflow-management/timesheet?userId=${assignment?.user?.id}`,
-                )
+                canViewTimesheet || assignment?.user.id === user?.id
+                  ? goTo(
+                      `workflow-management/timesheet?userId=${assignment?.user?.id}`,
+                    )
+                  : null
               }
             >
-              <div className="w-8 hover:scale-3d hover:scale-105 transition-all cursor-pointer bg-gradient rounded-full flex justify-center text-sm font-semibold items-center">
+              <div
+                className={`w-7 ${(canViewTimesheet || assignment?.user.id === user?.id) && "hover:scale-3d hover:scale-130 transition-all hover:border-2  hover:border-teal-600 cursor-pointer scale-120 "}  bg-gradient  rounded-full flex justify-center text-sm font-semibold items-center`}
+              >
                 <span>
                   {assignment?.user?.fName?.charAt(0)}
                   {assignment?.user?.lName?.charAt(0)}
@@ -158,7 +166,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
             <MdOutlineWatchLater />
             {formatedDate(task?.dueDate || "")}
           </div>
-          {canDoAction && (
+          {canDoAction && task.status !== "CREATED" && (
             <div className="w-10">
               <DynamicButton
                 icon={
@@ -171,7 +179,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                 variant="card"
                 onClick={() =>
                   goTo(
-                    `/document-editor/fullpageEditor?documentBufferUrl=${document?.data.reference.referenceFile.key}`,
+                    `/document-editor/fullpageEditor?documentBufferUrl=${task?.documentVersion?.documentVersionFile?.key || document?.data.reference.referenceFile.key}&type=${task?.documentVersion?.reference?.schemaMeta?.type}&region=${task?.documentVersion?.reference?.type?.country?.code}&versionId=${task.documentVersion.id}&role=${user?.businessRole?.permissions?.[0]?.type || ""}`,
                   )
                 }
               />

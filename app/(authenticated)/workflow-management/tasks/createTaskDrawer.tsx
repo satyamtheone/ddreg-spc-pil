@@ -39,7 +39,21 @@ type FormValues = {
   approverID: string;
 };
 
-const CreateTaskDrawer = () => {
+const CreateTaskDrawer = ({
+  fromRepo,
+  countryCode,
+  documentType,
+  documentId,
+  versionId,
+  title,
+}: {
+  fromRepo?: boolean;
+  countryCode?: string;
+  documentType?: string;
+  documentId?: string;
+  versionId?: string;
+  title?: string;
+}) => {
   const countryQuery = useGetCountriesQuery();
   const countryQueryData = useQueryErrorHandler(countryQuery, "Get Countries");
   const countriesData = countryQueryData?.data || [];
@@ -117,11 +131,11 @@ const CreateTaskDrawer = () => {
       ) : (
         <Formik<FormValues>
           initialValues={{
-            taskTitle: "",
+            taskTitle: title || "",
             taskType: "",
-            country: "",
-            type: "",
-            selectedDocument: "",
+            country: countryCode || "",
+            type: documentType || "",
+            selectedDocument: documentId || "",
             selectedVersion: "",
             description: "",
             dueDate: "",
@@ -158,10 +172,14 @@ const CreateTaskDrawer = () => {
               if (values.selectedDocument) {
                 setFieldValue("selectedDocument", "");
               }
+              if (documentId && versionId) {
+                setFieldValue("selectedDocument", documentId);
+                setFieldValue("selectedVersion", versionId);
+              }
               if (values.selectedVersion) {
                 setFieldValue("selectedVersion", "");
               }
-            }, [values.country, values.type]);
+            }, [values.country, values.type, documentId, versionId]);
 
             const versionQuery = useGetDocumentVersionsQuery(
               { docId: values.selectedDocument },
@@ -216,12 +234,14 @@ const CreateTaskDrawer = () => {
                       name="country"
                       label="Select country"
                       options={countryOptions}
+                      disabled={fromRepo}
                     />
                     {values.country && (
                       <FormikSelect
                         name="type"
                         label="Select Type"
                         options={typeOptions}
+                        disabled={fromRepo}
                       />
                     )}
                   </div>
@@ -232,6 +252,7 @@ const CreateTaskDrawer = () => {
                         label="Select Document"
                         isLoading={documentQuery.isLoading}
                         options={templateOptions}
+                        disabled={fromRepo}
                       />
                     )}
 
@@ -241,6 +262,7 @@ const CreateTaskDrawer = () => {
                         label="Select Document Version"
                         isLoading={versionQuery.isLoading}
                         options={documentVersionOptions}
+                        disabled={fromRepo}
                       />
                     )}
                   </div>

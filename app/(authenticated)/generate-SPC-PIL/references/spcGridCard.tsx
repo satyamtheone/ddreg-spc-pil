@@ -13,9 +13,9 @@ type SpcGridCardProps = {
 const SpcGridCard: React.FC<SpcGridCardProps> = ({ item }) => {
   return (
     <div
-      className={`shadow-md  rounded-[10px] py-4  relative flex flex-col gap-4 w-104 border ${crudOperationChipColors({ variant: "Approved" }).border} animate-dialog-slide-down`}
+      className={`shadow-md  rounded-[10px] py-4  relative flex flex-col justify-between gap-4 w-104 border ${crudOperationChipColors({ variant: "Approved" }).border} animate-dialog-slide-down`}
     >
-      <div className="absolute right-0 bg-emerald-400 p-1 text-sm font-semibold text-white px-4 rounded-l-3xl">
+      <div className="absolute right-0 bg-emerald-400 p-1 top-3 text-sm font-semibold text-white px-4 rounded-l-3xl">
         <div>Approved</div>
       </div>
 
@@ -43,11 +43,14 @@ const SpcGridCard: React.FC<SpcGridCardProps> = ({ item }) => {
         </div>
       </div>
       <div className="flex justify-between gap-4 bg-purple-50 px-2 py-1 rounded-sm ">
-        <div>
+        <div
+          data-tip={item?.activeIngredient}
+          className={`${item?.activeIngredient && item?.activeIngredient?.length > 24 ? "tooltip tooltip-info tooltip-top" : ""}`}
+        >
           <div className=" text-sm font-normal text-neutral-400">
             Active Ingredient
           </div>
-          <div className="">-</div>
+          <div className="line-clamp-2">{item?.activeIngredient}</div>
         </div>
         <div>
           <div className=" text-sm font-normal text-neutral-400">Country</div>
