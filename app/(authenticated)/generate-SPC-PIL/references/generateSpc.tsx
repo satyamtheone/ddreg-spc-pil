@@ -99,7 +99,7 @@ const GenerateSpc: React.FC<ReferencesProps> = ({
       ) : (
         <SpcGrid references={data?.data?.data || []} />
       )}
-      {data?.data && data?.data?.pagination?.pageSize > 1 && (
+      {data?.data && data?.data?.pagination?.totalPages > 1 && (
         <Pagination
           currentPage={Number(params.page)}
           lengthPerPage={10}
