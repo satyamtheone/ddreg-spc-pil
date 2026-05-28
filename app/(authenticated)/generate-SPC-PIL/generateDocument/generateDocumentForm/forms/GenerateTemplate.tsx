@@ -32,7 +32,7 @@ export default function GenerateTemplate() {
       storagePrecautions: formData.basicInformation?.storagePrecautions ?? "",
       mahAddress: formData.basicInformation?.MAHAddress ?? "",
       packagingDetails: formData.basicInformation?.packagingDetails ?? "",
-      country: formData.stepReference?.countryName ?? "",
+      country: formData.stepReference?.countryCode ?? "",
       regulatoryBody: formData.stepTemplate?.regulatoryBody ?? "",
       sections: formData.sections ?? [],
     };

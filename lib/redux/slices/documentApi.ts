@@ -99,6 +99,7 @@ export const documentApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body,
       }),
+      invalidatesTags: ["getTasks"],
     }),
   }),
 });
