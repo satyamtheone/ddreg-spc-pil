@@ -108,17 +108,15 @@ export default function EditorPage({
             fileType: "docx",
             key: documentKey,
             title: "document.docx",
-            url: `${prodUrl}/cache/${encodeURIComponent(
-              filePath,
-            )}`,
+            url: `${prodUrl}/cache/${encodeURIComponent(filePath)}`,
           },
 
           editorConfig: {
             mode: isApprover || isOnlyView ? "view" : "edit",
-            user: {
-              id: user?.id,
-              name: `${user?.fName} ${user?.lName}`,
-            },
+            // user: {
+            //   id: user?.id,
+            //   name: `${user?.fName} ${user?.lName}`,
+            // },
             customization: {
               autosave: !isReviewer,
               forcesave: true,
