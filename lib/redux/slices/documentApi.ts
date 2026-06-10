@@ -81,7 +81,12 @@ export const documentApi = apiSlice.injectEndpoints({
         success: boolean;
         url: string;
       },
-      { document_url: string; response_type: "url" }
+      {
+        document_url: string;
+        response_type: "url";
+        region: string;
+        type: string;
+      }
     >({
       query: (body) => ({
         url: "/convert/pdf2docx",

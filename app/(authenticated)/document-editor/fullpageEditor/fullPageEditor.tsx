@@ -49,6 +49,7 @@ export default function EditorPage({
     }
   };
 
+
   useEffect(() => {
     const loadDocument = async () => {
       try {
@@ -65,6 +66,8 @@ export default function EditorPage({
         const res = await getDocumentBuffer({
           document_url: newUrl,
           response_type: "url",
+          region: params.region || "",
+          type: params.type || "",
         }).unwrap();
         setFilePath(res.url);
       } catch (err) {
@@ -206,7 +209,7 @@ export default function EditorPage({
       />
 
       {/* Toolbar */}
-      <div className={`flex justify-end gap-3 mb-3 shrink-0  `}>
+      <div className={`flex justify-end gap-3 mb-3 shrink-0`}>
         {params.role === "VIEWER" ? (
           ""
         ) : (
