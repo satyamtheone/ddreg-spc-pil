@@ -13,6 +13,15 @@ import {
 import { FormikOptonType } from "@/components/FormikComponents/FormikSelect";
 import JSZip from "jszip";
 
+
+export const getErrorMessage = (error: any) => {
+  return (
+    error?.data?.message ||
+    error?.error ||
+    error?.message ||
+    "Something went wrong"
+  );
+};
 export const crudOperationChipColors = ({
   variant,
   size,

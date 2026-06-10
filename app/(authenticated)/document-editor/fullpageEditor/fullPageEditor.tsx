@@ -11,6 +11,7 @@ import { useAuth } from "@/lib/AuthProvider";
 import { FullPageEditorSearchParams } from "./page";
 import toast from "react-hot-toast";
 import { useNavigation } from "@/components/hooks/useNavigation";
+import { getErrorMessage } from "@/lib/utilMethods";
 
 declare global {
   interface Window {
@@ -34,7 +35,7 @@ export default function EditorPage({
   const [isEditorReady, setIsEditorReady] = useState(false);
   const [getDocumentBuffer, { isLoading }] = useGetDocumentBufferMutation();
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const prodUrl= process.env.NEXT_PUBLIC_PROD_URL;
+  const prodUrl = process.env.NEXT_PUBLIC_PROD_URL;
 
   const toggleFullscreen = () => {
     const elem = document.getElementById("editor-container");
@@ -67,41 +68,40 @@ export default function EditorPage({
         }).unwrap();
         setFilePath(res.url);
       } catch (err) {
-        console.error("Failed to load document:", err);
+        toast.error(getErrorMessage(err));
       }
     };
-
     loadDocument();
   }, [params.documentBufferUrl, getDocumentBuffer]);
 
   useEffect(() => {
-    const isEditor = params.role === "EDITOR";
     const isReviewer = params.role === "REVIEWER";
     const isApprover = params.role === "APPROVER";
     const isOnlyView = params.role === "VIEWER";
-    
+
     const initEditor = async () => {
       try {
-        if (!filePath || !window.DocsAPI) {
+        if (!filePath || !window.DocsAPI || !user?.id) {
           return;
         }
-
-        // destroy existing editor
+        setIsEditorReady(false);
         if (editorRef.current?.destroyEditor) {
           editorRef.current.destroyEditor();
-
           editorRef.current = null;
         }
 
         const tokenRes = await fetch(
-          `${prodUrl}/convert/token?file=${encodeURIComponent(
-            filePath,
-          )}`,
+          `${prodUrl}/convert/token?file=${encodeURIComponent(filePath)}`,
         );
+        if (!tokenRes.ok) {
+          throw new Error("Failed to generate document token");
+        }
 
         const data = await tokenRes.json();
+        if (!data?.token) {
+          throw new Error("Token not found");
+        }
 
-        // stable key
         const documentKey = data?.payload?.document?.key;
         editorRef.current = new window.DocsAPI.DocEditor("placeholder", {
           document: {
@@ -113,10 +113,10 @@ export default function EditorPage({
 
           editorConfig: {
             mode: isApprover || isOnlyView ? "view" : "edit",
-            // user: {
-            //   id: user?.id,
-            //   name: `${user?.fName} ${user?.lName}`,
-            // },
+            user: {
+              id: user?.id,
+              name: `${user?.fName} ${user?.lName}`,
+            },
             customization: {
               autosave: !isReviewer,
               forcesave: true,
@@ -134,7 +134,7 @@ export default function EditorPage({
               try {
                 const fileUrl = event?.data;
                 if (!fileUrl?.url) {
-                  console.error("No file URL received");
+                  toast.error("Failed to retrieve the file URL");
                   return;
                 }
                 const res = await saveDocxToS3({
@@ -145,22 +145,27 @@ export default function EditorPage({
                     region: params?.region || "",
                     type: params?.type || "",
                   },
-                });
+                }).unwrap();
+                if (res.success === false) {
+                  toast.error(
+                    res.message ||
+                      "Failed to save file check the network connection",
+                  );
+                } else if (res.success === true) {
+                  toast.success("File saved successfully");
+                }
                 updateQueryParams({
-                  documentBufferUrl:
-                    res.data?.data?.documentVersionFile?.key || "",
+                  documentBufferUrl: res.data?.documentVersionFile?.key || "",
                 });
-                toast.success("File is saved Successfully");
               } catch (err) {
-                console.error("Download failed:", err);
-                toast.error("Failed to save file");
+                toast.error(getErrorMessage(err));
               }
             },
           },
           token: data.token,
         });
       } catch (err) {
-        console.error("ONLYOFFICE init error:", err);
+        toast.error(getErrorMessage(err));
       }
     };
 
@@ -178,12 +183,12 @@ export default function EditorPage({
   const handleSave = () => {
     try {
       if (!editorRef.current) {
-        console.error("Editor not initialized");
+        toast.error("Editor is not ready yet");
         return;
       }
       editorRef.current.downloadAs("docx");
     } catch (err) {
-      console.error("Save operation failed:", err);
+      toast.error(getErrorMessage(err));
     }
   };
 
@@ -213,7 +218,9 @@ export default function EditorPage({
               text={`${isSaveLoading ? "Saving..." : "Save this File"}`}
               className="px-4 capitalize"
               onClick={handleSave}
-              isSubmitting={!isEditorReady || isLoading || isSaveLoading}
+              isSubmitting={
+                !isEditorReady || isLoading || isSaveLoading || !user?.id
+              }
             />
           </div>
         )}
@@ -230,7 +237,6 @@ export default function EditorPage({
         </div>
       </div>
 
-      {/* Editor */}
       <div
         id="placeholder"
         className="flex-1 w-full rounded-xl overflow-hidden"
