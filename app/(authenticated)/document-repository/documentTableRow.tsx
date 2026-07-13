@@ -74,7 +74,7 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
   const data = useQueryErrorHandler(query, "Get Versions");
   return (
     <div
-      className={` rounded-xl transition-all  ${showVersions ? "border border-sky-600 shadow-xl scale-3d scale-101" : "shadow-md border  px-4 border-gray-300"} ${index % 2 === 0 ? "bg-purple-50" : ""} `}
+      className={` rounded-xl transition-all ${showVersions ? "border border-sky-600 shadow-xl scale-3d scale-101" : "shadow-md border  px-4 border-gray-300"} ${index % 2 === 0 ? "bg-purple-50" : ""} `}
     >
       <div className={` grid grid-cols-12   animate-dialog-slide-down   `}>
         <div className="flex gap-2 items-start border-r p-4 col-span-3">
@@ -86,10 +86,10 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
             <div>{document?.title}</div>
           </div>
         </div>
-        <div className="flex gap-2 items-start border-r p-4 col-span-2">
+        <div className="flex gap-2 items-start border-r p-4 col-span-1">
           <div>
             <div className="text-sm text-gray-400">Country</div>
-            <div>{document?.country}</div>
+            <div className="text-sm">{document?.country}</div>
           </div>
         </div>
         <div className="flex gap-2 items-start border-r p-4 col-span-1">
@@ -119,7 +119,7 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
         <div className="flex gap-2 items-start overflow-hidden border-r p-4 col-span-1">
           <div>
             <div className="text-sm text-gray-400">Author</div>
-            <div className=" wrap-break-word">
+            <div className=" wrap-break-word text-sm">
               {" "}
               {document?.createdBy?.fName} {document?.createdBy?.lName}
             </div>
@@ -127,9 +127,12 @@ const DocumentTableRow: React.FC<DocumentTableRowProps> = ({
         </div>
         <div className="flex gap-2 items-start p-4 col-span-1  border-r">
           <div>
-            <div className="text-sm text-gray-400">Status</div>
+            <div className="text-sm text-gray-400 mb-2">Status</div>
             <div>
-              <MiniChip status={document?.currentVersion?.status} />
+              <MiniChip
+                size="small"
+                status={document?.currentVersion?.status}
+              />
             </div>
           </div>
         </div>

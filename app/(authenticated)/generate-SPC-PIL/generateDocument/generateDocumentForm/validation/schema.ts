@@ -32,13 +32,13 @@ export const step3Schema = Yup.object({
     .of(sectionSchema)
     .min(1, "At least one section is required"),
   basicInformation: Yup.object({
-    brandName: Yup.string().required("Brand name is required"),
-    strength: Yup.string().required("Strength is required"),
-    dosageForm: Yup.string().required("Dosage form is required"),
-    manufacturer: Yup.string().required("Manufacturer is required"),
-    shelfLife: Yup.string().required("Shelf life is required"),
-    storagePrecautions: Yup.string().required("Storage precautions required"),
-    MAHAddress: Yup.string().required("MAH Address is required"),
-    packagingDetails: Yup.string().required("Packaging details required"),
+    brandName: Yup.string().optional(),
+    strength: Yup.string().optional(),
+    dosageForm: Yup.string().optional(),
+    manufacturer: Yup.string().optional(),
+    shelfLife: Yup.string().optional(),
+    storagePrecautions: Yup.string().optional(),
+    MAHAddress: Yup.string().optional(),
+    packagingDetails: Yup.string().optional(),
   }),
 });

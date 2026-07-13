@@ -7,6 +7,7 @@ type Props = {
   size?: "base" | "slim";
   isSubmitting?: boolean;
   icon?: ReactNode;
+  isLoading?: boolean;
   iconPosition?: "left" | "right";
   type?: "button" | "submit" | "reset";
   className?: string;
@@ -21,6 +22,7 @@ const DynamicButton = forwardRef<HTMLButtonElement, Props>(
       isSubmitting,
       icon,
       size,
+      isLoading,
       iconPosition = "left",
       type = "submit",
       className = "",
@@ -51,6 +53,7 @@ const DynamicButton = forwardRef<HTMLButtonElement, Props>(
             iconPosition === "right" ? "flex-row-reverse" : ""
           }`}
         >
+          {isLoading && <div className="loading loading-xs"></div>}
           {icon}
           {text && <span>{text}</span>}
         </div>

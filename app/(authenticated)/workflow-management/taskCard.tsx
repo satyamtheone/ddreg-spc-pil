@@ -15,9 +15,13 @@ import DynamicButton from "@/components/common/DynamicButton";
 import { useNavigation } from "@/components/hooks/useNavigation";
 import { BiSolidMessageSquareEdit } from "react-icons/bi";
 import { useAuth } from "@/lib/AuthProvider";
-import { IoIosWarning } from "react-icons/io";
+import { HiOutlineTrash } from "react-icons/hi";
+import { FaFlag } from "react-icons/fa6";
+import { FaEye } from "react-icons/fa";
+
 import { useGetSingleDocumentVersionsQuery } from "@/lib/redux/slices/documentApi";
 import { WorkFlowSearchParams } from "./page";
+import DeleteTaskDialog from "./deleteTaskDialog";
 
 type TaskCardProps = {
   task: Task;
@@ -60,7 +64,17 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
     >
       <div className="flex justify-between items-center">
         <div>
-          <FlagIcon size={14} />
+          {task.rejectionCount > 0 ? (
+            <div
+              className="text-red-600 flex items-center gap-2 tooltip tooltip-right tooltip-info"
+              data-tip={`This task is rejected ${task.rejectionCount} times`}
+            >
+              <FaFlag size={14} className="text-red-600" />
+              <strong> {task.rejectionCount}</strong>
+            </div>
+          ) : (
+            <FlagIcon size={14} />
+          )}
         </div>
         <div className="flex items-center">
           <MiniChip status={task?.taskType} />
@@ -117,9 +131,21 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
         </div>
       </div>
       <div className="flex flex-col gap-2 ">
-        <div>
+        <div className="w-full">
           <div>{task?.title}</div>
-          <div className="text-sm text-gray-400">{task?.description}</div>
+          <div
+            className={`text-sm text-gray-400  ${task?.description.length > 30 && "tooltip tooltip-info cursor-pointer"}`}
+          >
+            {task?.description.length > 30 && (
+              <div className="tooltip-content text-white">
+                {task?.description}
+              </div>
+            )}
+
+            <div className="text-wrap w-80 line-clamp-2 ">
+              {task?.description}
+            </div>
+          </div>
         </div>
         <div className="flex gap-2 items-center">
           <MiniChip
@@ -128,14 +154,14 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
           <MiniChip status={task?.documentVersion?.document?.country} />
         </div>
       </div>
-      {task.rejectionCount > 0 && (
-        <div className="text-red-600 text-sm flex gap-2 items-center">
-          <IoIosWarning size={20} />
+      {/* {task.rejectionCount > 0 && (
+        <div className="text-red-600 text-xs flex gap-2 items-center">
+          <IoIosWarning size={15} />
           <p>
             This task is rejected <strong>{task.rejectionCount}</strong> times
           </p>
         </div>
-      )}
+      )} */}
       <div className="flex justify-between items-center mt-4">
         <div className=" -space-x-2 flex items-center ">
           {task.assignments.map((assignment) => (
@@ -182,6 +208,38 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
                     `/document-editor/fullpageEditor?documentBufferUrl=${task?.documentVersion?.documentVersionFile?.key || document?.data.reference.referenceFile.key}&type=${task?.documentVersion?.reference?.schemaMeta?.type}&region=${task?.documentVersion?.reference?.type?.country?.code}&versionId=${task.documentVersion.id}&role=${user?.businessRole?.permissions?.[0]?.type || ""}`,
                   )
                 }
+              />
+            </div>
+          )}
+          {isAdmin && task.status === "CREATED" && (
+            <div className=" flex items-center gap-2">
+              <DynamicButton
+                icon={<FaEye className="text-teal-600" size={25} />}
+                size="slim"
+                className="px-2"
+                variant="card"
+                onClick={() =>
+                  goTo(
+                    `/document-editor/fullpageEditor?documentBufferUrl=${task?.documentVersion?.documentVersionFile?.key || document?.data.reference.referenceFile.key}&type=${task?.documentVersion?.reference?.schemaMeta?.type}&region=${task?.documentVersion?.reference?.type?.country?.code}&versionId=${task.documentVersion.id}&role=VIEWER`,
+                  )
+                }
+              />
+              <DynamicButton
+                icon={<HiOutlineTrash size={25} />}
+                size="slim"
+                variant="danger"
+                className="px-2"
+                onClick={() => {
+                  openDialog({
+                    children: (
+                      <ModalProvider
+                        size="md:w-200 w-11/12 "
+                        title={`Upload/Update Profile`}
+                        children={<DeleteTaskDialog Id={task.id} Name="Task" />}
+                      />
+                    ),
+                  });
+                }}
               />
             </div>
           )}

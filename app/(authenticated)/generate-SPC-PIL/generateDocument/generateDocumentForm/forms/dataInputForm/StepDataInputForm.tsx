@@ -49,15 +49,16 @@ export default function StepDataInputForm() {
       initialValues={{
         sections: formData.sections || previewData?.data.sections || [],
         basicInformation: {
-          brandName: formData.basicInformation?.brandName || "",
-          strength: formData.basicInformation?.strength || "",
-          dosageForm: formData.basicInformation?.dosageForm || "",
-          manufacturer: formData.basicInformation?.manufacturer || "",
-          shelfLife: formData.basicInformation?.shelfLife || "",
+          brandName: formData.basicInformation?.brandName || "N/A",
+          strength: formData.basicInformation?.strength || "N/A",
+          dosageForm: formData.basicInformation?.dosageForm || "N/A",
+          manufacturer: formData.basicInformation?.manufacturer || "N/A",
+          shelfLife: formData.basicInformation?.shelfLife || "N/A",
           storagePrecautions:
-            formData.basicInformation?.storagePrecautions || "",
-          MAHAddress: formData.basicInformation?.MAHAddress || "",
-          packagingDetails: formData.basicInformation?.packagingDetails || "",
+            formData.basicInformation?.storagePrecautions || "N/A",
+          MAHAddress: formData.basicInformation?.MAHAddress || "N/A",
+          packagingDetails:
+            formData.basicInformation?.packagingDetails || "N/A",
         },
       }}
       validationSchema={step3Schema}
@@ -104,7 +105,7 @@ export default function StepDataInputForm() {
               </div>
               <div>
                 <DynamicButton
-                  isSubmitting={!dirty || !isValid}
+                  isSubmitting={!isValid}
                   text="Continue To Summary"
                   type="submit"
                   variant="submit"

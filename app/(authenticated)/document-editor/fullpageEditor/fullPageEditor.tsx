@@ -70,6 +70,7 @@ export default function EditorPage({
           type: params.type || "",
         }).unwrap();
         setFilePath(res.url);
+        console.log("Document buffer loaded successfully:", res.url);
       } catch (err) {
         toast.error(getErrorMessage(err));
       }
@@ -115,7 +116,7 @@ export default function EditorPage({
           },
 
           editorConfig: {
-            mode: isApprover || isOnlyView ? "view" : "edit",
+            mode: isOnlyView ? "view" : "edit",
             user: {
               id: user?.id,
               name: `${user?.fName} ${user?.lName}`,
@@ -199,7 +200,7 @@ export default function EditorPage({
     <div
       id="editor-container"
       className={`w-full flex flex-col ${isFullscreen && "bg-white pt-2"} ${
-        isFullscreen ? "h-screen" : "h-[85vh]"
+        isFullscreen ? "h-screen" : "h-[98vh]"
       }`}
     >
       <Script
@@ -216,9 +217,10 @@ export default function EditorPage({
           <div className="min-w-max">
             <DynamicButton
               variant="submit"
+              isLoading={isSaveLoading}
               size="slim"
               icon={<FaSave />}
-              text={`${isSaveLoading ? "Saving..." : "Save this File"}`}
+              // text={`${isSaveLoading ? "Saving..." : "Save this File"}`}
               className="px-4 capitalize"
               onClick={handleSave}
               isSubmitting={
@@ -233,7 +235,7 @@ export default function EditorPage({
             variant="submit"
             size="slim"
             icon={isFullscreen ? <FaCompress /> : <FaExpand />}
-            text={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+            // text={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
             className="px-4 capitalize"
             onClick={toggleFullscreen}
           />

@@ -1,7 +1,5 @@
 import FormikInput from "@/components/FormikComponents/FormikInput";
 import React from "react";
-import { useStepper } from "../../stepper/stepperContext,";
-import DynamicButton from "@/components/common/DynamicButton";
 
 type BasicInformationFormProps = {};
 

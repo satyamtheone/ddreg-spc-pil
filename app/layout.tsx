@@ -6,6 +6,7 @@ import DialogProvider from "@/components/hooks/DialogProvider";
 import ReduxProvider from "@/lib/redux/reduxProvider";
 import { AuthProvider } from "@/lib/AuthProvider";
 import TitleUpdater from "@/components/common/tileUpdater";
+import ServiceWorker from "./(authenticated)/ServiceWorker";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -18,6 +19,7 @@ export const metadata = {
     template: "%s | SPC - PIL",
     default: "SPC - PIL",
   },
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({

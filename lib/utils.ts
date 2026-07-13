@@ -11,7 +11,7 @@ import { FiSettings } from "react-icons/fi";
 import { MdOutlineNotifications } from "react-icons/md";
 import { LuWorkflow } from "react-icons/lu";
 import { RiAiGenerateText } from "react-icons/ri";
-import { FaFolderOpen, FaRegUser } from "react-icons/fa";
+import { FaFolderOpen, FaRegFileWord, FaRegUser } from "react-icons/fa";
 import { MdHistory } from "react-icons/md";
 import { IconType } from "react-icons";
 import { IoCalendarOutline } from "react-icons/io5";
@@ -316,6 +316,13 @@ export const NavData: NavLinkItem[] = [
     title: "Document Editor",
     icon: FiEdit,
     link: "/document-editor",
+    children: [
+      {
+        title: "Word Editor",
+        icon: FaRegFileWord,
+        link: "/document-editor/fullpageEditor",
+      },
+    ],
   },
   {
     title: "Workflow Management",

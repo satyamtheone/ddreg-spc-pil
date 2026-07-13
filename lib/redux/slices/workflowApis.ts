@@ -1,10 +1,7 @@
 import {
-  CreateDocumentRequest,
   CreateDocumentResponse,
-  CreateRoleResponse,
   CreateTaskRequest,
   GetTaskResponse,
-  UpdateRoleRequest,
   UpdateTasActionRequest,
 } from "../apiTypes";
 import { apiSlice } from "./apislice";
@@ -40,6 +37,16 @@ export const workflowApis = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["getTasks"],
     }),
+
+    deleteTask: builder.mutation<{ success: boolean; message: string }, string>(
+      {
+        query: (taskId) => ({
+          url: `/documents/tasks/${taskId}/delete`,
+          method: "DELETE",
+        }),
+        invalidatesTags: ["getTasks"],
+      },
+    ),
   }),
 });
 
@@ -47,4 +54,5 @@ export const {
   useGetTaskQuery,
   useCreateTaskMutation,
   useUpdateTaskActionMutation,
+  useDeleteTaskMutation,
 } = workflowApis;

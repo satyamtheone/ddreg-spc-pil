@@ -1,0 +1,23 @@
+{
+  "id": "/",
+  "name": "Vitalic SPC/PIL",
+  "short_name": "SPC/PIL",
+  "description": "SPC/PIL Application",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0524D2",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/dwWH3JPS/spclogo-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.ibb.co/yFXL20ss/spclogo-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
