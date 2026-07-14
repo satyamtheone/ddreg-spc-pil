@@ -8,6 +8,7 @@ import LogoutDialog from "@/features/auth/logoutDialog";
 import { useDialog } from "../hooks/DialogProvider";
 import DynamicButton from "../common/DynamicButton";
 import { RiLogoutCircleRLine } from "react-icons/ri";
+import { BiRefresh } from "react-icons/bi";
 
 export default function Header() {
   const pathname = usePathname();
@@ -55,24 +56,34 @@ export default function Header() {
             <h1 className="text-lg font-semibold">{title}</h1>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <DynamicButton
-              icon={<RiLogoutCircleRLine size={20} />}
+              icon={<BiRefresh size={20} />}
               size="slim"
-              variant="danger"
+              variant="outline"
               className="px-2 "
-              onClick={() => {
-                openDialog({
-                  children: (
-                    <ModalProvider
-                      size="md:w-200 w-11/12 "
-                      title={`Logout`}
-                      children={<LogoutDialog />}
-                    />
-                  ),
-                });
-              }}
+              onClick={() => window.location.reload()}
             />
+
+            <div className="flex items-center gap-3">
+              <DynamicButton
+                icon={<RiLogoutCircleRLine size={20} />}
+                size="slim"
+                variant="danger"
+                className="px-2 "
+                onClick={() => {
+                  openDialog({
+                    children: (
+                      <ModalProvider
+                        size="md:w-200 w-11/12 "
+                        title={`Logout`}
+                        children={<LogoutDialog />}
+                      />
+                    ),
+                  });
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -211,38 +211,44 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
               />
             </div>
           )}
-          {isAdmin && task.status === "CREATED" && (
-            <div className=" flex items-center gap-2">
-              <DynamicButton
-                icon={<FaEye className="text-teal-600" size={25} />}
-                size="slim"
-                className="px-2"
-                variant="card"
-                onClick={() =>
-                  goTo(
-                    `/document-editor/fullpageEditor?documentBufferUrl=${task?.documentVersion?.documentVersionFile?.key || document?.data.reference.referenceFile.key}&type=${task?.documentVersion?.reference?.schemaMeta?.type}&region=${task?.documentVersion?.reference?.type?.country?.code}&versionId=${task.documentVersion.id}&role=VIEWER`,
-                  )
-                }
-              />
-              <DynamicButton
-                icon={<HiOutlineTrash size={25} />}
-                size="slim"
-                variant="danger"
-                className="px-2"
-                onClick={() => {
-                  openDialog({
-                    children: (
-                      <ModalProvider
-                        size="md:w-200 w-11/12 "
-                        title={`Upload/Update Profile`}
-                        children={<DeleteTaskDialog Id={task.id} Name="Task" />}
-                      />
-                    ),
-                  });
-                }}
-              />
-            </div>
-          )}
+          {canDoAction &&
+            (task.status === "CREATED" || task.status === "UNDER_EDITING") && (
+              <div className=" flex items-center gap-2">
+                {task.status === "CREATED" && (
+                  <DynamicButton
+                    icon={<FaEye className="text-teal-600" size={25} />}
+                    size="slim"
+                    className="px-2"
+                    variant="card"
+                    onClick={() =>
+                      goTo(
+                        `/document-editor/fullpageEditor?documentBufferUrl=${task?.documentVersion?.documentVersionFile?.key || document?.data.reference.referenceFile.key}&type=${task?.documentVersion?.reference?.schemaMeta?.type}&region=${task?.documentVersion?.reference?.type?.country?.code}&versionId=${task.documentVersion.id}&role=VIEWER`,
+                      )
+                    }
+                  />
+                )}
+
+                <DynamicButton
+                  icon={<HiOutlineTrash size={25} />}
+                  size="slim"
+                  variant="danger"
+                  className="px-2"
+                  onClick={() => {
+                    openDialog({
+                      children: (
+                        <ModalProvider
+                          size="md:w-200 w-11/12 "
+                          title={`Delete Task`}
+                          children={
+                            <DeleteTaskDialog Id={task.id} Name="Task" />
+                          }
+                        />
+                      ),
+                    });
+                  }}
+                />
+              </div>
+            )}
         </div>
       </div>
     </div>
