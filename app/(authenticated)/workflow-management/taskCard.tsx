@@ -211,7 +211,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
               />
             </div>
           )}
-          {canDoAction &&
+          {(canDoAction || user?.id === task.createdById) &&
             (task.status === "CREATED" || task.status === "UNDER_EDITING") && (
               <div className=" flex items-center gap-2">
                 {task.status === "CREATED" && (
