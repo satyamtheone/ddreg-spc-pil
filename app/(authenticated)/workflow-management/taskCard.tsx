@@ -211,10 +211,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, params }) => {
               />
             </div>
           )}
-          {(user?.id === task.createdById ||
-            (canDoAction &&
-              (task.status === "CREATED" ||
-                task.status === "UNDER_EDITING"))) && (
+          {((user?.id === task.createdById && task.status === "CREATED") ||
+            (canDoAction && task.status === "UNDER_EDITING")) && (
             <div className=" flex items-center gap-2">
               {task.status === "CREATED" && (
                 <DynamicButton
