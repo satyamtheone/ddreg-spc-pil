@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import LoadingCard from "./loadingCard";
 
 export interface BarSeries {
   label: string;
@@ -23,7 +24,8 @@ interface BarGraphProps {
   showBothLabels?: boolean;
   xLabels: string[];
   series: BarSeries[];
-  rightExtraSpacePercent?: number; 
+  isLoading: boolean;
+  rightExtraSpacePercent?: number;
 }
 
 const buildBarPath = (
@@ -50,6 +52,7 @@ export const BarGraph: React.FC<BarGraphProps> = ({
   title,
   description,
   tooltipLabel,
+  isLoading,
   barStyle = "sharp",
   showBothLabels = false,
   xLabels = [],
@@ -95,15 +98,11 @@ export const BarGraph: React.FC<BarGraphProps> = ({
 
   if (!series.length || !xLabels.length) {
     return (
-      <div className="p-4">
-        <p className="text-lg font-medium text-theme-secondary">{title}</p>
-        {description && (
-          <p className="text-sm text-theme-secondary mt-0.5">{description}</p>
-        )}
-        <div className="mt-4 flex items-center justify-center h-40 text-gray-400 text-sm">
-          No data available
-        </div>
-      </div>
+      <LoadingCard
+        description={description || ""}
+        isLoading={isLoading}
+        title={title}
+      />
     );
   }
 
@@ -114,9 +113,9 @@ export const BarGraph: React.FC<BarGraphProps> = ({
 
   const groupCount = xLabels.length;
   const seriesCount = series.length;
-  
+
   const barAreaWidth = chartWidth * (1 - rightExtraSpacePercent / 100);
-  
+
   const groupWidth = barAreaWidth / groupCount;
   const groupGap = groupWidth * 0.2;
   const barGap = seriesCount > 1 ? 2 : 0;

@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import LoadingCard from "./loadingCard";
 
 export interface AreaSeries {
   label: string;
@@ -25,6 +26,7 @@ interface AreaGraphProps {
   showBothLabels?: boolean;
   xLabels: string[];
   series: AreaSeries[];
+  isLoading: boolean;
 }
 
 export const AreaGraph: React.FC<AreaGraphProps> = ({
@@ -37,6 +39,7 @@ export const AreaGraph: React.FC<AreaGraphProps> = ({
   showBothLabels = false,
   xLabels = [],
   series = [],
+  isLoading,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -58,7 +61,7 @@ export const AreaGraph: React.FC<AreaGraphProps> = ({
     svgY: number,
     seriesLabel: string,
     value: number,
-    color: string
+    color: string,
   ) => {
     if (!svgRef.current || !containerRef.current) return;
     const svgRect = svgRef.current.getBoundingClientRect();
@@ -74,22 +77,18 @@ export const AreaGraph: React.FC<AreaGraphProps> = ({
 
   if (!series.length || !xLabels.length) {
     return (
-      <div className="p-4">
-        <p className="text-lg font-medium text-theme-secondary">{title}</p>
-        {description && (
-          <p className="text-sm text-theme-secondary mt-0.5">{description}</p>
-        )}
-        <div className="mt-4 flex items-center justify-center h-40 text-gray-400 text-sm">
-          No data available
-        </div>
-      </div>
+      <LoadingCard
+        description={description || ""}
+        isLoading={isLoading}
+        title={title}
+      />
     );
   }
 
   const allValues = series.flatMap((s) => s.data);
   const rawMin = Math.min(...allValues);
   const rawMax = Math.max(...allValues, 1);
-  
+
   const padding = (rawMax - rawMin) * 0.1 || 5;
   const yMin = Math.max(0, Math.floor((rawMin - padding) / 5) * 5);
   const yMax = Math.ceil((rawMax + padding) / 5) * 5;
@@ -271,7 +270,7 @@ export const AreaGraph: React.FC<AreaGraphProps> = ({
                     const rect = svg.getBoundingClientRect();
                     const scaleX = rect.width / viewBoxWidth;
                     const mouseX = (e.clientX - rect.left) / scaleX;
-                    
+
                     let nearestIndex = 0;
                     let minDistance = Infinity;
                     points.forEach((p, pi) => {
@@ -281,14 +280,14 @@ export const AreaGraph: React.FC<AreaGraphProps> = ({
                         nearestIndex = pi;
                       }
                     });
-                    
+
                     const nearestPoint = points[nearestIndex];
                     handleMouseEnter(
                       nearestPoint.x,
                       nearestPoint.y,
                       s.label,
                       s.data[nearestIndex],
-                      s.lineColor
+                      s.lineColor,
                     );
                   }}
                   onMouseLeave={handleMouseLeave}
@@ -297,7 +296,13 @@ export const AreaGraph: React.FC<AreaGraphProps> = ({
                 {showDots &&
                   points.map((p, pi) => (
                     <g key={pi} style={{ cursor: "pointer" }}>
-                      <circle cx={p.x} cy={p.y} r={5} fill="white" stroke="none" />
+                      <circle
+                        cx={p.x}
+                        cy={p.y}
+                        r={5}
+                        fill="white"
+                        stroke="none"
+                      />
                       <circle
                         cx={p.x}
                         cy={p.y}
@@ -311,7 +316,7 @@ export const AreaGraph: React.FC<AreaGraphProps> = ({
                             p.y,
                             s.label,
                             s.data[pi],
-                            s.lineColor
+                            s.lineColor,
                           )
                         }
                         onMouseLeave={handleMouseLeave}
@@ -341,7 +346,10 @@ export const AreaGraph: React.FC<AreaGraphProps> = ({
       {tooltip && (
         <div
           className="pointer-events-none absolute z-40 -translate-y-full"
-          style={{ left: tooltip.containerX - 16, top: tooltip.containerY - 10 }}
+          style={{
+            left: tooltip.containerX - 16,
+            top: tooltip.containerY - 10,
+          }}
         >
           <div className="bg-white border border-gray-200 shadow-md rounded-md px-2.5 py-1.5 whitespace-nowrap">
             <div className="flex items-center gap-1.5">
@@ -352,7 +360,7 @@ export const AreaGraph: React.FC<AreaGraphProps> = ({
               <p className="text-xs font-medium text-theme-secondary">
                 {showBothLabels && tooltipLabel
                   ? `${tooltip.seriesLabel} ${tooltipLabel}`
-                  : tooltipLabel ?? tooltip.seriesLabel}
+                  : (tooltipLabel ?? tooltip.seriesLabel)}
               </p>
             </div>
             <p className="text-xl font-medium text-theme-secondary mt-0.5">

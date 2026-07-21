@@ -1,9 +1,10 @@
 import React, { useRef, useState } from "react";
+import LoadingCard from "./loadingCard";
 
 interface DataPoint {
-  x: string | number;
-  y: number;
-  name?: string; 
+  month: string;
+  count: number;
+  name?: string;
 }
 
 interface TooltipState {
@@ -25,6 +26,7 @@ interface LineGraphProps {
   showBothLabels?: boolean;
   lineColor?: string;
   dotColor?: string;
+  isLoading: boolean;
 }
 
 export const LineGraph: React.FC<LineGraphProps> = ({
@@ -39,6 +41,7 @@ export const LineGraph: React.FC<LineGraphProps> = ({
   showBothLabels = false,
   lineColor = "#6366f1",
   dotColor = "#6366f1",
+  isLoading,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -56,22 +59,18 @@ export const LineGraph: React.FC<LineGraphProps> = ({
 
   if (!data || data.length === 0) {
     return (
-      <div className="p-4">
-        <p className="text-lg font-medium text-theme-secondary">{title}</p>
-        {description && (
-          <p className="text-sm text-theme-secondary mt-0.5">{description}</p>
-        )}
-        <div className="mt-4 flex items-center justify-center h-40 text-gray-400 text-sm">
-          No data available
-        </div>
-      </div>
+      <LoadingCard
+        description={description || ""}
+        isLoading={isLoading}
+        title={title}
+      />
     );
   }
 
-  const yValues = data.map((d) => d.y);
+  const yValues = data.map((d) => d.count);
   const rawMin = Math.min(...yValues);
   const rawMax = Math.max(...yValues);
-  
+
   const padding = (rawMax - rawMin) * 0.1 || 5;
   const yMin = Math.max(0, Math.floor((rawMin - padding) / 5) * 5);
   const yMax = Math.ceil((rawMax + padding) / 5) * 5;
@@ -79,9 +78,9 @@ export const LineGraph: React.FC<LineGraphProps> = ({
 
   const points = data.map((d, i) => ({
     svgX: paddingLeft + (i / (data.length - 1)) * chartWidth,
-    svgY: paddingTop + chartHeight - ((d.y - yMin) / yRange) * chartHeight,
-    label: d.name ?? String(d.x),
-    value: d.y,
+    svgY: paddingTop + chartHeight - ((d.count - yMin) / yRange) * chartHeight,
+    label: d.name ?? String(d.month),
+    value: d.count,
   }));
 
   const buildSmoothPath = () => {
@@ -112,7 +111,7 @@ export const LineGraph: React.FC<LineGraphProps> = ({
     svgX: number,
     svgY: number,
     label: string,
-    value: number
+    value: number,
   ) => {
     if (!svgRef.current || !containerRef.current) return;
     const svgRect = svgRef.current.getBoundingClientRect();
@@ -131,7 +130,7 @@ export const LineGraph: React.FC<LineGraphProps> = ({
 
   const renderDot = (
     p: { svgX: number; svgY: number; label: string; value: number },
-    i: number
+    i: number,
   ) => {
     const events = {
       onMouseEnter: () => handleMouseEnter(p.svgX, p.svgY, p.label, p.value),
@@ -261,7 +260,7 @@ export const LineGraph: React.FC<LineGraphProps> = ({
                 const rect = svg.getBoundingClientRect();
                 const scaleX = rect.width / viewBoxWidth;
                 const mouseX = (e.clientX - rect.left) / scaleX;
-                
+
                 let nearestIndex = 0;
                 let minDistance = Infinity;
                 points.forEach((p, pi) => {
@@ -271,9 +270,14 @@ export const LineGraph: React.FC<LineGraphProps> = ({
                     nearestIndex = pi;
                   }
                 });
-                
+
                 const nearestPoint = points[nearestIndex];
-                handleMouseEnter(nearestPoint.svgX, nearestPoint.svgY, nearestPoint.label, nearestPoint.value);
+                handleMouseEnter(
+                  nearestPoint.svgX,
+                  nearestPoint.svgY,
+                  nearestPoint.label,
+                  nearestPoint.value,
+                );
               }}
               onMouseLeave={handleMouseLeave}
             />
@@ -292,7 +296,7 @@ export const LineGraph: React.FC<LineGraphProps> = ({
                 const rect = svg.getBoundingClientRect();
                 const scaleX = rect.width / viewBoxWidth;
                 const mouseX = (e.clientX - rect.left) / scaleX;
-                
+
                 let nearestIndex = 0;
                 let minDistance = Infinity;
                 points.forEach((p, pi) => {
@@ -302,9 +306,14 @@ export const LineGraph: React.FC<LineGraphProps> = ({
                     nearestIndex = pi;
                   }
                 });
-                
+
                 const nearestPoint = points[nearestIndex];
-                handleMouseEnter(nearestPoint.svgX, nearestPoint.svgY, nearestPoint.label, nearestPoint.value);
+                handleMouseEnter(
+                  nearestPoint.svgX,
+                  nearestPoint.svgY,
+                  nearestPoint.label,
+                  nearestPoint.value,
+                );
               }}
               onMouseLeave={handleMouseLeave}
             />
@@ -317,15 +326,20 @@ export const LineGraph: React.FC<LineGraphProps> = ({
       {tooltip && (
         <div
           className="pointer-events-none absolute z-40 -translate-y-full"
-          style={{ left: tooltip.containerX - 16, top: tooltip.containerY - 10 }}
+          style={{
+            left: tooltip.containerX - 16,
+            top: tooltip.containerY - 10,
+          }}
         >
           <div className="bg-white border border-gray-200 shadow-md rounded-md px-2.5 py-1.5 whitespace-nowrap">
             <p className="text-xs font-medium text-theme-secondary">
               {showBothLabels && tooltipLabel
                 ? `${tooltip.label} ${tooltipLabel}`
-                : tooltipLabel ?? tooltip.label}
+                : (tooltipLabel ?? tooltip.label)}
             </p>
-            <p className="text-lg font-medium text-theme-secondary">{tooltip.value}</p>
+            <p className="text-lg font-medium text-theme-secondary">
+              {tooltip.value}
+            </p>
           </div>
           <div className="flex justify-start pl-3">
             <div className="w-2 h-2 bg-white border-b border-r border-gray-200 rotate-45 -mt-1" />

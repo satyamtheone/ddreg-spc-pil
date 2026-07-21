@@ -821,3 +821,51 @@ export type SaveDocxToS3Response = {
     sections: Section[];
   };
 };
+
+
+//==================================================dashboard types
+
+export type GetDashboardReferenceResponseType = {
+  success: boolean;
+  message: string;
+  data: [
+    {
+      month: string;
+      count: number;
+    },
+  ];
+};
+
+export type GetDashboardTaskStatusResponseType = {
+  success: boolean;
+  message: string;
+  data: [
+    {
+      approved: number;
+      pending: number;
+      week: String;
+    },
+  ];
+};
+
+export type GetDashboardDocumentGenerationByCountryResponse = {
+  success: boolean;
+  message: string;
+  data: [
+    {
+      count: number;
+      country: string;
+    },
+  ];
+};
+
+export type GetdocumentGenerationOverSixMonthsResponse = {
+  success: boolean;
+  message: string;
+  data: [
+    {
+      month: string;
+      count: number;
+    },
+  ];
+};

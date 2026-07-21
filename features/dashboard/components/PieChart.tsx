@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useMemo, useCallback } from "react";
 import Image from "next/image";
+import LoadingCard from "./loadingCard";
 
 export interface PieDataItem {
   label: string;
@@ -25,6 +26,7 @@ interface PieChartProps {
   data: PieDataItem[];
   iconSrc?: string;
   renderTooltip?: (data: TooltipData) => React.ReactNode;
+  isLoading: boolean;
 }
 
 const COLORS_PALETTE = [
@@ -48,6 +50,7 @@ const COLORS_PALETTE = [
 export const PieChart: React.FC<PieChartProps> = ({
   title,
   description,
+  isLoading,
   data = [],
   iconSrc = "/dashboard/chart/Icon-01.svg",
   renderTooltip,
@@ -119,15 +122,11 @@ export const PieChart: React.FC<PieChartProps> = ({
 
   if (!data || data.length === 0) {
     return (
-      <div className="p-4 h-full">
-        <p className="text-lg font-medium text-theme-secondary">{title}</p>
-        {description && (
-          <p className="text-sm text-theme-secondary mt-0.5">{description}</p>
-        )}
-        <div className="mt-4 flex items-center justify-center h-40 text-gray-400 text-sm">
-          No data available
-        </div>
-      </div>
+      <LoadingCard
+        description={description || ""}
+        isLoading={isLoading}
+        title={title}
+      />
     );
   }
 
@@ -140,7 +139,7 @@ export const PieChart: React.FC<PieChartProps> = ({
 
       <div className="border-b border-gray-200 my-3" />
 
-      <div className="flex items-center">
+      <div className="flex items-center justify-center gap-6">
         {/* Pie */}
         <div className="relative flex items-center justify-center">
           <svg
@@ -184,7 +183,7 @@ export const PieChart: React.FC<PieChartProps> = ({
         </div>
 
         {/* Legend */}
-        <div className="ml-4 flex flex-col justify-center gap-2">
+        <div className=" flex flex-col justify-center gap-2">
           {data.map((item, i) => (
             <div key={i} className="flex items-center gap-2">
               <div
